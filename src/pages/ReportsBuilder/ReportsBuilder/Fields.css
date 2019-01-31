@@ -1,0 +1,136 @@
+table tr.rb-fe-drop-over-downward td {
+  border-bottom: 2px dashed #1890ff !important;
+}
+
+table tr.rb-fe-drop-over-upward td {
+  border-top: 2px dashed #1890ff !important;
+}
+
+.rb-fe-icon-button {
+  cursor: pointer;
+}
+
+.rb-fe-editable-cell-grey { 
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.rb-fe-editable-cell {
+  position: relative;
+}
+
+.rb-fe-editable-cell-input-wrapper,
+.rb-fe-editable-cell-text-wrapper {
+  padding-right: 24px;
+}
+
+.rb-fe-editable-cell-text-wrapper {
+  padding: 5px 24px 5px 5px;
+}
+
+.rb-fe-editable-cell-icon,
+.rb-fe-editable-cell-icon-check {
+  position: absolute;
+  right: 0;
+  width: 20px;
+  cursor: pointer;
+}
+
+.rb-fe-editable-cell-icon {
+  line-height: 18px;
+  display: none;
+}
+
+.rb-fe-editable-cell-icon-check {
+  line-height: 28px;
+}
+
+.rb-fe-editable-cell:hover .rb-fe-editable-cell-icon {
+  display: inline-block;
+}
+
+.rb-fe-editable-cell-icon:hover,
+.rb-fe-editable-cell-icon-check:hover {
+  color: #108ee9;
+}
+
+.rb-builder-editor-fields .ant-table table thead>tr>th:nth-child(2)>div {
+  position: relative;
+  left: 8px;
+  top: -1px;
+}
+.rb-builder-editor-fields .ant-table table thead>tr>th:nth-child(2)>div>i {
+  color: rgba(0, 0, 0, 0.85);
+  cursor: default;
+}
+.rb-builder-editor-fields thead.ant-table-thead>tr>th:first-child,
+.rb-builder-editor-fields tbody.ant-table-tbody>tr>td:first-child {
+  padding: 4px 16px;
+  width: 100%;
+}
+.rb-builder-editor-fields thead.ant-table-thead>tr>th,
+.rb-builder-editor-fields tbody.ant-table-tbody>tr>td {
+  padding: 4px;
+}
+.rb-builder-editor-fields tbody.ant-table-tbody>tr>td {
+  border-color: transparent;
+}
+
+.rb-builder-editor-fields thead.ant-table-thead>tr>th:first-child>div,
+.rb-builder-editor-fields tbody.ant-table-tbody>tr>td:first-child>div {
+  width: auto;
+}
+.rb-builder-editor-fields thead.ant-table-thead>tr>th>div,
+.rb-builder-editor-fields tbody.ant-table-tbody>tr>td>label,
+.rb-builder-editor-fields tbody.ant-table-tbody>tr>td>i {
+  width: 14px;
+}
+
+.rb-builder-editor-fields .ant-table-body tr>td:first-child  {
+  position: relative;
+  height: 32px;
+}
+.rb-builder-editor-fields .ant-table-body tr>td:first-child .rb-fe-editable-cell,
+.rb-builder-editor-fields .ant-table-body tr>td:first-child .rb-fe-editable-cell .rb-fe-editable-cell-text-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 30px;
+}
+.rb-builder-editor-fields .ant-table-body tr>td:first-child .rb-fe-editable-cell {
+  margin: 2px 12px 0;
+}
+.rb-builder-editor-fields .rb-builder-item-content>div,
+.rb-builder-editor-fields .rb-builder-item-content>div>.ant-table-wrapper,
+.rb-builder-editor-fields .rb-builder-item-content>div>.ant-table-wrapper>div,
+.rb-builder-editor-fields .rb-builder-item-content>div>.ant-table-wrapper>div>div,
+.rb-builder-editor-fields .rb-builder-item-content>div>.ant-table-wrapper>div>div>div,
+.rb-builder-editor-fields .rb-builder-item-content>div>.ant-table-wrapper>div>div>div>div,
+.rb-builder-editor-fields .rb-builder-item-content>div>.ant-table-wrapper>div>div>div>div>div {
+  display: flex;
+  justify-content: stretch;
+  flex-direction: column;
+  height: 0;
+  flex-grow: 1;
+}
+.rb-builder-editor-fields .rb-builder-item-content>div>.ant-table-wrapper>div>div>div>div>div>.ant-table-header {
+  height: auto;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+.rb-builder-editor-fields .rb-builder-item-content>div>.ant-table-wrapper>div>div>div>div>div>.ant-table-body {
+  flex-grow: 1;
+}
+.rb-builder-editor-fields .rb-builder-item-content>div>.ant-table-wrapper>div>div>div>div>div>.ant-table-placeholder {
+  display: none;
+}
+.rb-fe-editable-cell-text-tooltip label {
+  font-weight: bold;
+}
+.rb-fe-editable-cell-text-tooltip label::after {
+  content: ': ';
+}

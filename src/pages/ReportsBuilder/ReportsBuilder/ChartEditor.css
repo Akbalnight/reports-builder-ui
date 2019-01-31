@@ -1,0 +1,151 @@
+.rb-builder-editor-chart-settings {
+    width: 300px;
+    flex: 0 0 auto;
+}
+
+.rb-builder-editor-chart-settings input[type="text"] {
+    height: 24px;
+}
+
+.rb-builder-editor-chart-view {
+    flex-grow: 1;
+    
+}
+
+.rb-builder-editor-chart-view>div {
+    flex-grow: 1;
+}
+
+.rb-builder-editor-chart {
+}
+
+.rb-builder-editor-chart-preview {
+}
+
+.rb-builder-editor-chart-settings,
+.rb-builder-editor-chart-view,
+.rb-builder-editor-chart,
+.rb-builder-editor-chart-preview {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}
+
+.rb-builder-editor-chart-st-root {
+    height: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10px;
+}
+
+.rb-builder-editor-chart-st-item {
+    margin-bottom: 15px;
+}
+.rb-builder-editor-chart-st-item>label {
+    color: black;
+    font-weight: bold;
+}
+.rb-builder-editor-chart-st-item>div {
+
+}
+.rb-builder-editor-chart-st-title-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.rb-builder-editor-chart-st-title-item>label {
+    color: black;
+    text-align: right;
+    flex-basis: 30%;
+    padding-right: 10px;
+}
+
+.rb-builder-editor-chart-st-title-item>input {
+    flex-basis: 70%;
+}
+.rb-builder-editor-chart-st-axis-desc,
+.rb-builder-editor-chart-st-general {
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+.rb-builder-editor-chart-st-axis-desc>div {
+    display: flex;
+    align-items: center;
+    height: 28px;
+}
+.rb-builder-editor-chart-st-axis-desc>div>div {
+    width: 0;
+    flex-grow: 1;
+}
+.rb-builder-editor-chart-st-axis-desc>div>label {
+    flex-grow: 0 !important;
+    color: black;
+    white-space: nowrap;
+    padding-right: 10px;
+}
+.rb-builder-editor-chart-st-rows {
+    white-space: nowrap;
+}
+.rb-builder-editor-chart-st-rows input[type="text"] {
+    width: 35px;
+}
+
+.rb-builder-editor-chart .rb-builder-item-content span,
+.rb-builder-editor-chart .rb-builder-item-content p {
+    color: rgb(0, 0, 0, 0.65);
+}
+
+.rb-builder-editor-chart-settings .rb-builder-editor-chart-st-item label.rb-builder-editor-chart-st-item-title {
+    display: flex;
+    width: 100%;
+    justify-content: space-between; 
+}
+
+.rb-builder-editor-chart-settings .rb-builder-editor-chart-st-item label.rb-builder-editor-chart-st-item-title>a {
+    font-weight: normal;
+    text-decoration: none;
+}
+.rb-builder-editor-chart-st-color-mark {
+    width: 16px;
+    height: 16px;
+    margin: 0 10px;
+    border: 1px solid rgb(0, 0, 0, .25);
+    border-radius: 2px;
+    cursor: pointer;
+}
+.rb-builder-editor-chart-st-color-picker-popover {
+    position: absolute;
+    z-index: 2;
+    top: 24px;
+}
+.rb-builder-editor-chart-st-color-picker-cover {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+.rb-builder-editor-chart-st-rows input[type="text"] {
+    padding: 4px;
+}
+.rb-builder-editor-chart-st-axis-desc>div:first-child {
+    justify-content: flex-end;
+    cursor: pointer;
+    height: auto;
+    margin: 2px 0 4px 0;
+}
+.rb-builder-editor-chart-st-axis-desc>div:first-child>button {
+    padding: 0 !important;
+    border: none;
+    height: auto;
+    line-height: 1em;
+    color: rgb(0, 0, 0, 0.46);
+}
+.rb-builder-editor-chart-st-axis-desc>div:first-child>button:hover {
+    color: rgb(0, 0, 0, 0.85);
+}

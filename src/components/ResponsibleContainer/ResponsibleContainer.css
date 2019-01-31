@@ -1,0 +1,43 @@
+.rbu-rc-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.rbu-rc-tracker {
+    flex: 1 0 auto;
+    align-items: stretch;
+    z-index: -9999;
+    background-color: transparent;
+}
+
+.rbu-rc-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.rbu-rcf-wrapper {
+    position: relative;
+    flex-grow: 1;
+    align-items: stretch;
+    display: flex;
+}
+
+.rbu-rcf-tracker {
+    flex: 1 0 auto;
+    align-items: stretch;
+    z-index: -9999;
+    background-color: transparent;
+}
+
+.rbu-rcf-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}

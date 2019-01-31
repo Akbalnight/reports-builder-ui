@@ -1,0 +1,145 @@
+.reportViewer :global(.react-grid-Grid) {
+    color:rgba(0, 0, 0, 0.65);
+}
+.report-viewer .report-viewer-header-button {
+    cursor: pointer;
+}
+.report-viewer div.report-viewer-header-button {
+    display: inline;
+}
+.report-viewer-filter-popover-content {
+    display:flex;
+    flex-direction: column;
+    width: 300px;
+}
+.report-viewer-filter-popover-content>div {
+    display:flex;
+}
+.report-viewer-filter-popover-content>div:first-child {
+    margin-bottom: 10px;
+}
+.report-viewer-filter-popover-content>div:first-child .ant-input {
+    height: 24px;
+}
+.report-viewer-filter-popover-content>div>div:first-child {
+    margin-right: 10px;
+}
+.report-viewer-filter-popover-content>div:last-child>* {
+    margin-right: 10px;
+}
+.report-viewer-filter-popover-content .ant-select-selection-selected-value {
+    white-space: nowrap;
+}
+
+.report-viewer div.report-viewer-header {
+    display: flex;
+    justify-content: space-between;
+}
+.report-viewer .report-viewer-header>span {
+    flex: 0 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.report-viewer .report-viewer-header>div {
+    flex: 0 0 auto;
+}
+.report-viewer .report-viewer-total {
+    height: 35px;
+    overflow: hidden;
+}
+.react-grid-Cell{
+    border-left:  0;
+    border-right:  0;
+    font-weight: bold;
+}
+.report-viewer .report-viewer-total .react-grid-Cell{
+    border:  0 !important;
+    font-weight: bold;
+}
+.report-viewer .report-viewer-total .rdg-selected {
+    display: none;
+}
+.report-viewer .report-viewer-total  .react-grid-Viewport {
+    top: 0px !important;
+}
+
+.report-viewer .report-viewer-total  .react-grid-Canvas {
+    overflow-y: hidden !important;
+}
+.report-viewer .react-grid-HeaderCell-sortable span.pull-right{
+    display: none !important;
+}
+.report-viewer.no-data-placeholder {
+    background-size: 350px;
+    min-height: 400px;
+    background-repeat: no-repeat;
+    background-position: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row !important;
+}
+.report-viewer.no-data-placeholder span,
+.report-viewer.not-built-placeholder span {
+    margin-top: 400px;
+    font-size: 1.5em;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.report-viewer.not-built-placeholder {
+    background-size: 350px;
+    min-height: 400px;
+    background-repeat: no-repeat;
+    background-position: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row !important;
+}
+
+.report-viewer {
+    display: flex;
+    overflow: hidden;
+    flex-grow: 1;
+    align-content: stretch;
+}
+
+.report-viewer>div.ant-spin-nested-loading {
+    height: auto;
+    display: flex;
+    flex-grow: 1;
+    align-content: stretch;
+}
+
+.report-viewer>div.ant-spin-nested-loading>div.ant-spin-container {
+    height: auto;
+    display: flex;
+    flex-grow: 1;
+    align-content: stretch;
+}
+
+.report-viewer-layout {
+    display: flex;
+    flex-grow: 1;
+    align-content: stretch;
+    overflow: hidden;
+}
+
+.report-viewer-numbers {
+    display: flex;
+    align-content: stretch;
+    flex: 0 0 auto;
+    width: 38px;
+}
+
+.report-viewer-report {
+    display: flex;
+    align-content: stretch;
+    flex-direction: column;
+    flex: 1 0 auto;
+    width: 0;
+}
+
+.report-viewer-total {
+    display: flex;
+    align-content: stretch;
+    flex: 0 0 auto;
+}

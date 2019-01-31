@@ -1,0 +1,84 @@
+.rb-st-root {
+    margin: 4px;
+    flex-grow: 1;
+    height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.rb-st-root > .rb-st-search-bar {
+    padding: 4px;
+}
+
+.rb-st-root > .rb-st-content {
+    height: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: auto;
+}
+
+.rb-st-root .rb-st-node {
+    padding: 4px 4px;
+    transition: all .3s;
+    display: flex;
+}
+
+.rb-st-root .rb-st-node>* {
+    flex-grow: 1;
+}
+
+.rb-st-root .rb-st-node:hover  {
+    cursor: pointer;
+    background-color: #e6f7ff;
+}
+
+.rb-st-root .rb-st-node>span:first-child {
+    flex: 0 0 auto;
+    width: 24px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 12px;
+    margin: auto;
+}
+
+.rb-st-root .rb-st-node>span:first-child>*{
+    transition: transform .2s;
+}
+
+span.rb-st-expanded>* {
+    transform: rotateZ(90deg);
+}
+
+.rb-st-root .rb-st-node[level="1"]>span:first-child {
+    margin-left: 16px;
+}
+
+.rb-st-root .rb-st-node[level="2"]>span:first-child {
+    margin-left: 32px;
+}
+
+.rb-st-root .rb-st-node[level="3"]>span:first-child {
+    margin-left: 48px;
+}
+
+.rb-st-root .rb-st-node[level="4"]>span:first-child {
+    margin-left: 64px;
+}
+
+.rb-st-root .rb-st-node[level="5"]>span:first-child {
+    margin-left: 80px;
+}
+
+div.rb-st-text {
+    font-family: "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-variant: tabular-nums;
+    color: rgba(0, 0, 0, 0.65);
+    user-select: none;
+}
+
+div.rb-st-text.rb-st-disabled {
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
+}
