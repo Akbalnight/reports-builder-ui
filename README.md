@@ -1,31 +1,26 @@
 # reports-builder-ui
 
-> Reports builder library and components with state management
+> Библиотека редактора отчётов с интегрированной работой с redux
 
-[![NPM](https://img.shields.io/npm/v/reports-builder-ui.svg)](https://www.npmjs.com/package/reports-builder-ui) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-
-## Install
+## Установка
 
 ```bash
 npm install --save reports-builder-ui
 ```
 
-## Usage
+## Разработка
 
-```jsx
-import React, { Component } from 'react'
+Для удобства разработки можно использовать ссылку на библиотеку, в этом случае не понадобится её при каждом изменении устанавливать.
 
-import MyComponent from 'reports-builder-ui'
+Создание ссылки
+```bash
+cd <library-path>
+npm link
 
-class Example extends Component {
-  render () {
-    return (
-      <MyComponent />
-    )
-  }
-}
+cd <app-path>
+npm link reports-builder-ui
 ```
 
-## License
+## Использование
 
-Internal © [](https://github.com/)
+В процессе разработки
