@@ -109,16 +109,16 @@ class ReportsList extends Component {
                     trigger={['contextMenu']}
                     overlay={menu}
                 >
-                    <div className="rl-body-menu-item-text">
+                    <div className="rbu-rl-body-menu-item-text">
                         {report.title}
                     </div>
                 </Dropdown>
                 <Tooltip title="Редактировать">
-                    <Button className="rl-menu-item-button" size="small" icon="edit" onClick={() => this.editReportHandler(report)} />
+                    <Button className="rbu-rl-menu-item-button" size="small" icon="edit" onClick={() => this.editReportHandler(report)} />
                 </Tooltip>
                 <Popconfirm onConfirm={() => this.removeReportHandler(report.id)} title="Вы действительно хотите удалить отчёт? Восстановить будет невозможно" okText="Да" cancelText="Отмена">
                     <Tooltip title="Удалить">
-                        <Button className="rl-menu-item-button" size="small" icon="delete" />
+                        <Button className="rbu-rl-menu-item-button" size="small" icon="delete" />
                     </Tooltip>
                 </Popconfirm>
             </Fragment>
@@ -136,14 +136,14 @@ class ReportsList extends Component {
             : this.state.openKeys;
 
         return (
-            <div className="rl-root">
-                <div className="rl-header">
+            <div className="rbu-rl-root">
+                <div className="rbu-rl-header">
                     <Search
                         placeholder="Введите поисковый запрос"
-                        className="rl-header-search"
+                        className="rbu-rl-header-search"
                         onChange={this.onSearchHandle}
                     />
-                    <div className="rl-filler"></div>
+                    <div className="rbu-rl-filler"></div>
                     <Button size="small" icon="bar-chart" onClick={this.openTypeSelector}>Новый отчёт</Button>
                     <Dropdown
                         trigger={['click']}
@@ -151,12 +151,12 @@ class ReportsList extends Component {
                             <Menu>
                                 <Menu.Item key='pdf'>
                                     <form target="_blank" method="post" action={`${getUrlPrefix()}/reports/analytics/reports/${selectedKey}/_export?format=PDF`}>
-                                        <Button className="rl-menu-item-button item-export" size="small" htmlType="submit" ><Icon type="file-pdf" /> PDF</Button>
+                                        <Button className="rbu-rl-menu-item-button item-export" size="small" htmlType="submit" ><Icon type="file-pdf" /> PDF</Button>
                                     </form>
                                 </Menu.Item>
                                 <Menu.Item key='excel'>
                                     <form target="_blank" method="post" action={`${getUrlPrefix()}/reports/analytics/reports/${selectedKey}/_export?format=XLSX`}>
-                                        <Button className="rl-menu-item-button item-export" size="small" htmlType="submit" ><Icon type="file-excel" /> Excel</Button>
+                                        <Button className="rbu-rl-menu-item-button item-export" size="small" htmlType="submit" ><Icon type="file-excel" /> Excel</Button>
                                     </form>
                                 </Menu.Item>
                             </Menu>
@@ -167,8 +167,8 @@ class ReportsList extends Component {
                     </Dropdown>
                     <Button size="small" icon="printer" onClick={this.onPrintClick} disabled={!selectedKey}>Печать</Button>
                 </div>
-                <div className="rl-body">
-                    <div className="rl-body-menu">
+                <div className="rbu-rl-body">
+                    <div className="rbu-rl-body-menu">
                         <Spin spinning={isLoading} >
                             <Menu
                                 openKeys={openKeys}
@@ -178,7 +178,7 @@ class ReportsList extends Component {
                             >
                                 <SubMenu key='favorites' title={<b>Избранные</b>}>
                                     {filteredReportsList.length > 0 && filteredReportsList.filter(item => item.isFavorite).map(report =>
-                                        <Menu.Item key={report.id} className="rl-body-menu-item">
+                                        <Menu.Item key={report.id} className="rbu-rl-body-menu-item">
                                             <this.MenuItemView
                                                 report={report}
                                                 menu={(<Menu>
@@ -190,7 +190,7 @@ class ReportsList extends Component {
                                 </SubMenu>
                                 <SubMenu key='private' title={<b>Личные отчёты</b>}>
                                     {filteredReportsList.length > 0 && filteredReportsList.filter(item => !item.isPublic).map(report =>
-                                        <Menu.Item key={report.id} className="rl-body-menu-item">
+                                        <Menu.Item key={report.id} className="rbu-rl-body-menu-item">
                                             <this.MenuItemView
                                                 report={report}
                                                 menu={(<Menu>
@@ -202,7 +202,7 @@ class ReportsList extends Component {
                                 </SubMenu>
                                 <SubMenu key='public' title={<b>Публичные отчёты</b>}>
                                     {filteredReportsList.length > 0 && filteredReportsList.filter(item => item.isPublic).map(report =>
-                                        <Menu.Item key={report.id} className="rl-body-menu-item">
+                                        <Menu.Item key={report.id} className="rbu-rl-body-menu-item">
                                             <this.MenuItemView
                                                 report={report}
                                                 menu={(<Menu>
@@ -215,7 +215,7 @@ class ReportsList extends Component {
                             </Menu>
                         </Spin>
                     </div>
-                    <div className="rl-body-content" style={{color: 'black'}}>
+                    <div className="rbu-rl-body-content" style={{color: 'black'}}>
                         <ReportCompositeViewer
                             reportData={selectedReport}
                             showBuildButton={false} />

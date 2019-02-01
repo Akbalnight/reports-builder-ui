@@ -18,26 +18,26 @@ import './ReportsBuilderType.css';
 
 const chartTypes = [{
     type: 'table',
-    className: 'rb-builder-image-table',
+    className: 'rbu-builder-image-table',
     title: 'Таблица'
 }, {
     type: 'linear',
-    className: 'rb-builder-image-linear',
+    className: 'rbu-builder-image-linear',
     title: 'Линейный график'
 }, {
     type: 'bar',
-    className: 'rb-builder-image-bar',
+    className: 'rbu-builder-image-bar',
     title: 'Гистограмма'
 }, {
     type: 'hbar',
-    className: 'rb-builder-image-hbar',
+    className: 'rbu-builder-image-hbar',
     title: 'Линейчатая диаграмма'
 }];
 
 const getImages = () => settings.get().reportImages;
 
 const ChartImage = ({className, title, onClick}) => (
-    <div onClick={onClick} className={classNames("rb-builder-type-column", className)}>
+    <div onClick={onClick} className={classNames("rbu-builder-type-column", className)}>
         <p><span style={{backgroundImage: `url('${getImages()}')`}}></span></p>
         <div>{title}</div>
     </div>
@@ -92,7 +92,7 @@ class TypeSettings extends Component {
         return (
             <Drawer
                 title="Настройки отчёта"
-                className="rb-builder-editor-type-settings-panel"
+                className="rbu-builder-editor-type-settings-panel"
                 width={400}
                 placement="right"
                 onClose={this.props.onClose}
@@ -106,7 +106,7 @@ class TypeSettings extends Component {
                 <div>
                     <Row title="Наименование отчёта">
                         <Input 
-                            className={classNames({'rb-builder-editor-type-settings-validation-error': this.props.highlightName && !this.props.reportName})}
+                            className={classNames({'rbu-builder-editor-type-settings-validation-error': this.props.highlightName && !this.props.reportName})}
                             placeholder="Название отчёта" 
                             value={this.props.reportName} 
                             onChange={this.props.onReportNameChange} />
@@ -114,17 +114,17 @@ class TypeSettings extends Component {
                     </Row>
                     <ChartRow 
                         title="Текущее представление отчёта" 
-                        className={classNames({'rb-builder-editor-type-settings-validation-error': this.props.highlightTypes && !this.props.reportType})}
+                        className={classNames({'rbu-builder-editor-type-settings-validation-error': this.props.highlightTypes && !this.props.reportType})}
                         filterFunc={type => type === this.props.reportType} 
                     />
                     <ChartRow 
                         title="Доступные представления отчёта"
-                        className={classNames({'rb-builder-editor-type-settings-validation-error': this.props.highlightTypes && !this.props.reportType})}
+                        className={classNames({'rbu-builder-editor-type-settings-validation-error': this.props.highlightTypes && !this.props.reportType})}
                         filterFunc={type => type !== this.props.reportType} 
                         onClick={this.reportTypeChangeHandler} 
                     />
                 </div>
-                <div className="rb-builder-editor-type-settings-actions">
+                <div className="rbu-builder-editor-type-settings-actions">
                     <Button type="danger" onClick={this.props.onTerminate}>Отмена</Button>
                     <Button type="primary" onClick={this.props.onClose}>Продолжить</Button>
                 </div>

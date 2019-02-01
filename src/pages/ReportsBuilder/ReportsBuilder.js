@@ -43,7 +43,7 @@ class ReportsBuilder extends React.Component {
             <Spin spinning={!this.props.isInitialized}>
                 {this.props.isInitialized 
                     ? <EditorWrapper reportId={this.getReportIdSafe()} onCancel={this.props.onCancel} />
-                    : <div className="rb-loading-dummy"></div>
+                    : <div className="rbu-loading-dummy"></div>
                 }
             </Spin>
         );

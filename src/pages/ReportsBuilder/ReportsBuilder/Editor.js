@@ -159,7 +159,7 @@ class Editor extends Component {
         const isTable = this.props.reportType === 'table';
         const isTableView = !this.props.reportType || isTable || !this.state.isChartView;
         return (<div
-            className="rb-builder-editor-preview">
+            className="rbu-builder-editor-preview">
             <Item title={title} icon={icon} contentRef={node => this.divContaner = node}>
                 <ViewerWrapper pagination={false} />
                 <ItemActions>
@@ -177,11 +177,11 @@ class Editor extends Component {
         )
     }
 
-    Chart = () => (<div className="rb-builder-editor-chart">
+    Chart = () => (<div className="rbu-builder-editor-chart">
         <Item
             title="Предпросмотр"
             icon="bars"
-            contentClassName="rb-builder-item-content-stretch">
+            contentClassName="rbu-builder-item-content-stretch">
             <ItemActions>
                 {!this.state.isChartViewMaximized && <a href="#" onClick={this.maximizeChartView}>Развернуть окно</a>}
                 {this.state.isChartViewMaximized && <a href="#" onClick={this.normalizeChartView}>Свернуть окно</a>}
@@ -195,7 +195,7 @@ class Editor extends Component {
         const icon = getCurrentChartIconSafe(this.props.reportType);
         return (
             <Button 
-                className={classNames("rb-builder-editor-type-settings", icon.className)}
+                className={classNames("rbu-builder-editor-type-settings", icon.className)}
                 size='small'
                 type='ghost'
                 shape={null}
@@ -208,22 +208,22 @@ class Editor extends Component {
         <Fragment>
         {!this.state.isReportViewMaximized &&
             <Fragment>
-                <div className="rb-builder-editor-views">
+                <div className="rbu-builder-editor-views">
                     <Item
                         title="Доступные поля"
                         icon="database"
-                        contentClassName="rb-builder-item-views">
+                        contentClassName="rbu-builder-item-views">
                         <ViewsWrapper selectsOnlySiblings={true} />
                     </Item>
                 </div>
-                <div className="rb-builder-editor-configuration">
-                    <div className="rb-builder-editor-configuration-fields">
-                        <div className="rb-builder-editor-fields">
+                <div className="rbu-builder-editor-configuration">
+                    <div className="rbu-builder-editor-configuration-fields">
+                        <div className="rbu-builder-editor-fields">
                             <Item title="Отобранные поля" icon="bars">
                                 <FieldsWrapper title="Поля" />
                             </Item>
                         </div>
-                        <div className="rb-builder-editor-settings">
+                        <div className="rbu-builder-editor-settings">
                             <SettingsWrapper onTabChange={this.tabChangeHandler} />
                             <this.SettingsButton />
                         </div>
@@ -240,17 +240,17 @@ class Editor extends Component {
         <Fragment>
             {!this.state.isReportViewMaximized && !this.state.isChartViewMaximized &&
             <Fragment>
-                <div className="rb-builder-editor-chart-settings">
+                <div className="rbu-builder-editor-chart-settings">
                     <Item
                         title="Настройка"
                         icon="database"
-                        contentClassName="rb-builder-item-views">
+                        contentClassName="rbu-builder-item-views">
                         <ChartSettingsWrapper />
                     </Item>
                 </div>
-                <div className="rb-builder-editor-chart-view">
+                <div className="rbu-builder-editor-chart-view">
                     <this.Chart />
-                    <div className="rb-builder-editor-chart-preview">
+                    <div className="rbu-builder-editor-chart-preview">
                         <this.Preview title="Отобранные данные" icon="database" />
                     </div>
                 </div>
@@ -262,7 +262,7 @@ class Editor extends Component {
 
     render() {
         return (
-            <div className="rb-builder-type-root">
+            <div className="rbu-builder-type-root">
                 <TypeSettingsWrapper 
                     visible={this.state.typeSettingsVisible}
                     highlightName={this.state.validationStatus === VALIDATION_EMPTY_NAME}
@@ -270,7 +270,7 @@ class Editor extends Component {
                     onClose={this.typeSettingsCloseHandler}
                     onTerminate={this.terminateHandler}
                 />
-                <div className="rb-builder-editor">
+                <div className="rbu-builder-editor">
                     {!this.props.reportType || this.props.reportType === 'table' || !this.state.isChartView
                         ? <this.TableEditor />
                         : <this.ChartEditor />

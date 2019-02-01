@@ -1,4 +1,4 @@
-.rb-chart-root {
+.rbu-chart-root {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -6,7 +6,7 @@
     align-items: stretch;
 }
 
-.rb-chart-area {
+.rbu-chart-area {
     min-width: 0;
     min-height: 0;
     overflow: hidden;
@@ -17,14 +17,14 @@
     bottom: 0;
 }
 
-.rb-chart-root>p {
+.rbu-chart-root>p {
     flex-grow: 0;
     color: rgb(0, 0, 0, 0.65);
     padding: 0;
     margin: 2px;
     text-align: center;
 }
-.rb-chart-root>div {
+.rbu-chart-root>div {
     height: 0;
     flex-grow: 1;
     position: relative;

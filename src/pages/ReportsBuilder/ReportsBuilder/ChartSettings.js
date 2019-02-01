@@ -11,8 +11,8 @@ const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
 const SettingsItem = ({ title, action, onAction, children }) => (
-    <div className="rb-builder-editor-chart-st-item">
-        <label className="rb-builder-editor-chart-st-item-title">
+    <div className="rbu-builder-editor-chart-st-item">
+        <label className="rbu-builder-editor-chart-st-item-title">
             <span>{title}</span>
             {action && <a href="#" onClick={onAction}>{action}</a>}
         </label>
@@ -21,7 +21,7 @@ const SettingsItem = ({ title, action, onAction, children }) => (
 )
 
 const TitleItem = ({ title, value, onChange }) => (
-    <div className="rb-builder-editor-chart-st-title-item">
+    <div className="rbu-builder-editor-chart-st-title-item">
         <label>{title}</label>
         <Input value={value} onChange={onChange} />
     </div>
@@ -120,10 +120,10 @@ class Color extends React.Component {
             <div style={{position: 'relative'}}>
                 <div 
                     style={{backgroundColor: this.props.color}}
-                    className="rb-builder-editor-chart-st-color-mark" 
+                    className="rbu-builder-editor-chart-st-color-mark" 
                     onClick={this.handleClick}></div>
-                {this.state.displayColorPicker && <div className="rb-builder-editor-chart-st-color-picker-popover">
-                    <div className="rb-builder-editor-chart-st-color-picker-cover" onClick={this.handleClose} />
+                {this.state.displayColorPicker && <div className="rbu-builder-editor-chart-st-color-picker-popover">
+                    <div className="rbu-builder-editor-chart-st-color-picker-cover" onClick={this.handleClose} />
                     <GithubPicker
                         colors={colors} 
                         color={this.props.color} 
@@ -185,7 +185,7 @@ class RowsSelector extends React.Component {
     render() {
         const isPartDisabled = this.state.type !== 'part';
         return (
-            <div className="rb-builder-editor-chart-st-rows">
+            <div className="rbu-builder-editor-chart-st-rows">
                 <RadioGroup value={this.state.type} onChange={this.typeHandler}>
                     <Radio value="all">Всё</Radio>
                     <Radio value="part">
@@ -213,7 +213,7 @@ const AxisSettings = ({
     onRowsChange
 }) => { 
     return (
-        <div className="rb-builder-editor-chart-st-axis-desc">
+        <div className="rbu-builder-editor-chart-st-axis-desc">
             <div>
                 <Popconfirm title="Вы действительно хотите удалить график?" onConfirm={onRemove} okText="Да" cancelText="Отмена">
                     <Button icon="close" size="small" />
@@ -253,7 +253,7 @@ const GeneralSettings = ({
     isLegendVisible,
     onLegendVisibilityChange
 }) => (
-    <div className="rb-builder-editor-chart-st-general">
+    <div className="rbu-builder-editor-chart-st-general">
         <Checkbox checked={isLegendVisible} onChange={onLegendVisibilityChange}>Отображение легенды</Checkbox>
     </div>
 )
@@ -314,7 +314,7 @@ class ChartSettings extends Component {
 
     render() {
         return (
-            <div className="rb-builder-editor-chart-st-root">
+            <div className="rbu-builder-editor-chart-st-root">
                 <SettingsItem title="Подписи">
                     <TitleItem title="Заголовок:" value={this.props.chartTitle} onChange={this.props.onChartTitleChange} />
                     <TitleItem title="Ось X:" value={this.props.dataAxisName} onChange={this.props.onDataAxisNameChange} />

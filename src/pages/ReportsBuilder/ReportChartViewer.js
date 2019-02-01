@@ -79,11 +79,11 @@ class ReportChartViewer extends React.Component {
 
     render() {
         return (
-            <div className="rb-chart-root">
+            <div className="rbu-chart-root">
                 <p>{this.props.title}</p>
                 <div>
                     <ResponsiveContainer
-                        className="rb-chart-area" 
+                        className="rbu-chart-area" 
                         width="99%" 
                         height="100%"
                         debounce={300}>

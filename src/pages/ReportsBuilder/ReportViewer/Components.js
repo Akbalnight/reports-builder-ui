@@ -41,7 +41,7 @@ class FilterContent extends Component {
 
     render() {
         return (
-            <div className="report-viewer-filter-popover-content">
+            <div className="rbu-viewer-filter-popover-content">
                 <div>
                     <Select
                         size="small"
@@ -126,7 +126,7 @@ class FilterPopover extends Component {
                 visible={this.state.visible}
                 onVisibleChange={this.handleVisibleChange}
             >
-                <div className="report-viewer-header-button">
+                <div className="rbu-viewer-header-button">
                     <Icon
                         type="filter"
                     />
@@ -141,7 +141,7 @@ const ReportViewerHeader = ({
     onFilterChange, 
     onSortToggle
 }) => (
-    <div className="report-viewer-header">
+    <div className="rbu-viewer-header">
         <span>
             {column.name}
         </span>
@@ -161,7 +161,7 @@ const ReportViewerHeader = ({
                 operation={column.filterValue && column.filterValue.operation ? column.filterValue.operation : "Равно"}
             />}
             {column.sortable && <div
-                className="report-viewer-header-button"
+                className="rbu-viewer-header-button"
                 onClick={() => onSortToggle({
                     id: column.id,
                     column: column.column,
@@ -205,7 +205,7 @@ const NumerationColumn = ({
 }
 
 const Placeholder = ({fetched}) => {
-    const classes = classNames('report-viewer', {
+    const classes = classNames('rbu-viewer', {
         'no-data-placeholder': fetched,
         'not-built-placeholder': !fetched
     });

@@ -188,9 +188,9 @@ class EditableCell extends React.Component {
         } = this.props;
 
         const isEmpty = placeholder && (Array.isArray(restProps.children) && (typeof restProps.children[2] === 'undefined' || restProps.children[2] === ''));
-        const cellClasses = classNames('rb-be-editable-cell', {'rb-be-editable-cell-placeholder': isEmpty});
+        const cellClasses = classNames('rbu-be-editable-cell', {'rbu-be-editable-cell-placeholder': isEmpty});
         return (
-            <td ref={node => (this.cell = node)} {...restProps}><div className="rb-be-editable-cell-wrapper">
+            <td ref={node => (this.cell = node)} {...restProps}><div className="rbu-be-editable-cell-wrapper">
                 {editor ? (
                     <EditableContext.Consumer>
                         {(form) => {
@@ -204,7 +204,7 @@ class EditableCell extends React.Component {
                                         })
                                         (
                                             <Editor
-                                                className="rb-be-s-editor"
+                                                className="rbu-be-s-editor"
                                                 row={record}
                                                 editor={editor}
                                                 editorSource={editorSource}
@@ -312,7 +312,7 @@ class EditableTable extends React.Component {
             };
         });
         columns.push({
-            className: 'rb-builder-action-column',
+            className: 'rbu-builder-action-column',
             actions: true,
             render: (text, record) => {
                 return (
@@ -324,7 +324,7 @@ class EditableTable extends React.Component {
         return (
             <Table
                 components={components}
-                rowClassName={() => 'rb-be-editable-row'}
+                rowClassName={() => 'rbu-be-editable-row'}
                 dataSource={this.props.dataSource}
                 columns={columns}
                 pagination={false}

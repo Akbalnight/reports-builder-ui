@@ -1,19 +1,19 @@
-.rb-header {
+.rbu-header {
     display: flex;
     align-items: center;
 }
 
-.rb-header {
+.rbu-header {
     display: flex;
     padding: 1.2em;
     background: rgb(230, 230, 230);
     color: black;
 }
 
-.rb-header-title {
+.rbu-header-title {
     flex-grow: 1;
 }
 
-.rb-loading-dummy {
+.rbu-loading-dummy {
     height: calc(100vh - 75px);
 }

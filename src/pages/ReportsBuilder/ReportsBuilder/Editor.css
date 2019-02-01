@@ -1,26 +1,26 @@
-.rb-builder-type-root {
+.rbu-builder-type-root {
     max-height: calc(100vh - 75px);
     height: calc(100vh - 75px);
     display: flex;
     flex-direction: column;
 }
 
-.rb-builder-type-root > * {
+.rbu-builder-type-root > * {
     flex: 0 0 auto;
 }
 
-.rb-builder-type-root a,
-.rb-builder-type-root a:hover,
-.rb-builder-type-root a:visited {
+.rbu-builder-type-root a,
+.rbu-builder-type-root a:hover,
+.rbu-builder-type-root a:visited {
     color: #0079c0;
 }
 
 
-.rb-builder-type-root button.ant-btn-primary {
+.rbu-builder-type-root button.ant-btn-primary {
     background-color: #0079c0;
 }
 
-.rb-builder-editor {
+.rbu-builder-editor {
     height: 0;
     flex-grow: 1;
     display: flex;
@@ -30,18 +30,18 @@
     padding-bottom: 10px;
 }
 
-.rb-builder-editor-views {
+.rbu-builder-editor-views {
     width: 300px;
     flex: 0 0 auto;
 }
 
-.rb-builder-editor-configuration {
+.rbu-builder-editor-configuration {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 
-.rb-builder-editor-configuration-fields {
+.rbu-builder-editor-configuration-fields {
     flex-grow: 1;
     height: 0;
     max-height: 300px;
@@ -49,46 +49,46 @@
     justify-content: stretch;
 }
 
-.rb-builder-editor-fields {
+.rbu-builder-editor-fields {
     width: 0;
     flex: 1 0 30%;
 }
 
-.rb-builder-editor-settings {
+.rbu-builder-editor-settings {
     width: 0;
     flex: 1 0 70%;
     position: relative;
 }
 
-.rb-builder-editor-preview,
-.rb-builder-editor-chart {
+.rbu-builder-editor-preview,
+.rbu-builder-editor-chart {
     flex-grow: 1;
     flex-basis: 0;
 }
 
-.rb-builder-editor-preview .rb-builder-item-content>div:first-child {
+.rbu-builder-editor-preview .rbu-builder-item-content>div:first-child {
     height: 0;
     overflow: hidden;
     display: flex;
 }
 
-.rb-builder-editor-views,
-.rb-builder-editor-fields,
-.rb-builder-editor-settings,
-.rb-builder-editor-preview {
+.rbu-builder-editor-views,
+.rbu-builder-editor-fields,
+.rbu-builder-editor-settings,
+.rbu-builder-editor-preview {
     display: flex;
     flex-direction: column;
     justify-content: stretch;
 }
 
-.rb-builder-editor-views>*,
-.rb-builder-editor-fields>*,
-.rb-builder-editor-settings>*,
-.rb-builder-editor-preview>* {
+.rbu-builder-editor-views>*,
+.rbu-builder-editor-fields>*,
+.rbu-builder-editor-settings>*,
+.rbu-builder-editor-preview>* {
     flex-grow: 1;
 }
 
-.rb-builder-item {
+.rbu-builder-item {
     display: flex;
     flex-direction: column;
     margin-left: 10px;
@@ -97,7 +97,7 @@
     flex: 1 0 auto;
 }
 
-.rb-builder-item-title {
+.rbu-builder-item-title {
     color: #0079c0;
     font-weight: bold;
     background-color: white;
@@ -110,21 +110,21 @@
     border: 1px solid #d9d9d9;
 }
 
-.rb-builder-item-title>span {
+.rbu-builder-item-title>span {
     margin-left: 8px;
     flex-grow: 1;
 }
 
-.rb-builder-item-actions>a {
+.rbu-builder-item-actions>a {
     text-decoration: none;
 }
 
-.rb-builder-item-actions>* {
+.rbu-builder-item-actions>* {
     margin: 4px 8px;
 }
 
-.rb-builder-item .ant-spin-nested-loading,
-.rb-builder-item .ant-spin-nested-loading .ant-spin-container {
+.rbu-builder-item .ant-spin-nested-loading,
+.rbu-builder-item .ant-spin-nested-loading .ant-spin-container {
     display: flex;
     flex-direction: column;
     justify-content: stretch;
@@ -133,7 +133,7 @@
     flex-grow: 1;
 }
 
-.rb-builder-item-content {
+.rbu-builder-item-content {
     height: 0;
     flex-grow: 1;
     border-bottom: 1px solid #d9d9d9;
@@ -147,7 +147,7 @@
     background-color: white;
 }
 
-.rb-builder-item-content-stretch {
+.rbu-builder-item-content-stretch {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -157,63 +157,63 @@
     position: relative;
 }
 
-.rb-builder-item-content>div {
+.rbu-builder-item-content>div {
     flex: 1 0 auto;
 }
 
-.rb-builder-item-content>div.rb-builder-item-footer {
+.rbu-builder-item-content>div.rbu-builder-item-footer {
     flex: 0 0 auto;
     text-align: right;
 }
-.rb-builder-item-content>div.rb-builder-item-footer>* {
+.rbu-builder-item-content>div.rbu-builder-item-footer>* {
     margin: 10px 0 10px 10px;
 }
-.rb-builder-item-content>div.rb-builder-item-footer>*:last-child {
+.rbu-builder-item-content>div.rbu-builder-item-footer>*:last-child {
     margin: 10px;
 }
-.rb-builder-editor-type-settings-actions>button,
-.rb-builder-item-content>div.rb-builder-item-footer>button {
+.rbu-builder-editor-type-settings-actions>button,
+.rbu-builder-item-content>div.rbu-builder-item-footer>button {
     padding: 0 10px;
     height: 30px;
     line-height: normal;
     font-weight: bold;
 }
 
-.rb-builder-item-content .ant-table-header,
-.rb-builder-editor-settings .ant-table-header {
+.rbu-builder-item-content .ant-table-header,
+.rbu-builder-editor-settings .ant-table-header {
     margin-right: -17px;
     padding-right: 17px;
 }
 
-.rb-builder-item-content .ant-table-header table,
-.rb-builder-editor-settings .ant-table-header table {
+.rbu-builder-item-content .ant-table-header table,
+.rbu-builder-editor-settings .ant-table-header table {
     margin-right: -17px;
 }
 
-.rb-builder-item-content .ant-table-header table th:last-child,
-.rb-builder-editor-settings .ant-table-header table thead>tr>th:last-child {
+.rbu-builder-item-content .ant-table-header table th:last-child,
+.rbu-builder-editor-settings .ant-table-header table thead>tr>th:last-child {
     padding-right: 21px;
 }
 
-.rb-builder-editor-settings {
+.rbu-builder-editor-settings {
     margin: 10px 0 0 10px;
     flex-shrink: 1;
 }
 
-.rb-builder-editor-settings .ant-tabs-content {
+.rbu-builder-editor-settings .ant-tabs-content {
     border: 1px solid #d9d9d9;
     border-radius: 4px;
 }
 
-.rb-builder-editor-settings .ant-tabs,
-.rb-builder-editor-settings .ant-tabs-content
+.rbu-builder-editor-settings .ant-tabs,
+.rbu-builder-editor-settings .ant-tabs-content
 {
     display: flex;
     flex-grow: 1;
     flex-direction: column;
 }
 
-.rb-builder-editor-settings .ant-tabs > .ant-tabs-bar {
+.rbu-builder-editor-settings .ant-tabs > .ant-tabs-bar {
     background-color: white;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
@@ -223,57 +223,57 @@
     font-weight: bold;
 }
 
-.rb-builder-editor-settings .ant-tabs > .ant-tabs-bar .ant-tabs-tab-active {
+.rbu-builder-editor-settings .ant-tabs > .ant-tabs-bar .ant-tabs-tab-active {
     color: black;
 }
 
-.rb-builder-editor-settings .ant-tabs > .ant-tabs-bar,
-.rb-builder-editor-settings .ant-tabs > .ant-tabs-content {
+.rbu-builder-editor-settings .ant-tabs > .ant-tabs-bar,
+.rbu-builder-editor-settings .ant-tabs > .ant-tabs-content {
     flex-shrink: 1;
     flex-basis: auto;
 }
 
-.rb-builder-editor-settings .ant-tabs > .ant-tabs-bar { 
+.rbu-builder-editor-settings .ant-tabs > .ant-tabs-bar { 
     height: 32px;
 }
 
-.rb-builder-editor-settings .ant-tabs:not(.ant-tabs-vertical) > .ant-tabs-content {
+.rbu-builder-editor-settings .ant-tabs:not(.ant-tabs-vertical) > .ant-tabs-content {
     width: auto;
 }
 
-.rb-builder-editor-settings .ant-tabs thead.ant-table-thead>tr>th,
-.rb-builder-editor-settings .ant-tabs tbody.ant-table-tbody>tr>td {
+.rbu-builder-editor-settings .ant-tabs thead.ant-table-thead>tr>th,
+.rbu-builder-editor-settings .ant-tabs tbody.ant-table-tbody>tr>td {
     padding: 4px 16px;
 }
 
-.rb-builder-editor-settings .ant-tabs tbody.ant-table-tbody>tr>td {
+.rbu-builder-editor-settings .ant-tabs tbody.ant-table-tbody>tr>td {
     border-bottom: none;
 }
 
-.rb-builder-editor-settings .ant-tabs table tr>td.rb-builder-action-column {
+.rbu-builder-editor-settings .ant-tabs table tr>td.rbu-builder-action-column {
     padding: 5px;
     white-space: nowrap;
 }
 
-.rb-builder-editor-settings .ant-tabs .rb-builder-action-column button.ant-btn.ant-btn-icon-only {
+.rbu-builder-editor-settings .ant-tabs .rbu-builder-action-column button.ant-btn.ant-btn-icon-only {
     margin: 0px;
     padding: 0 4px;
     border: none;
 }
 
-.rb-builder-editor-settings .ant-table-body table tr>td:not(:last-child) {
+.rbu-builder-editor-settings .ant-table-body table tr>td:not(:last-child) {
     padding: 0;
     height: 24px;
     line-height: normal;
 }
 
-.rb-builder-editor-settings .ant-table-body table tr>td:not(:last-child)>div.rb-be-editable-cell-wrapper {
+.rbu-builder-editor-settings .ant-table-body table tr>td:not(:last-child)>div.rbu-be-editable-cell-wrapper {
     position: relative;
     height: 24px;
     line-height: normal;
     width: 100%;
 }
-.rb-builder-editor-settings .ant-table-body table tr>td:not(:last-child)>div.rb-be-editable-cell-wrapper>div {
+.rbu-builder-editor-settings .ant-table-body table tr>td:not(:last-child)>div.rbu-be-editable-cell-wrapper>div {
     position: absolute;
     left: 16px;
     right: 16px;
@@ -284,151 +284,151 @@
     white-space: nowrap;
 }
 
-.rb-builder-item-views {
+.rbu-builder-item-views {
     height: 0;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 
-.rb-be-editable-cell {
+.rbu-be-editable-cell {
     cursor: pointer;
 }
 
-.rb-be-editable-cell-placeholder {
+.rbu-be-editable-cell-placeholder {
     color: rgba(0, 0, 0, 0.25);
 }
 
-.rb-be-editable-row .ant-form-item-control {
+.rbu-be-editable-row .ant-form-item-control {
     line-height: normal;
 }
 
-.rb-be-editable-row .rb-be-editable-cell {
+.rbu-be-editable-row .rbu-be-editable-cell {
     margin: 2px 0;
 }
 
-.rb-be-s-editor.ant-input {
+.rbu-be-s-editor.ant-input {
     height: 20px;
 }
 
-.rb-be-editable-row .ant-select-selection {
+.rbu-be-editable-row .ant-select-selection {
     height: 20px;
 }
-.rb-be-editable-row .ant-select-selection>div {
+.rbu-be-editable-row .ant-select-selection>div {
     line-height: 20px;
 }
-.rb-be-editable-row .ant-calendar-picker .ant-input {
+.rbu-be-editable-row .ant-calendar-picker .ant-input {
     height: 24px;
 }
 
-.rb-builder-editor-settings .ant-tabs-content>div,
-.rb-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper,
-.rb-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div,
-.rb-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div,
-.rb-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div,
-.rb-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div>div,
-.rb-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div>div>div {
+.rbu-builder-editor-settings .ant-tabs-content>div,
+.rbu-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper,
+.rbu-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div,
+.rbu-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div,
+.rbu-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div,
+.rbu-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div>div,
+.rbu-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div>div>div {
     display: flex;
     justify-content: stretch;
     flex-direction: column;
     height: 0;
     flex-grow: 1;
 }
-.rb-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div>div>div>.ant-table-header {
+.rbu-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div>div>div>.ant-table-header {
     height: auto;
     flex-grow: 0;
     flex-shrink: 0;
 }
-.rb-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div>div>div>.ant-table-body {
+.rbu-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div>div>div>.ant-table-body {
     flex-grow: 1;
 }
-.rb-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div>div>div>.ant-table-placeholder {
+.rbu-builder-editor-settings .ant-tabs-content>div>.ant-table-wrapper>div>div>div>div>div>.ant-table-placeholder {
     display: none;
 }
-.rb-builder-action-column a,
-.rb-builder-action-column a:visited,
-.rb-builder-action-column a:hover {
+.rbu-builder-action-column a,
+.rbu-builder-action-column a:visited,
+.rbu-builder-action-column a:hover {
     color: rgba(0, 0, 0, 0.65);
 }
 
-.rb-builder-editor-name {
+.rbu-builder-editor-name {
     display: flex;
     padding: 4px;
     background-color: #F1F2F6;
 }
-.rb-builder-editor-name>label {
+.rbu-builder-editor-name>label {
     padding: 4px 8px 4px 12px;
     color: black;
     white-space: nowrap;
 }
-.rb-builder-editor-name>label>span {
+.rbu-builder-editor-name>label>span {
     margin-left: 8px;
 }
-.rb-builder-editor-modal svg {
+.rbu-builder-editor-modal svg {
     font-size: 22px;
 }
-.rb-builder-type-root .rb-builder-editor .rb-builder-editor-actions {
+.rbu-builder-type-root .rbu-builder-editor .rbu-builder-editor-actions {
     flex-grow: 0;
     height: 30px;
     display: flex;
     justify-content: flex-end;
 }
 
-.rb-builder-editor-actions>* {
+.rbu-builder-editor-actions>* {
     margin: 5px;
 }
-.rb-builder-editor-settings .ant-tabs .ant-tabs-nav>div>div {
+.rbu-builder-editor-settings .ant-tabs .ant-tabs-nav>div>div {
     margin-right: 6px;
 }
-.rb-builder-editor-settings .ant-tabs .ant-tabs-nav-container {
+.rbu-builder-editor-settings .ant-tabs .ant-tabs-nav-container {
     max-width: calc(100% - 100px);
 }
 
-.rb-builder-editor-type-settings {
+.rbu-builder-editor-type-settings {
     border: none;
     margin: 0;
     height: auto;
     line-height: 1em;
 }
-.rb-builder-editor-settings .rb-builder-editor-type-settings {
+.rbu-builder-editor-settings .rbu-builder-editor-type-settings {
     position: absolute;
     right: 10px;
     top: 10px;
 }
-button.rb-builder-editor-type-settings>span {
+button.rbu-builder-editor-type-settings>span {
     color: #0079c0;
     font-weight: bold;
 }
 
-.rb-builder-editor-type-settings>i {
+.rbu-builder-editor-type-settings>i {
     color: #E8874D
 }
 
-.rb-builder-editor-type-settings-panel .ant-drawer-body {
+.rbu-builder-editor-type-settings-panel .ant-drawer-body {
     padding-top: 10px;
     display: flex;
     flex-direction: column;
 }
-.rb-builder-editor-type-settings-panel .ant-drawer-body>div>div>label:first-child {
+.rbu-builder-editor-type-settings-panel .ant-drawer-body>div>div>label:first-child {
     font-weight: bold;
 }
-.rb-builder-editor-type-settings-panel .ant-checkbox-wrapper {
+.rbu-builder-editor-type-settings-panel .ant-checkbox-wrapper {
     margin: 5px 0;
 }
-input.rb-builder-editor-type-settings-validation-error {
+input.rbu-builder-editor-type-settings-validation-error {
     border-color: #f5222d;
 }
-label.rb-builder-editor-type-settings-validation-error {
+label.rbu-builder-editor-type-settings-validation-error {
     color: #f5222d;
 }
-.rb-builder-editor-type-settings-panel .ant-drawer-header {
+.rbu-builder-editor-type-settings-panel .ant-drawer-header {
     border-bottom: 1px solid #e8e8e8;
 }
-.rb-builder-editor-type-settings.rb-builder-item-title-hbar-icon i,
-i.rb-builder-item-title-hbar-icon {
+.rbu-builder-editor-type-settings.rbu-builder-item-title-hbar-icon i,
+i.rbu-builder-item-title-hbar-icon {
     transform: scaleX(-1) rotateZ(-90deg) translateX(1px);
 }
-.rb-builder-editor-type-settings-actions {
+.rbu-builder-editor-type-settings-actions {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -439,9 +439,9 @@ i.rb-builder-item-title-hbar-icon {
     border-radius: 0 0 4px 4px;
     margin-bottom: 0 !important;
 }
-.rb-builder-editor-type-settings-actions>* {
+.rbu-builder-editor-type-settings-actions>* {
     margin-left: 10px;
 }
-.rb-builder-editor-type-settings-actions>*.ant-btn-primary {
+.rbu-builder-editor-type-settings-actions>*.ant-btn-primary {
     background-color: #0079c0;
 }

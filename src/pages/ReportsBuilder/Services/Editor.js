@@ -66,7 +66,7 @@ export const chartIcons = {
     table: {icon: 'table'},
     linear: {icon: 'line-chart'},
     bar: {icon: 'bar-chart'},
-    hbar: {icon: 'bar-chart', className: 'rb-builder-item-title-hbar-icon'}
+    hbar: {icon: 'bar-chart', className: 'rbu-builder-item-title-hbar-icon'}
 }
 
 export const getCurrentChartIconSafe = (reportType) => {
@@ -174,7 +174,7 @@ export const errorDialog = (props) => {
         title: 'Внимание',
         maskClosable: true,
         okText: 'Ок',
-        className: 'rb-builder-editor-modal',
+        className: 'rbu-builder-editor-modal',
         ...props
     });
 }
@@ -186,7 +186,7 @@ export const confirmDialog = (props) => {
         maskClosable: true,
         okText: 'Ок',
         cancelText: 'Отмена',
-        className: 'rb-builder-editor-modal',
+        className: 'rbu-builder-editor-modal',
         ...props
     });
 }

@@ -292,7 +292,7 @@ class ReportCompositeViewer extends React.Component {
     }
 
     Placeholder = () => {
-        const classes = classNames('report-viewer', {
+        const classes = classNames('rbu-viewer', {
             'no-data-placeholder': this.state.rebuildPended,
             'not-built-placeholder': !this.state.rebuildPended
         });
@@ -389,7 +389,7 @@ class ReportCompositeViewer extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <div className="rl-filler" style={{color: 'black'}}>
+                <div className="rbu-rl-filler" style={{color: 'black'}}>
                     <this.Internal />
                 </div>
             </React.Fragment>

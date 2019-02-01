@@ -14,7 +14,7 @@ import {
 const { TabPane } = Tabs;
 
 const SettingsTooltipRender = ({table, value}) => (
-    <div className="rb-fe-editable-cell-text-tooltip">
+    <div className="rbu-fe-editable-cell-text-tooltip">
         <div><label>Таблица</label><span>{table}</span></div>
         <div><label>Поле</label><span>{value}</span></div>
     </div>

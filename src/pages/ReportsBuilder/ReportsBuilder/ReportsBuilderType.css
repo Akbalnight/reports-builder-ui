@@ -1,4 +1,4 @@
-.rb-builder-type-column {
+.rbu-builder-type-column {
     margin: 10px;
     display: flex;
     flex-direction: column;
@@ -6,7 +6,7 @@
     cursor: pointer;
 }
 
-.rb-builder-type-column > p {
+.rbu-builder-type-column > p {
     display: block;
     width: 234px;
     height: 154px;
@@ -17,16 +17,16 @@
     transition: 300ms border-color;
 }
 
-.rb-builder-type-column > div {
+.rbu-builder-type-column > div {
     color: black;
     font-weight: bold;
 }
 
-.rb-builder-type-column > p:hover {
+.rbu-builder-type-column > p:hover {
     border-color: #F98B61;
 }
 
-.rb-builder-type-column > p > span {
+.rbu-builder-type-column > p > span {
     position: absolute;
     content: '';
     top: 2px; bottom: 2px;
@@ -34,27 +34,27 @@
     background-repeat: no-repeat no-repeat;
 }
 
-.rb-builder-type-column.rb-builder-image-table > p > span {
+.rbu-builder-type-column.rbu-builder-image-table > p > span {
     background-position: 0 0;
 }
-.rb-builder-type-column.rb-builder-image-linear > p > span {
+.rbu-builder-type-column.rbu-builder-image-linear > p > span {
     background-position: -230px 0;
 }
-.rb-builder-type-column.rb-builder-image-bar > p > span {
+.rbu-builder-type-column.rbu-builder-image-bar > p > span {
     background-position: -460px 0;
 }
-.rb-builder-type-column.rb-builder-image-scatter > p > span {
+.rbu-builder-type-column.rbu-builder-image-scatter > p > span {
     background-position: -690px 0;
 }
-.rb-builder-type-column.rb-builder-image-pie > p > span {
+.rbu-builder-type-column.rbu-builder-image-pie > p > span {
     background-position: 0 -150px;
 }
-.rb-builder-type-column.rb-builder-image-hbar > p > span {
+.rbu-builder-type-column.rbu-builder-image-hbar > p > span {
     background-position: -230px -150px;
 }
-.rb-builder-type-column.rb-builder-image-cascade > p > span {
+.rbu-builder-type-column.rbu-builder-image-cascade > p > span {
     background-position: -460px -150px;
 }
-.rb-builder-type-column.rb-builder-image-combo > p > span {
+.rbu-builder-type-column.rbu-builder-image-combo > p > span {
     background-position: -690px -150px;
 }

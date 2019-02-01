@@ -351,17 +351,17 @@ class ReportViewer extends React.Component {
         const rowNumbersStart = this.props.pagination ? startingRow : 1;
         const rowNumbersEnd = this.props.pagination ? (this.getSize() !== 10 ? startingRow + this.getSize() : startingRow + 10) : this.getSize() + 1;
         return (
-            <div className="report-viewer">
+            <div className="rbu-viewer">
                 <Spin spinning={this.state.loading}>
-                    <div className="report-viewer-layout">
+                    <div className="rbu-viewer-layout">
                         {this.props.showRowNumbers && 
-                            <div className="report-viewer-numbers">
+                            <div className="rbu-viewer-numbers">
                                 <ResponsibleContainer>
                                     {(props) => (<NumerationColumn height={props.height-totalHeight} width={38} rowNumbersStart={rowNumbersStart} rowNumbersEnd={rowNumbersEnd} scrollTop={this.state.scrollTop} />)}
                                 </ResponsibleContainer>
                             </div>
                         }
-                        <div className="report-viewer-report">
+                        <div className="rbu-viewer-report">
                             <ResponsibleContainer>
                                 {(props) => (
                                     <ReactDataGrid
@@ -379,7 +379,7 @@ class ReportViewer extends React.Component {
                                 )}
                             </ResponsibleContainer>
                             {isTotalRow && 
-                                <div className="report-viewer-total">
+                                <div className="rbu-viewer-total">
                                     <ResponsibleContainer>
                                         {(props) => (
                                             <ReactDataGrid

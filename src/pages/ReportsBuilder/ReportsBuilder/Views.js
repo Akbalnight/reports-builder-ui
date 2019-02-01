@@ -14,7 +14,7 @@ const SearchBar = (props) => (
 
 const Text = ({className, disabled, onDoubleClick, children, ...props}) => (
     <div
-        className={classNames({className: true, 'rb-st-text': true, 'rb-st-disabled': disabled})}
+        className={classNames({className: true, 'rbu-st-text': true, 'rbu-st-disabled': disabled})}
         onDoubleClick={disabled ? null : onDoubleClick} 
         {...props}
     >{children}</div>
@@ -82,11 +82,11 @@ class TreePanel extends React.Component {
 
     defaultRender = ({node, level, disabled, onMoveItem, onCollapseToggle}) => (
         <div
-            className="rb-st-node"
+            className="rbu-st-node"
             key={this.props.idFunc(node)}
             level={level}
         >
-            <span className={classNames({'rb-st-expanded': !this.isCollapsed(node)})}>
+            <span className={classNames({'rbu-st-expanded': !this.isCollapsed(node)})}>
                 {!node.isLeaf && <Icon type="caret-right" onClick={e => onCollapseToggle(node, e)} />}
             </span>
             <Text
@@ -238,7 +238,7 @@ class TreePanel extends React.Component {
     render() {
         const {data} = this.props;
         return (
-            <div className="rb-st-content">{this.renderTree(data)}</div>
+            <div className="rbu-st-content">{this.renderTree(data)}</div>
         );
     }
 }
@@ -281,7 +281,7 @@ class ReportsBuilderViews extends React.Component {
             onMoveItem
         } = this.props;
 
-        const classes = classNames(['rb-st-root', className])
+        const classes = classNames(['rbu-st-root', className])
         const sortFunc = this.props.sortFunc || ((a, b) => {
             a = titleFunc(a);
             b = titleFunc(b);
@@ -293,7 +293,7 @@ class ReportsBuilderViews extends React.Component {
         return (
             <div className={classes}>
                 <SearchBar
-                    className="rb-st-search-bar"
+                    className="rbu-st-search-bar"
                     onChange={this.onFilterChange} />
                 <TreePanel
                     data={data}

@@ -28,12 +28,12 @@ class EditableCell extends React.Component {
     render() {
         const { value, editable } = this.state;
         const { table } = this.props;
-        const classes = classNames({"rb-fe-editable-cell": true, "rb-fe-editable-cell-grey": !this.props.canMove})
+        const classes = classNames({"rbu-fe-editable-cell": true, "rbu-fe-editable-cell-grey": !this.props.canMove})
         return (
             <div className={classes}>
                 {
                     editable ?
-                        <div className="rb-fe-editable-cell-input-wrapper">
+                        <div className="rbu-fe-editable-cell-input-wrapper">
                             <Input
                                 value={value}
                                 onChange={this.handleChange}
@@ -43,20 +43,20 @@ class EditableCell extends React.Component {
                             />
                             <Icon
                                 type="check"
-                                className="rb-fe-editable-cell-icon-check rb-fe-icon-button"
+                                className="rbu-fe-editable-cell-icon-check rbu-fe-icon-button"
                                 onClick={this.check}
                             />
                         </div>
                         :
-                        <div className="rb-fe-editable-cell-text-wrapper">
-                            <Tooltip title={<div className="rb-fe-editable-cell-text-tooltip">
+                        <div className="rbu-fe-editable-cell-text-wrapper">
+                            <Tooltip title={<div className="rbu-fe-editable-cell-text-tooltip">
                                 <div><label>Таблица</label><span>{table}</span></div>
                                 <div><label>Поле</label><span>{value}</span></div>
                             </div>}>{value || ' '}</Tooltip>
                             <Tooltip title="Редактировать">
                                 <Icon
                                     type="edit"
-                                    className="rb-fe-editable-cell-icon rb-fe-icon-button"
+                                    className="rbu-fe-editable-cell-icon rbu-fe-icon-button"
                                     onClick={this.edit}
                                 />
                             </Tooltip>
@@ -102,7 +102,7 @@ class ReportsBuilderFields extends React.Component {
             render: this.checkBoxRenderer("sort", "Добавить сортировку")
         }, {
             render: (text, record) => {
-                return <Tooltip title="Удалить"><Icon href="#" type="close" onClick={() => this.onDelete(record.key)} className="rb-fe-icon-button" /></Tooltip>
+                return <Tooltip title="Удалить"><Icon href="#" type="close" onClick={() => this.onDelete(record.key)} className="rbu-fe-icon-button" /></Tooltip>
             }
         }];
     }

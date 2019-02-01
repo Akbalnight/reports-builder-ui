@@ -63,10 +63,10 @@ class BodyRow extends React.Component {
                 sourceClientOffset
             );
             if (direction === 'downward') {
-                className += ' rb-fe-drop-over-downward';
+                className += ' rbu-fe-drop-over-downward';
             }
             if (direction === 'upward') {
-                className += ' rb-fe-drop-over-upward';
+                className += ' rbu-fe-drop-over-upward';
             }
         }
 
