@@ -26,3 +26,6 @@ export const chartNamesSelector = reportId => state => state.reports.editors[rep
 export const dataAxisSelector = reportId => state => state.reports.editors[reportId] && state.reports.editors[reportId].dataAxis;
 export const valueAxisSelector = reportId => state => state.reports.editors[reportId] && state.reports.editors[reportId].valueAxis;
 export const isLegendVisibleSelector = reportId => state => state.reports.editors[reportId] && state.reports.editors[reportId].isLegendVisible;
+export const isCalculatedXRangeSelector = reportId => state => state.reports.editors[reportId] && state.reports.editors[reportId].isCalculatedXRange;
+export const isCalculatedYRangeSelector = reportId => state => state.reports.editors[reportId] && state.reports.editors[reportId].isCalculatedYRange;
+export const isShowedDotValuesSelector = reportId => state => state.reports.editors[reportId] && state.reports.editors[reportId].isShowedDotValues;

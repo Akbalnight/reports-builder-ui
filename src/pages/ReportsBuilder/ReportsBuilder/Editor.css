@@ -445,3 +445,7 @@ i.rbu-builder-item-title-hbar-icon {
 .rbu-builder-editor-type-settings-actions>*.ant-btn-primary {
     background-color: #0079c0;
 }
+
+.rbu-builder-editor-chart-st-general .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+    margin-left: 0;
+}

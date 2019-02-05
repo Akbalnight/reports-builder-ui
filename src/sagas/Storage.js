@@ -85,7 +85,10 @@ const generateStateChartData = (cd, fd, keyCounter) => {
                 name: item.name,
                 rows: loadRowsConverter(item.rows)
             })),
-            isLegendVisible: !!cd.general.showLegend
+            isLegendVisible: !!cd.general.showLegend,
+            isCalculatedXRange: !!cd.general.calculatedXRange,
+            isCalculatedYRange: !!cd.general.calculatedYRange,
+            isShowedDotValues: !!cd.general.showDotValues
         };
     }
 
@@ -232,7 +235,10 @@ const generateChartSaveData = (data) => {
             rows: saveRowsConverter(item.rows)
         })),
         general: {
-            showLegend: data.isLegendVisible
+            showLegend: data.isLegendVisible,
+            calculatedXRange: data.isCalculatedXRange,
+            calculatedYRange: data.isCalculatedYRange,
+            showDotValues: data.isShowedDotValues
         }
     }
 }
