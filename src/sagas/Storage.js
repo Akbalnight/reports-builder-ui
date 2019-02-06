@@ -110,7 +110,8 @@ const generateReduxData = (data) => {
         return {
             id: row.column,
             parent: field.parent,
-            key: field.key,
+            key: keyCounter++,
+            fieldKey: field.key,
             type: field.type,
             column,
             table,

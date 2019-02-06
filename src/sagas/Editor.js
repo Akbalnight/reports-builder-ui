@@ -19,6 +19,7 @@ import {
 } from 'Selectors/ReportsBuilder';
 
 import { 
+    getSelectedViews,
     getViewsAllowedParents,
     getNextDefaultColor,
     buildFullColumnName
@@ -67,7 +68,7 @@ const prepareFieldsData = (editorState, subsystems, fieldsData) => {
         isChanged: true,
         fieldsData: newFieldsData,
         viewsAllowedParents: getViewsAllowedParents(subsystems, newFieldsData),
-        viewsSelected: newFieldsData.map(row => row.fieldKey),
+        viewsSelected: getSelectedViews(newFieldsData),
     }
 }
 
@@ -77,7 +78,7 @@ const prepareRemoveField = (data) => {
         tableName: newFieldsData.length ? data.tableName : undefined,
         fieldsData: newFieldsData,
         viewsAllowedParents: getViewsAllowedParents(data.subsystems, newFieldsData),
-        viewsSelected: newFieldsData.map(row => row.fieldKey)
+        viewsSelected: getSelectedViews(newFieldsData)
     };
 
     const toRemove = data.fieldsData.find(row => row.key === data.key);

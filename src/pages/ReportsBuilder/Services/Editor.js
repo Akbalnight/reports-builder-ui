@@ -120,7 +120,7 @@ export const getViewsAllowedParents = (viewsData, rows) => {
 }
 
 export const getSelectedViews = (rows) => {
-    return rows.map(row => row.key);
+    return rows.map(row => row.fieldKey);
 }
 
 export const canFieldMove = (tab) => (row) => {
