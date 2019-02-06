@@ -145,6 +145,49 @@ const numberRange = (min, max) => (p, n) => {
         return new Error(`${n} should be between ${min} and ${max}`);
 }
 
+const getDataDomain = (reportType, data, axis, isCalculated) => {
+    if (isCalculated) {
+        const d = data.map(row => row[axis.dataKey]);
+        const min = Math.min(...d);
+        const max = Math.max(...d);
+
+        let rowValue = 20;
+        if (reportType === 'bar')
+            rowValue = d.filter((v, i, self) => self.indexOf(v) === i).length;
+
+        const margin = Math.abs((max - min) / rowValue);
+
+        return [
+            Math.trunc((min - margin) * 100) / 100,
+            Math.trunc((max + margin) * 100) / 100,
+        ];
+    }
+
+    return [0, 'auto'];
+}
+
+const getValueDomain = (reportType, data, axis, isCalculated) => {
+    if (isCalculated) {
+        const byAxis = axis.map(a => {
+            const vd = data.map(d => d[a.dataKey]);
+            return {
+                min: Math.min(...vd),
+                max: Math.max(...vd)
+            }
+        });
+        const min = Math.min(...byAxis.map(ba => ba.min));
+        const max = Math.max(...byAxis.map(ba => ba.max));
+        let margin = Math.abs((max - min) / 15);
+
+        return [
+            Math.trunc((min - margin) * 100) / 100,
+            Math.trunc((max + margin) * 100) / 100,
+        ];
+    }
+
+    return [0, 'auto'];
+}
+
 export {
     getLengthSafe,
     hasChildren,
@@ -156,5 +199,7 @@ export {
     charTooltipLabelFormatter,
     formatDate,
     debounce,
-    numberRange
+    numberRange,
+    getDataDomain,
+    getValueDomain
 };

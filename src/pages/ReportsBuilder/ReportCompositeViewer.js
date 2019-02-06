@@ -367,6 +367,9 @@ class ReportCompositeViewer extends React.Component {
                     dataAxisName={cd.names.xAxis}
                     valueAxisName={cd.names.yAxis}
                     isLegendVisible={cd.general.showLegend}
+                    isCalculatedXRange={cd.general.calculatedXRange}
+                    isCalculatedYRange={cd.general.calculatedYRange}
+                    isShowedDotValues={cd.general.showDotValues}
                 />
             );
         }

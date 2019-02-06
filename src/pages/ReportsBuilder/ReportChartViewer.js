@@ -28,6 +28,10 @@ class ReportChartViewer extends React.Component {
         data: PropTypes.any,
         dataAxisName: PropTypes.string,
         valueAxisName: PropTypes.string,
+        isLegendVisible: PropTypes.bool,
+        isCalculatedXRange: PropTypes.bool,
+        isCalculatedYRange: PropTypes.bool,
+        isShowedDotValues: PropTypes.bool
     }
 
     numericTypes = ['numeric', 'date'];
@@ -39,7 +43,10 @@ class ReportChartViewer extends React.Component {
             data,
             dataAxisName,
             valueAxisName,
-            isLegendVisible
+            isLegendVisible,
+            isCalculatedXRange,
+            isCalculatedYRange,
+            isShowedDotValues
         } = this.props;
 
         const props = {
@@ -53,7 +60,10 @@ class ReportChartViewer extends React.Component {
             data,
             dataAxisName,
             valueAxisName,
-            isLegendVisible
+            isLegendVisible,
+            isCalculatedXRange,
+            isCalculatedYRange,
+            isShowedDotValues
         };
 
         switch (type) {

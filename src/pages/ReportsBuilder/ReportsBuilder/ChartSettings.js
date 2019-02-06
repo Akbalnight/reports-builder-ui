@@ -251,10 +251,19 @@ const AxisSettings = ({
 
 const GeneralSettings = ({
     isLegendVisible,
-    onLegendVisibilityChange
+    isCalculatedXRange,
+    isCalculatedYRange,
+    isShowedDotValues,
+    onLegendVisibilityChange,
+    onCalculateXRangeChange,
+    onCalculateYRangeChange,
+    onShowDotValuesChange
 }) => (
     <div className="rbu-builder-editor-chart-st-general">
         <Checkbox checked={isLegendVisible} onChange={onLegendVisibilityChange}>Отображение легенды</Checkbox>
+        <Checkbox checked={isShowedDotValues} onChange={onShowDotValuesChange}>Показывать значения</Checkbox>
+        <Checkbox checked={isCalculatedXRange} onChange={onCalculateXRangeChange}>Вычислять границы оси X</Checkbox>
+        <Checkbox checked={isCalculatedYRange} onChange={onCalculateYRangeChange}>Вычислять границы оси Y</Checkbox>
     </div>
 )
 
@@ -277,7 +286,13 @@ class ChartSettings extends Component {
         valueAxis: PropTypes.array.isRequired,
 
         isLegendVisible: PropTypes.bool,
-        onLegendVisibilityChange: PropTypes.func
+        isCalculatedXRange: PropTypes.bool,
+        isCalculatedYRange: PropTypes.bool,
+        isShowedDotValues: PropTypes.bool,
+        onLegendVisibilityChange: PropTypes.func,
+        onCalculateXRangeChange: PropTypes.func,
+        onCalculateYRangeChange: PropTypes.func,
+        onShowDotValuesChange: PropTypes.func
     };
 
     removeHandler = (index) => () => {
@@ -347,7 +362,13 @@ class ChartSettings extends Component {
                 <SettingsItem title="Общие настройки">
                     <GeneralSettings
                         isLegendVisible={this.props.isLegendVisible}
+                        isCalculatedXRange={this.props.isCalculatedXRange}
+                        isCalculatedYRange={this.props.isCalculatedYRange}
+                        isShowedDotValues={this.props.isShowedDotValues}
                         onLegendVisibilityChange={this.props.onLegendVisibilityChange}
+                        onCalculateXRangeChange={this.props.onCalculateXRangeChange}
+                        onCalculateYRangeChange={this.props.onCalculateYRangeChange}
+                        onShowDotValuesChange={this.props.onShowDotValuesChange}
                         />
                 </SettingsItem>
             </div>

@@ -47,6 +47,9 @@ const createNewEditorData = () => ({
         dataTitle: ''
     },
     isLegendVisible: false,
+    isCalculatedXRange: false,
+    isCalculatedYRange: false,
+    isShowedDotValues: false
 });
 
 const reports = (state = initialState, action) => {

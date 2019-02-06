@@ -14,7 +14,10 @@ import {
     chartNamesSelector,
     dataAxisSelector,
     valueAxisSelector,
-    isLegendVisibleSelector
+    isLegendVisibleSelector,
+    isCalculatedXRangeSelector,
+    isCalculatedYRangeSelector,
+    isShowedDotValuesSelector
 } from 'Selectors/ReportsBuilder';
 
 import { applyContext } from './Context';
@@ -39,6 +42,18 @@ class ChartSettingsWrapper extends React.Component {
 
     legendVisibilityHandler = (e) => {
         this.props.setValue('isLegendVisible', e.target.checked);
+    }
+
+    calculateXRangeHandler = (e) => {
+        this.props.setValue('isCalculatedXRange', e.target.checked);
+    }
+
+    calculateYRangeHandler = (e) => {
+        this.props.setValue('isCalculatedYRange', e.target.checked);
+    }
+
+    showDotValuesHandler = (e) => {
+        this.props.setValue('isShowedDotValues', e.target.checked);
     }
 
     render () {
@@ -70,6 +85,9 @@ class ChartSettingsWrapper extends React.Component {
                 onValueAxisChange={changeValueAxis}
 
                 onLegendVisibilityChange={this.legendVisibilityHandler}
+                onCalculateXRangeChange={this.calculateXRangeHandler}
+                onCalculateYRangeChange={this.calculateYRangeHandler}
+                onShowDotValuesChange={this.showDotValuesHandler}
                 {...rest}
             />
         )
@@ -84,6 +102,9 @@ export default applyContext(
             dataAxis: dataAxisSelector(ownProps.reportId)(state),
             valueAxis: valueAxisSelector(ownProps.reportId)(state),
             isLegendVisible: isLegendVisibleSelector(ownProps.reportId)(state),
+            isCalculatedXRange: isCalculatedXRangeSelector(ownProps.reportId)(state),
+            isCalculatedYRange: isCalculatedYRangeSelector(ownProps.reportId)(state),
+            isShowedDotValues: isShowedDotValuesSelector(ownProps.reportId)(state),
         };
     }, (dispatch, ownProps) => {
         return { 

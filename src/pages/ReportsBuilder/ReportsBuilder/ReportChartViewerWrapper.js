@@ -10,7 +10,10 @@ import {
     chartNamesSelector,
     dataAxisSelector,
     valueAxisSelector,
-    isLegendVisibleSelector
+    isLegendVisibleSelector,
+    isCalculatedXRangeSelector,
+    isCalculatedYRangeSelector,
+    isShowedDotValuesSelector
 } from 'Selectors/ReportsBuilder';
 
 import { applyContext } from './Context';
@@ -44,6 +47,9 @@ export default applyContext(
             dataAxis: dataAxisSelector(ownProps.reportId)(state),
             valueAxis: valueAxisSelector(ownProps.reportId)(state),
             isLegendVisible: isLegendVisibleSelector(ownProps.reportId)(state),
+            isCalculatedXRange: isCalculatedXRangeSelector(ownProps.reportId)(state),
+            isCalculatedYRange: isCalculatedYRangeSelector(ownProps.reportId)(state),
+            isShowedDotValues: isShowedDotValuesSelector(ownProps.reportId)(state),
         };
     }, {})(ReportChartViewerWrapper)
 );
