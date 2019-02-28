@@ -1,10 +1,15 @@
 import { 
-    Button, 
     Modal, 
     notification, 
 } from 'antd';
 
 export const generalCompareTypes = [{
+    type: 'contains',
+    title: 'Содержит'
+}, {
+    type: 'not contains',
+    title: 'Не содержит'
+}, {
     type: '=',
     title: 'Равно'
 }, {
