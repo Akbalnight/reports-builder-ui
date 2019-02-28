@@ -18,6 +18,13 @@ import {
     generalAggregationTypes,
     generalCompareTypes
 } from './Services/Editor';
+
+import {
+    prepareFilterForExecute,
+    prepareSortingForExecute,
+    prepareAggregationForExecute
+} from './Services/Viewer';
+
 import { settings } from '../../settings';
 
 class ReportCompositeViewer extends React.Component {
@@ -73,10 +80,10 @@ class ReportCompositeViewer extends React.Component {
                 }
             });
 
-            qd.where = qd.where || [];
-            qd.orderBy = qd.orderBy || [];
+            qd.where = prepareFilterForExecute(viewsData, qd.where || []);
+            qd.orderBy = prepareSortingForExecute(qd.orderBy || []);
             qd.groupBy = qd.groupBy || [];
-            qd.aggregations = qd.aggregations || [];
+            qd.aggregations = prepareAggregationForExecute(qd.aggregations || []);
 
             const filterData =  qd.where.map(row => {
                 const {column, table} = parseFullColumnName(row.column, qd.table);

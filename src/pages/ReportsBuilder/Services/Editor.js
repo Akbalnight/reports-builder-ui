@@ -196,6 +196,11 @@ export const showSavingError = () => notification.error({
     description: 'В настоящее время не удалсь сохранить отчёт, попробуйте позже.'
 });
 
+export const showLoadingPreviewError = () => notification.error({
+    message: 'Не удалось загрузить данные',
+    description: 'Не удалось загрузить данные.'
+});
+
 export const askActionAfterSaving = ({onClose, onCancel}) => Modal.confirm({
     title: 'Отчёт успешно сохранён',
     content: 'Отчёт успешно сохранён.',

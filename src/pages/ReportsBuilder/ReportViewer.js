@@ -180,22 +180,38 @@ class ReportViewer extends React.Component {
                 ...this.props.filtering];
         }
 
-        this.props.dataSource(sorting, filtering, this.state.page, this.state.pageSize, this.props.pagination).then(data => {
-            this.setState({
-                columns: this.state.newColumns,
-                rows: data.data,
-                groupBy: this.props.grouping.map(entry => entry.title),
-                expandedRows: {},
-                loading: false,
-                totalcount: data.total.count,
-                ...this.updateNumerationScroll(this.state.grid),
-                total: data.total.data,
-                isLoaded: true
-            }, () => {
-                this.fetchBarrier = false;
-                ResponsibleContainer.trigger();
-            });
-        })
+        const clearBarrier = () => {
+            this.fetchBarrier = false;
+            ResponsibleContainer.trigger();
+        };
+
+        this.props.dataSource(sorting, filtering, this.state.page, this.state.pageSize, this.props.pagination)
+            .then(data => {
+                this.setState({
+                    columns: this.state.newColumns,
+                    rows: data.data,
+                    groupBy: this.props.grouping.map(entry => entry.title),
+                    expandedRows: {},
+                    loading: false,
+                    totalcount: data.total.count,
+                    ...this.updateNumerationScroll(this.state.grid),
+                    total: data.total.data,
+                    isLoaded: true
+                }, clearBarrier);
+            })
+            .catch(() => {
+                this.setState({
+                    columns: [],
+                    rows: [],
+                    groupBy: [],
+                    expandedRows: {},
+                    loading: false,
+                    totalcount: 0,
+                    //...this.updateNumerationScroll(this.state.grid),
+                    total: [],
+                    isLoaded: false
+                }, clearBarrier);
+            })
     }
 
     onRowExpandToggle = ({ columnGroupName, name, shouldExpand }) => {

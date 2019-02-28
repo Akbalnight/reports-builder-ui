@@ -39,6 +39,10 @@ const normalizeTree = (tree) => {
     return tree;
 }
 
+const parseDate = (value) => {
+    return moment(value, 'DD.MM.YYYY HH:mm').utcOffset(0);
+}
+
 let keyCounter = 0;
 const prepareTree = (tree) => {
     const join = Object.entries(tree).find(([key]) => key === 'join');
@@ -90,7 +94,7 @@ const prepareChartData = (data, valueAxis, dataAxis) => {
     if (dataAxis.dataOriginalType === 'date') {
         result = result.map(row => ({
             ...row,
-            [dataAxis.dataKey]: moment(row[dataAxis.dataKey], 'DD.MM.YYYY HH:mm').utcOffset(0).format('X')
+            [dataAxis.dataKey]: parseDate(row[dataAxis.dataKey]).format('X')
         }));
     }
 
@@ -200,6 +204,7 @@ export {
     formatDate,
     debounce,
     numberRange,
+    parseDate,
     getDataDomain,
     getValueDomain
 };

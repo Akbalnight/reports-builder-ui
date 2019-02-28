@@ -15,10 +15,15 @@ import {
 } from 'Selectors/ReportsBuilder';
 
 import { 
-    generalCompareTypes, 
     buildFullColumnName, 
-    aggregationType 
+    showLoadingPreviewError
 } from '../Services/Editor';
+
+import {
+    prepareFilterForPreview,
+    prepareSortingForPreview,
+    prepareAggregationForPreview
+} from '../Services/Viewer';
 
 import { getPreviewWithTotal } from '../network';
 import { formatDate } from '../utils';
@@ -43,61 +48,49 @@ class ViewerWrapper extends React.Component {
             "where": []
         }
         apiParams.select = this.props.fieldsData.map(f => ({ column: buildFullColumnName(f.table, f.column), filterable: f.filter, sortable: f.sort, title: f.title }));
-        apiParams.orderBy = sorting ? sorting
-            .filter(sort => sort.order)
-            .map(sort => ({
-                column: buildFullColumnName(sort.table, sort.column),
-                order: (sort.order === "По возрастанию" ? "ASC" : "DESC")
-            })) : [];
-        apiParams.where = filtration ? filtration
-            .filter(filter => filter.func)
-            .map(filter => ({
-                column: buildFullColumnName(filter.table, filter.column),
-                operator: filter.func ? generalCompareTypes.find(type => type.title === filter.func).type : "=",
-                value: ((filter.value === null || filter.value === undefined) ? 0 : filter.value)
-            })) : [];
-        apiParams.aggregations = this.props.totalData ? this.props.totalData
-            .filter(row => row.func)
-            .map(row => ({
-                column: buildFullColumnName(row.table, row.column),
-                title: row.title,
-                function: aggregationType(row)
-            })) : [];
-        return getPreviewWithTotal(apiParams).then(
-            result => {
-                const totalData = {};
-                if (result.data.total) {
-                    const headerTitles = result.data.headers.map(item => item.title);
-                    const headerColumns = result.data.headers.map(item => item.column);
-                    result.data.total.forEach(column => {
-                        const columnIndex = headerColumns.indexOf(column.column);
-                        if (columnIndex >= 0)
-                            totalData[headerTitles[columnIndex]] = column.value;
-                    });
-                }
-    
-                const reportData = {
-                    data: (needPagination ? result.data.rows.slice((paginationCurrent - 1) * paginationRows, paginationCurrent * paginationRows) : result.data.rows).map((row) => {
-                        const rowObject = {};
-
-                        result.data.headers.forEach((c, i) => {
-                            if (c.type === 'date')
-                                rowObject[c.title] = formatDate(row[i]);
-                            else
-                                rowObject[c.title] = row[i];
+        apiParams.orderBy = prepareSortingForPreview(sorting);
+        apiParams.where = prepareFilterForPreview(this.props.viewsData, filtration);
+        apiParams.aggregations = prepareAggregationForPreview(this.props.totalData);
+        return getPreviewWithTotal(apiParams)
+            .then(
+                result => {
+                    const totalData = {};
+                    if (result.data.total) {
+                        const headerTitles = result.data.headers.map(item => item.title);
+                        const headerColumns = result.data.headers.map(item => item.column);
+                        result.data.total.forEach(column => {
+                            const columnIndex = headerColumns.indexOf(column.column);
+                            if (columnIndex >= 0)
+                                totalData[headerTitles[columnIndex]] = column.value;
                         });
-    
-                        return rowObject;
-                    }),
-                    total: {
-                        count: result.data.rows.length, 
-                        data: [totalData]
                     }
+        
+                    const reportData = {
+                        data: (needPagination ? result.data.rows.slice((paginationCurrent - 1) * paginationRows, paginationCurrent * paginationRows) : result.data.rows).map((row) => {
+                            const rowObject = {};
+
+                            result.data.headers.forEach((c, i) => {
+                                if (c.type === 'date')
+                                    rowObject[c.title] = formatDate(row[i]);
+                                else
+                                    rowObject[c.title] = row[i];
+                            });
+        
+                            return rowObject;
+                        }),
+                        total: {
+                            count: result.data.rows.length, 
+                            data: [totalData]
+                        }
+                    }
+                    this.props.setChartData(reportData.data)
+                    return reportData;
                 }
-                this.props.setChartData(reportData.data)
-                return reportData;
-            }
-        );
+            )
+            .catch(e => {
+                showLoadingPreviewError();
+                return e;
+            });
     }
     
     render () {
