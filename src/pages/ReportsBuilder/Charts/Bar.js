@@ -71,12 +71,12 @@ const RbcBar = ({
                 allowDataOverflow={true}
                 type={dataAxis.dataType} 
                 name={dataAxis.dataTitle}
-                domain={getDataDomain('bar', data, dataAxis, isCalculatedXRange)}
+                domain={getDataDomain('bar', processedData, dataAxis, isCalculatedXRange)}
                 tickFormatter={value => chartFormatData(value, dataAxis)}
             >
                 <Label position='bottom'>{dataAxisName}</Label>
             </XAxis>
-            <YAxis domain={getValueDomain('bar', data, valueAxis, isCalculatedYRange)} allowDataOverflow={true}>
+            <YAxis domain={getValueDomain('bar', processedData, valueAxis, isCalculatedYRange)} allowDataOverflow={true}>
                 <Label angle={270} position='left' style={{textAnchor: 'middle'}}>{valueAxisName}</Label>
             </YAxis>
             <CartesianGrid strokeDasharray="3 3" />
@@ -101,11 +101,15 @@ const RbcHBar = ({
         const processedData = prepareChartData(data, valueAxis, dataAxis);
         return (
             <BarChart 
-                data={prepareChartData(data, valueAxis, dataAxis)}
+                data={processedData}
                 layout="vertical"
-                margin={{top: 5, right: 30, left: 30, bottom: valueAxisName ? 30 : 5}} 
-                {...props}>
-                <XAxis type="number" domain={getValueDomain('bar', data, valueAxis, isCalculatedXRange)} allowDataOverflow={true}>
+                margin={{
+                    top: 15, 
+                    right: 30, 
+                    left: 30, 
+                    bottom: valueAxisName ? 30 : 5}} 
+                    {...props}>
+                <XAxis type="number" domain={getValueDomain('bar', processedData, valueAxis, isCalculatedXRange)} allowDataOverflow={true}>
                     <Label position='bottom'>{valueAxisName}</Label>
                 </XAxis>
                 <YAxis 
@@ -114,7 +118,7 @@ const RbcHBar = ({
                     allowDataOverflow={true}
                     type={dataAxis.dataType}
                     name={dataAxis.dataTitle}
-                    domain={getDataDomain('bar', data, dataAxis, isCalculatedYRange)}
+                    domain={getDataDomain('bar', processedData, dataAxis, isCalculatedYRange)}
                     tickFormatter={value => chartFormatData(value, dataAxis)}
                 >
                     <Label angle={270} position='left' style={{textAnchor: 'middle'}}>{dataAxisName}</Label>

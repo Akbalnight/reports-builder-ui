@@ -150,16 +150,19 @@ const numberRange = (min, max) => (p, n) => {
 }
 
 const getDataDomain = (reportType, data, axis, isCalculated) => {
-    if (isCalculated) {
+    if (isCalculated && axis.dataType === 'number') {
         const d = data.map(row => row[axis.dataKey]);
         const min = Math.min(...d);
         const max = Math.max(...d);
 
-        let rowValue = 20;
+        const rowValues = [20];
         if (reportType === 'bar')
-            rowValue = d.filter((v, i, self) => self.indexOf(v) === i).length;
+            rowValues.push(d.filter((v, i, self) => self.indexOf(v) === i).length);
 
-        const margin = Math.abs((max - min) / rowValue);
+        const margins = rowValues.map(v => Math.abs((max - min) / v));
+
+        const margin = Math.min(...margins);
+
 
         return [
             Math.trunc((min - margin) * 100) / 100,
