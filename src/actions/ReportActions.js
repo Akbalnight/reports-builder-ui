@@ -181,6 +181,15 @@ export const setIsPublic = (reportId, isPublic) => ({
     }
 });
 
+export const setIsFavorite = (reportId, isFavorite) => ({
+    type: types.APPLY_NEW_STATE,
+    payload: {
+        reportId, 
+        editorState: {
+            isFavorite
+        }
+    }
+});
 
 export const setValue = (reportId, paramName, value) => ({
     type: types.APPLY_NEW_STATE,

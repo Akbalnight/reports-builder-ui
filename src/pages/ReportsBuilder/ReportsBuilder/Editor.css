@@ -415,6 +415,9 @@ button.rbu-builder-editor-type-settings>span {
 .rbu-builder-editor-type-settings-panel .ant-checkbox-wrapper {
     margin: 5px 0;
 }
+.rbu-builder-editor-type-settings-panel .ant-checkbox-wrapper~.ant-checkbox-wrapper {
+    margin-top: -2px;
+}
 input.rbu-builder-editor-type-settings-validation-error {
     border-color: #f5222d;
 }

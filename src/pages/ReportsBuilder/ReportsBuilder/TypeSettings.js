@@ -79,6 +79,9 @@ class TypeSettings extends Component {
         isPublic: PropTypes.bool,
         onIsPublicChange: PropTypes.func,
 
+        isFavorite: PropTypes.bool,
+        onIsFavoriteChange: PropTypes.func,
+
         onTerminate: PropTypes.func,
         onCancel: PropTypes.func,
     }
@@ -111,6 +114,7 @@ class TypeSettings extends Component {
                             value={this.props.reportName} 
                             onChange={this.props.onReportNameChange} />
                         <Checkbox checked={this.props.isPublic} onChange={this.props.onIsPublicChange}>Сделать отчёт публичным</Checkbox>
+                        <Checkbox checked={this.props.isFavorite} onChange={this.props.onIsFavoriteChange}>Добавить в избранное</Checkbox>
                     </Row>
                     <ChartRow 
                         title="Текущее представление отчёта" 

@@ -81,10 +81,9 @@ class ReportsList extends Component {
         this.setState({selectedKey: key})
     }
 
-    onSetFavoriteStateClick = (event, id, state) => {
-        event.domEvent.stopPropagation();
-        let reportToModify = this.props.reportsList.find(report => report.id === id);
-        reportToModify.isFavorite = state;
+    favoriteHandler = (record) => {
+        let reportToModify = this.props.reportsList.find(report => report.id === record.id);
+        reportToModify.isFavorite = !reportToModify.isFavorite;
         this.props.requestReportUpdate(reportToModify);
     }
 
@@ -100,19 +99,34 @@ class ReportsList extends Component {
         this.setState({filter: e.target.value})
     }
 
-    MenuItemView = ({report, menu}) => {
+    StarOutline = () => (
+        <svg style={{width:16,height:16}} viewBox="0 0 24 24">
+            <path fill="rgba(0, 0, 0, 0.65)" d="M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z" />
+        </svg>
+    )
+
+    Star = () => (
+        <svg style={{width:16,height:16}} viewBox="0 0 24 24">
+            <path fill="#E8874D" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" />
+        </svg>
+    )
+
+    MenuItemView = ({report}) => {
         const icon = getCurrentChartIconSafe(report.type);
+        const favoriteProps = {
+            component: report.isFavorite ? this.Star : this.StarOutline
+        };
         return (
             <Fragment>
                 <Icon type={icon.icon} className={icon.className} />
-                <Dropdown
-                    trigger={['contextMenu']}
-                    overlay={menu}
-                >
-                    <div className="rbu-rl-body-menu-item-text">
-                        {report.title}
-                    </div>
-                </Dropdown>
+                <div className="rbu-rl-body-menu-item-text">
+                    {report.title}
+                </div>
+                <Tooltip title="Избранное">
+                    <Button className="rbu-rl-menu-item-button rbu-rl-menu-item-button-custom" size="small" onClick={() => this.favoriteHandler(report)}>
+                        <Icon {...favoriteProps} />
+                    </Button>
+                </Tooltip>
                 <Tooltip title="Редактировать">
                     <Button className="rbu-rl-menu-item-button" size="small" icon="edit" onClick={() => this.editReportHandler(report)} />
                 </Tooltip>
@@ -181,9 +195,6 @@ class ReportsList extends Component {
                                         <Menu.Item key={report.id} className="rbu-rl-body-menu-item">
                                             <this.MenuItemView
                                                 report={report}
-                                                menu={(<Menu>
-                                                    <Menu.Item key="1" onClick={event => this.onSetFavoriteStateClick(event, report.id, false)}>Удалить из избранного</Menu.Item>
-                                                </Menu>)}
                                             />
                                         </Menu.Item>)
                                     }
@@ -193,9 +204,6 @@ class ReportsList extends Component {
                                         <Menu.Item key={report.id} className="rbu-rl-body-menu-item">
                                             <this.MenuItemView
                                                 report={report}
-                                                menu={(<Menu>
-                                                    <Menu.Item key="1" onClick={event => this.onSetFavoriteStateClick(event, report.id, true)}>Добавить в избранное</Menu.Item>
-                                                </Menu>)}
                                             />
                                         </Menu.Item>)
                                     }
@@ -205,9 +213,6 @@ class ReportsList extends Component {
                                         <Menu.Item key={report.id} className="rbu-rl-body-menu-item">
                                             <this.MenuItemView
                                                 report={report}
-                                                menu={(<Menu>
-                                                    <Menu.Item key="1" onClick={event => this.onSetFavoriteStateClick(event, report.id, true)}>Добавить в избранное</Menu.Item>
-                                                </Menu>)}
                                             />
                                         </Menu.Item>)
                                     }   
