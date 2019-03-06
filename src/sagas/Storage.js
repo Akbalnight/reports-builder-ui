@@ -16,6 +16,7 @@ import {
 } from 'Selectors/ReportsBuilder';
 
 import { getReport, storeReport } from 'Pages/ReportsBuilder/network';
+import { clearChangedKey } from 'Pages/ReportsBuilder/Services/IsChanged';
 
 import { 
     getViewsAllowedParents,
@@ -319,6 +320,7 @@ function* saveHandler(action) {
             yield put(applyNewState(reportId, {
                 reportId: data && data.id
             }));
+        yield call(clearChangedKey, reportId);
         yield put(requestReportsList());
         yield call(processStoringResult, textStatus);
     } catch (e) {

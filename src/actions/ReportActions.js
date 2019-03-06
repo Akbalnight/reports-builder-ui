@@ -156,7 +156,8 @@ export const setReportType = (reportId, reportType) => ({
     payload: {
         reportId, 
         editorState: {
-            reportType
+            reportType,
+            isChanged: true
         }
     }
 });
@@ -166,7 +167,8 @@ export const setReportName = (reportId, reportName) => ({
     payload: {
         reportId, 
         editorState: {
-            reportName
+            reportName,
+            isChanged: true
         }
     }
 });
@@ -176,7 +178,8 @@ export const setIsPublic = (reportId, isPublic) => ({
     payload: {
         reportId, 
         editorState: {
-            isPublic
+            isPublic,
+            isChanged: true
         }
     }
 });
@@ -186,7 +189,8 @@ export const setIsFavorite = (reportId, isFavorite) => ({
     payload: {
         reportId, 
         editorState: {
-            isFavorite
+            isFavorite,
+            isChanged: true
         }
     }
 });
@@ -196,7 +200,8 @@ export const setValue = (reportId, paramName, value) => ({
     payload: {
         reportId, 
         editorState: {
-            [paramName]: value
+            [paramName]: value,
+            isChanged: true
         }
     }
 });
