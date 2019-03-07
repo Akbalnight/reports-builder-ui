@@ -1,8 +1,15 @@
+import React from 'react';
+
 let isChanged = [];
 
 export const reportsBuilderCloseHandler = (key) => {
     if (isChangedKey(key))
-        return "Текущий отчёт не сохранён, изменения будут потеряны.\n Вы действительно хотите его закрыть?"
+        return (
+            <div>
+                <p>Текущий отчёт не сохранён, изменения будут потеряны.</p>
+                <div>Вы действительно хотите его закрыть?</div>
+            </div>
+        );
 };
 
 export const setChangedKey = (key) => {
