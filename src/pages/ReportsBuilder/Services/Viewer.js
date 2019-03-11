@@ -1,7 +1,7 @@
 import { 
     findViewsTable, 
     buildFullColumnName,
-    generalCompareTypes,
+    allCompareTypes,
     aggregationType,
     parseFullColumnName
 } from './Editor.js';
@@ -22,7 +22,8 @@ const getFilterValue = (viewsData, filter) => {
 }
 
 const getFilterValueExecute = (viewsData, filter) => {
-    const {table, column} = parseFullColumnName(filter.column);
+    const {table, column} = parseFullColumnName(filter.column, filter.table);
+
     return getFilterValue(viewsData, {
         table,
         column,
@@ -67,11 +68,18 @@ export const prepareFilterForPreview = (viewsData, filters) => {
 
     return filters
         .filter(filter => filter.func && isEmptyAllowed(filter.func, filter.value))
-        .map(filter => ({
-            column: buildFullColumnName(filter.table, filter.column),
-            operator: generalCompareTypes.find(type => type.title === filter.func).type,
-            value: getFilterValue(viewsData, filter)
-        }));
+        .map(filter => {
+            const {table, column} = parseFullColumnName(filter.column, filter.table);
+            return {
+                column: buildFullColumnName(table, column),
+                operator: allCompareTypes.find(type => type.title === filter.func).type,
+                value: getFilterValue(viewsData, {
+                    ...filter,
+                    table,
+                    column
+                })
+            }
+        });
 }
 
 export const prepareSortingForPreview = (sorting) => {

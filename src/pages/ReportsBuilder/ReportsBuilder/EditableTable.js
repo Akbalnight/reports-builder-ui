@@ -72,6 +72,7 @@ const DatePickerEditor = ({
 const SelectEditor = ({
     editorSource,
     ref,
+    row,
     onChange,
     onSave,
     editorPopupStatusChange,
@@ -91,7 +92,7 @@ const SelectEditor = ({
         style={{width: '100%'}}
         {...rest}
     >
-    {editorSource().map(item => <Select.Option key={item} value={item}>{item}</Select.Option>)}
+    {editorSource(row).map(item => <Select.Option key={item} value={item}>{item}</Select.Option>)}
     </Select>);
 }
 
@@ -105,7 +106,7 @@ const editors = {
 const Editor = React.forwardRef(({editor, editorSource, row, ...rest}) => {
     const Component = editors[typeof editor === 'function' ? editor(row) : editor];
     if (Component)
-        return <Component editorSource={editorSource} {...rest} />;
+        return <Component editorSource={editorSource} row={row} {...rest} />;
     return <div>В реализации</div>;
 });
 

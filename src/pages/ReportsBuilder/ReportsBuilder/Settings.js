@@ -5,7 +5,8 @@ import { Icon, Tabs } from 'antd';
 
 import EditableTable from './EditableTable';
 
-import { 
+import {
+    allCompareTypes,
     generalCompareTypes,
     generalOrderTypes,
     generalAggregationTypes
@@ -30,6 +31,8 @@ const filterColumns = [{
     placeholder: 'Выберите функцию',
     editor: 'select',
     editorSource: (row) => {
+        if (row && row.type === 'string')
+            return allCompareTypes.map(item => item.title);
         return generalCompareTypes.map(item => item.title);
     }
 }, {

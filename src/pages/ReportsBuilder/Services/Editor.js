@@ -3,13 +3,15 @@ import {
     notification, 
 } from 'antd';
 
-export const generalCompareTypes = [{
+export const stringCompareTypes = [{
     type: 'contains',
     title: 'Содержит'
 }, {
     type: 'not contains',
     title: 'Не содержит'
-}, {
+}];
+
+export const generalCompareTypes = [{
     type: '=',
     title: 'Равно'
 }, {
@@ -25,6 +27,8 @@ export const generalCompareTypes = [{
     type: '>=',
     title: 'Больше или равно'
 }];
+
+export const allCompareTypes = [...stringCompareTypes, ...generalCompareTypes];
 
 export const generalOrderTypes = [{
     type: 'ASC',

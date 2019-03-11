@@ -5,6 +5,8 @@ import { Button, Icon, Popover, Input, Select } from 'antd';
 
 import { settings } from 'Settings';
 
+import { allCompareTypes, generalCompareTypes } from '../Services/Editor';
+
 const Option = Select.Option;
 
 class CellFormatter extends Component {
@@ -42,6 +44,10 @@ class FilterContent extends Component {
     }
 
     render() {
+        const operators = this.props.type === 'string'
+            ? allCompareTypes
+            : generalCompareTypes;
+
         return (
             <div className="rbu-viewer-filter-popover-content">
                 <div>
@@ -51,11 +57,7 @@ class FilterContent extends Component {
                         dropdownMatchSelectWidth={false}
                         onChange={this.operationHandler}
                     >
-                        <Option value="Равно">Равно</Option>
-                        <Option value="Меньше">Меньше</Option>
-                        <Option value="Больше">Больше</Option>
-                        <Option value="Меньше или равно">Меньше или равно</Option>
-                        <Option value="Больше или равно">Больше или равно</Option>
+                        {operators.map(item => <Option value={item.title}>{item.title}</Option>)}
                     </Select>
                     <Input type="text" value={this.state.value} onChange={this.valueHandler} />
                 </div>
@@ -118,6 +120,7 @@ class FilterPopover extends Component {
                     <FilterContent
                         value={this.value}
                         operation={this.operation}
+                        type={this.props.type}
                         onValueChange={this.valueHandler}
                         onOperationChange={this.operationHandler}
                         onSave={this.save}
@@ -155,12 +158,14 @@ const ReportViewerHeader = ({
                     table: column.table,
                     field: column.id,
                     title: column.title,
+                    type: column.type,
                     value: value,
                     operation: operation
                 })}
                 onClear={() => onFilterChange({ id: column.id })}
                 value={column.filterValue ? column.filterValue.value : ""}
                 operation={column.filterValue && column.filterValue.operation ? column.filterValue.operation : "Равно"}
+                type={column.type}
             />}
             {column.sortable && <div
                 className="rbu-viewer-header-button"

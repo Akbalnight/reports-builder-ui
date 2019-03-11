@@ -61,6 +61,14 @@ class ReportViewer extends React.Component {
                     continue;
                 } else {
                     switch (filterObject.operation) {
+                        case "Содержит":
+                            if (row[fieldIndex].toString().includes(filterObject.value.toString()))
+                                return false;
+                            break;
+                        case "Не содержит":
+                            if (!row[fieldIndex].toString().includes(filterObject.value.toString()))
+                                return false;
+                            break;
                         case "Равно":
                             if (row[fieldIndex].toString() !== filterObject.value.toString())
                                 return false;
@@ -169,15 +177,17 @@ class ReportViewer extends React.Component {
                 }))), 
                 ...this.props.sorting];
 
+            const internalFiltersColumns = this.state.filteringFields.map(filter => filter.column);
             filtering = [
-                ...(this.state.filteringFields.map(entry => ({
-                    id: entry.field,
-                    column: entry.field,
-                    table: entry.table,
-                    func: entry.operation,
-                    value: entry.value
-                }))), 
-                ...this.props.filtering];
+                ...(this.state.filteringFields
+                    .map(entry => ({
+                        id: entry.field,
+                        column: entry.field,
+                        table: entry.table,
+                        func: entry.operation,
+                        value: entry.value
+                    }))), 
+                ...this.props.filtering.filter(filter => !internalFiltersColumns.includes(filter.column))];
         }
 
         const clearBarrier = () => {
@@ -233,7 +243,6 @@ class ReportViewer extends React.Component {
 
     static updateColumnsFromPropsStatic(columns, state) {
         const newColumns = columns.map(column => {
-
             const ret = { ...column };
             const filterObject = state.filteringFields.find(entry => entry.field === column.id);
             const sortingObject = state.sortingFields.find(entry => entry.field === column.id);
@@ -251,6 +260,7 @@ class ReportViewer extends React.Component {
                 column={ret} />
             return ret;
         })
+
         if (!state.self.props.dataSource.data)
             return {
                 newColumns: newColumns,

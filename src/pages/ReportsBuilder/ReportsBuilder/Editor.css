@@ -235,6 +235,7 @@
 
 .rbu-builder-editor-settings .ant-tabs > .ant-tabs-bar { 
     height: 32px;
+    margin-bottom: 0;
 }
 
 .rbu-builder-editor-settings .ant-tabs:not(.ant-tabs-vertical) > .ant-tabs-content {

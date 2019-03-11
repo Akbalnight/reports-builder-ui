@@ -25,7 +25,7 @@ import {
     getSelectedViews,
     generalOrderTypes,
     generalAggregationTypes,
-    generalCompareTypes,
+    allCompareTypes,
     buildFullColumnName,
     aggregationType,
     processStoringResult
@@ -44,7 +44,7 @@ const aggregationTitle = (func) => {
 };
 
 const operatorTitle = (func) => {
-    const operatorRow = generalCompareTypes.find(item => item.type === func);
+    const operatorRow = allCompareTypes.find(item => item.type === func);
     return operatorRow && operatorRow.title;
 }
 
@@ -190,7 +190,7 @@ const orderType = (row) => {
 };
 
 const operatorType = (row) => {
-    const operatorRow = generalCompareTypes.find(item => item.title === row.func);
+    const operatorRow = allCompareTypes.find(item => item.title === row.func);
     return operatorRow && operatorRow.type;
 }
 

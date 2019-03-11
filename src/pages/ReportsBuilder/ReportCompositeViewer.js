@@ -16,13 +16,12 @@ import {
     findViewsTable,
     generalOrderTypes,
     generalAggregationTypes,
-    generalCompareTypes
+    allCompareTypes
 } from './Services/Editor';
 
 import {
     prepareFilterForExecute,
-    prepareSortingForExecute,
-    prepareAggregationForExecute
+    prepareSortingForExecute
 } from './Services/Viewer';
 
 import { settings } from '../../settings';
@@ -44,7 +43,7 @@ class ReportCompositeViewer extends React.Component {
     };
 
     static operatorTitle(func) {
-        const operatorRow = generalCompareTypes.find(item => item.type === func);
+        const operatorRow = allCompareTypes.find(item => item.type === func);
         return operatorRow && operatorRow.title;
     }
 
@@ -80,10 +79,10 @@ class ReportCompositeViewer extends React.Component {
                 }
             });
 
-            qd.where = prepareFilterForExecute(viewsData, qd.where || []);
-            qd.orderBy = prepareSortingForExecute(qd.orderBy || []);
+            qd.where =  qd.where || [];
+            qd.orderBy = qd.orderBy || [];
             qd.groupBy = qd.groupBy || [];
-            qd.aggregations = prepareAggregationForExecute(qd.aggregations || []);
+            qd.aggregations = qd.aggregations || [];
 
             const filterData =  qd.where.map(row => {
                 const {column, table} = parseFullColumnName(row.column, qd.table);
@@ -209,9 +208,13 @@ class ReportCompositeViewer extends React.Component {
         })) : qd.orderBy;
         qd.where = filtration ? filtration.map(filter => ({
             column: this.buildFullColumnName(filter.table, filter.column),
-            operator: filter.func ? generalCompareTypes.find(type => type.title === filter.func).type : "=",
+            operator: filter.func ? allCompareTypes.find(type => type.title === filter.func).type : "=",
             value: ((filter.value === null || filter.value === undefined) ? 0 : filter.value)
         })) : qd.where;
+
+        qd.orderBy = prepareSortingForExecute(qd.orderBy);
+        qd.where = prepareFilterForExecute(this.props.viewsData, qd.where);
+
         return getPreviewWithTotal(qd).then(
             result => {
                 const totalData = {};
