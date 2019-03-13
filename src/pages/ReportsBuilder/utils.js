@@ -155,6 +155,9 @@ const getDataDomain = (reportType, data, axis, isCalculated) => {
         const min = Math.min(...d);
         const max = Math.max(...d);
 
+        if (isNaN(min) || isNaN(max) || max - min === 0)
+            return [0, 'auto'];
+
         const rowValues = [20];
         if (reportType === 'bar')
             rowValues.push(d.filter((v, i, self) => self.indexOf(v) === i).length);
@@ -162,7 +165,6 @@ const getDataDomain = (reportType, data, axis, isCalculated) => {
         const margins = rowValues.map(v => Math.abs((max - min) / v));
 
         const margin = Math.min(...margins);
-
 
         return [
             Math.trunc((min - margin) * 100) / 100,
@@ -184,6 +186,10 @@ const getValueDomain = (reportType, data, axis, isCalculated) => {
         });
         const min = Math.min(...byAxis.map(ba => ba.min));
         const max = Math.max(...byAxis.map(ba => ba.max));
+
+        if (isNaN(min) || isNaN(max) || max - min === 0)
+            return [0, 'auto'];
+
         let margin = Math.abs((max - min) / 15);
 
         return [
