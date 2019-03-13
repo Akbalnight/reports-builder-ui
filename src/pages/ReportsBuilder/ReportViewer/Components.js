@@ -30,7 +30,28 @@ class FilterContent extends Component {
         this.state = {
             value: props.value,
             operation: props.operation,
+            prevValue: props.value,
+            prevOperation: props.operation
         }
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        let newState = {};
+
+        if (nextProps.value !== prevState.prevValue) {
+            newState = {
+                value: nextProps.value,
+                prevValue: nextProps.value
+            }
+        }
+        if (nextProps.operation !== prevState.prevOperation) {
+            newState = {
+                operation: nextProps.operation,
+                prevOperation: nextProps.operation
+            }
+        }
+
+        return newState;
     }
 
     valueHandler = (event) => {
@@ -71,11 +92,6 @@ class FilterContent extends Component {
 }
 
 class FilterPopover extends Component {
-    state = {
-        visible: false,
-        isLoaded: false
-    };
-
     value = '';
     operation = null;
 
@@ -83,6 +99,34 @@ class FilterPopover extends Component {
         super(props);
         this.value = props.value;
         this.operation = props.operation;
+        this.state = {
+            self: this,
+            visible: false,
+            isLoaded: false
+        }
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        let newState = {};
+
+        if (nextProps.value !== prevState.prevValue) {
+            prevState.self.value = nextProps.value;
+
+            newState = {
+                ...newState,
+                prevValue: nextProps.value
+            }
+        }
+        if (nextProps.operation !== prevState.prevOperation) {
+            prevState.self.operation = nextProps.operation;
+
+            newState = {
+                ...newState,
+                prevOperation: nextProps.operation
+            }
+        }
+
+        return newState;
     }
 
     hide = () => {
@@ -114,6 +158,10 @@ class FilterPopover extends Component {
     }
 
     render() {
+        const isSet = this.value && this.operation;
+        const theme = isSet ? {
+            theme: 'twoTone'
+        } : {};
         return (
             <Popover
                 content={
@@ -134,6 +182,7 @@ class FilterPopover extends Component {
                 <div className="rbu-viewer-header-button">
                     <Icon
                         type="filter"
+                        {...theme}
                     />
                 </div>
             </Popover>

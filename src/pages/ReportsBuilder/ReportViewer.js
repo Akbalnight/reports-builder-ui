@@ -121,6 +121,11 @@ class ReportViewer extends React.Component {
     };
 
     filterChange = (filterObject) => {
+        const updateFieldsAndData = () => {
+            this.updateColumnsFromProps();
+            this.props.serverProcessing && this.fetchData()
+        };
+
         if (filterObject.operation) {
             const newfilteringFields = [...this.state.filteringFields];
             const newFilterObject = newfilteringFields.find(filterField => filterObject.id === filterField.field);
@@ -129,11 +134,11 @@ class ReportViewer extends React.Component {
             } else {
                 newfilteringFields.push(filterObject);
             }
-            this.setState({ filteringFields: newfilteringFields }, this.props.serverProcessing ? this.fetchData : null);
+            this.setState({ filteringFields: newfilteringFields }, updateFieldsAndData);
         } else {
             this.setState({
                 filteringFields: this.state.filteringFields.filter(f => f.id !== filterObject.id)
-            }, this.props.serverProcessing ? this.fetchData : null);
+            }, updateFieldsAndData);
         }
     }
 
@@ -252,6 +257,15 @@ class ReportViewer extends React.Component {
             ret.key = column.title;
             ret.sortable = column.sort;
             ret.filterable = column.filter;
+
+            const filteringField = state.filteringFields.find(field => field.table === ret.table && field.column === ret.column);
+            if (filteringField) {
+                ret.filterValue = {
+                    value: filteringField.value,
+                    operation: filteringField.operation
+                }
+            }
+
             ret.formatter = <CellFormatter digitsAfterPoint={state.self.props.digitsAfterPoint} />;
             ret.headerRenderer = <ReportViewerHeader
                 onFilterChange={state.self.filterChange}
