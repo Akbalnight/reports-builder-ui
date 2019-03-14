@@ -15,12 +15,15 @@ class CellFormatter extends Component {
     }
 
     render() {
-        switch (typeof this.props.value) {
-            case "number":
-                return <div title={this.props.value}>{this.props.value.toFixed(this.props.digitsAfterPoint)}</div>;
-            default:
-                return <div title={this.props.value}>{this.props.value}</div>;
-        }
+        const value = this.props.value;
+        const type = typeof value;
+        if (type === "number")
+            return <div title={value}>{value.toFixed(this.props.digitsAfterPoint)}</div>;
+
+        if (type === "undefined" || value === null)
+            return <div title="–">–</div>;
+
+        return <div title={value}>{value}</div>;
     }
 }
 
