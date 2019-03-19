@@ -287,3 +287,19 @@ export const processStoringResult = (textStatus) => {
         reject();
     });
 }
+
+export const findTableAndColumn = (tree, name, tableName) => {
+    const {table, column} = parseFullColumnName(name, tableName);
+    const tableDescription = findViewsTable(tree, table);
+    if (!tableDescription)
+        return undefined;
+
+    const fieldDescription = tableDescription.children.find(f => f.column === column);
+    if (!fieldDescription)
+        return undefined;
+
+    return {
+        table: tableDescription,
+        field: fieldDescription
+    }
+}

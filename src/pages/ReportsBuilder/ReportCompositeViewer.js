@@ -16,7 +16,8 @@ import {
     findViewsTable,
     generalOrderTypes,
     generalAggregationTypes,
-    allCompareTypes
+    allCompareTypes,
+    findTableAndColumn
 } from './Services/Editor';
 
 import {
@@ -271,34 +272,8 @@ class ReportCompositeViewer extends React.Component {
         ];
     }
 
-    findViewsTable = (tree, name) => {
-        for (let node of tree) {
-            if (node.isFirstParent) {
-                if (node.title === name)
-                    return node;
-            } else {
-                const resultNode = this.findViewsTable(node.children, name);
-                if (resultNode) return resultNode;
-            }
-        }
-    }
-
     buildFullColumnName = (table, column) => {
         return `${table}.${column}`;
-    }
-
-    parseFullColumnName = (column, defaultTable) => {
-        const index = column.lastIndexOf('.');
-        if (index === -1)
-            return {
-                column: column,
-                table: defaultTable
-            };
-        
-        return {
-            table: column.substr(0, index),
-            column: column.substr(index + 1)
-        }
     }
 
     Placeholder = () => {
@@ -343,18 +318,20 @@ class ReportCompositeViewer extends React.Component {
         if (this.props.reportData && this.props.reportData.description && this.state.chartData) {
             const cd = this.props.reportData.description;
             const qd = this.props.reportData.queryDescriptor;
-            const td = this.findViewsTable(this.props.viewsData, qd.table);
-            if (!td || !td.children || !cd.dataAxis.key)
+
+            const dataAxisDescription = qd.select.find(f => f.title === cd.dataAxis.key);
+
+            if (!dataAxisDescription)
                 return <this.Placeholder />;
 
-            const cn = qd.select.find(f => f.title === cd.dataAxis.key).column;
-            const {column} = this.parseFullColumnName(cn, qd.table);
-            const field = td.children.find(f => f.column === column);
+            const dataRowDescription = findTableAndColumn(this.props.viewsData, dataAxisDescription.column, qd.table);
+            if (!dataRowDescription)
+                return <this.Placeholder />;
 
             const dataAxisField = qd.select.find(item => item.title === cd.dataAxis.key) || {};
             const dataAxis = {
                 dataKey: cd.dataAxis.key,
-                dataType: field.type,
+                dataType: dataRowDescription.field.type,
                 dataTitle: dataAxisField.title
             };
             
