@@ -49,22 +49,16 @@ class ReportCompositeViewer extends React.Component {
     }
 
     static createFilterValue(value, type) {
-        switch (type) {
-            case 'date':
-                return formatDate(value);
-            default:
-                return value;
-        }
+        return value;
     }
 
     static buildTableReportData(reportData, viewsData) {
         if (viewsData && reportData && reportData.queryDescriptor) {
             const qd = reportData.queryDescriptor;
-            const td = findViewsTable(viewsData, qd.table);
-            if (!td || !td.children)
+            if (!qd || !qd.select)
                 return <this.Placeholder />;
             const fieldsData = qd.select.map(row => {
-                const {column, table} = parseFullColumnName(row.column, qd.table);
+                const {column, table} = parseFullColumnName(row.column);
                 const td = findViewsTable(viewsData, table);
                 const field = td.children.find(f => f.column === column);
 
@@ -86,7 +80,7 @@ class ReportCompositeViewer extends React.Component {
             qd.aggregations = qd.aggregations || [];
 
             const filterData =  qd.where.map(row => {
-                const {column, table} = parseFullColumnName(row.column, qd.table);
+                const {column, table} = parseFullColumnName(row.column);
                 const field = fieldsData.find(f => f.id === column);
 
                 return {
@@ -102,7 +96,7 @@ class ReportCompositeViewer extends React.Component {
 
             const sortData = qd.orderBy.map(row => {
                 return {
-                    ...parseFullColumnName(row.column, qd.table),
+                    ...parseFullColumnName(row.column),
                     id: row.column,
                     title: row.title,
                     order: ReportCompositeViewer.orderTitle(row.order)
@@ -111,7 +105,7 @@ class ReportCompositeViewer extends React.Component {
 
             const groupData = qd.groupBy.map(row => {
                 return {
-                    ...parseFullColumnName(row.column, qd.table),
+                    ...parseFullColumnName(row.column),
                     id: row.column,
                     title: row.title,
                 }
@@ -119,7 +113,7 @@ class ReportCompositeViewer extends React.Component {
 
             const totalData = qd.aggregations.map(row => {
                 return {
-                    ...parseFullColumnName(row.column, qd.table),
+                    ...parseFullColumnName(row.column),
                     id: row.column,
                     title: row.title,
                     func: ReportCompositeViewer.aggregationTitle(row.function)
@@ -149,6 +143,7 @@ class ReportCompositeViewer extends React.Component {
         if (nextProps.reportData !== prevState.prevReportData) {
             if (nextProps.reportData && nextProps.reportData.type !== 'table') {
                 return {
+                    chartData: undefined,
                     prevReportData: nextProps.reportData,
                     ...rebuildHandler()
                 };
@@ -195,7 +190,7 @@ class ReportCompositeViewer extends React.Component {
     }
 
     loadReportPreviewData = (sorting, filtration, paginationCurrent, paginationRows, needPagination) => {
-        if (!this.props.reportData.queryDescriptor.table) {
+        if (!this.props.reportData.queryDescriptor.select || !this.props.reportData.queryDescriptor.select.length) {
             this.setState({
                 chartData: []
             })
@@ -324,7 +319,7 @@ class ReportCompositeViewer extends React.Component {
             if (!dataAxisDescription)
                 return <this.Placeholder />;
 
-            const dataRowDescription = findTableAndColumn(this.props.viewsData, dataAxisDescription.column, qd.table);
+            const dataRowDescription = findTableAndColumn(this.props.viewsData, dataAxisDescription.column);
             if (!dataRowDescription)
                 return <this.Placeholder />;
 

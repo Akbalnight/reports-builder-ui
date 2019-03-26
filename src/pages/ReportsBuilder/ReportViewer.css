@@ -27,6 +27,7 @@
 .rbu-viewer-filter-popover-content>div:last-child>* {
     margin-right: 10px;
 }
+.rbu-builder-item-content .ant-select-selection-selected-value,
 .rbu-viewer-filter-popover-content .ant-select-selection-selected-value {
     white-space: nowrap;
 }

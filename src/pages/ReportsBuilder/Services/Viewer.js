@@ -6,16 +6,13 @@ import {
     parseFullColumnName
 } from './Editor.js';
 
-import { parseDate } from '../utils.js';
-
 const getFilterValue = (viewsData, filter) => {
     const td = findViewsTable(viewsData, filter.table);
     const cd = td.children.find(c => c.column === filter.column);
     if (cd.type === 'numeric') {
         return +filter.value || null;
     } else if (cd.type === 'date') {
-        const date = parseDate(filter.value, 'DD.MM.YYYY');
-        return date.isValid() ? date.format() : null;
+        return filter.value;
     }
         
     return filter.value || null;

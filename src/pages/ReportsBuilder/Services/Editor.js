@@ -91,7 +91,7 @@ export const getCurrentChartIconSafe = (reportType) => {
 export const findViewsTable = (tree, name) => {
     for (let node of tree) {
         if (node.isFirstParent) {
-            if (node.title === name)
+            if (node.name === name)
                 return node;
         } else {
             const resultNode = findViewsTable(node.children, name);
@@ -115,7 +115,7 @@ export const getViewsAllowedParents = (viewsData, rows) => {
             const join = p.parent.join;
             if (join) {
                 join.forEach(item => {
-                    if (item.includes(p.title)) {
+                    if (item.includes(p.name)) {
                         item.forEach(name => {
                             const td = findViewsTable(viewsData, name);
                             push(td.key);
@@ -288,8 +288,8 @@ export const processStoringResult = (textStatus) => {
     });
 }
 
-export const findTableAndColumn = (tree, name, tableName) => {
-    const {table, column} = parseFullColumnName(name, tableName);
+export const findTableAndColumn = (tree, name) => {
+    const {table, column} = parseFullColumnName(name);
     const tableDescription = findViewsTable(tree, table);
     if (!tableDescription)
         return undefined;

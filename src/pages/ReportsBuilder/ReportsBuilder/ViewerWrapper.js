@@ -34,7 +34,7 @@ import Viewer from '../ReportViewer';
 
 class ViewerWrapper extends React.Component {
     loadReportPreviewData = (sorting, filtration, paginationCurrent, paginationRows, needPagination) => {
-        if (!this.props.tableName) {
+        if (!this.props.fieldsData || !this.props.fieldsData.length) {
             this.props.setChartData([]);
             return Promise.resolve({data: [], total: []});
         }
