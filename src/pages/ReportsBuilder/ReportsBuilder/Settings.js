@@ -9,7 +9,8 @@ import {
     allCompareTypes,
     generalCompareTypes,
     generalOrderTypes,
-    generalAggregationTypes
+    generalAggregationTypes,
+    compareFuncHasParam
 } from '../Services/Editor';
 
 const { TabPane } = Tabs;
@@ -38,8 +39,12 @@ const filterColumns = [{
 }, {
     title: 'Значение',
     dataIndex: 'value',
-    placeholder: 'Введите значение',
+    placeholder: (row) => {
+        if (!compareFuncHasParam(row.func)) return '';
+        return 'Введите значение'
+    },
     editor: (row) => {
+        if (!compareFuncHasParam(row.func)) return null;
         return row.type;
     },
 }];

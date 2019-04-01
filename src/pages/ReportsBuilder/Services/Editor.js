@@ -26,6 +26,12 @@ export const generalCompareTypes = [{
 }, {
     type: '>=',
     title: 'Больше или равно'
+}, {
+    type: 'is not null',
+    title: 'Задано'
+}, {
+    type: 'is null',
+    title: 'Не задано'
 }];
 
 export const allCompareTypes = [...stringCompareTypes, ...generalCompareTypes];
@@ -70,6 +76,8 @@ export const defaultColors = [
     '#BED3F3',
     '#D4C4FB'
 ];
+
+export const compareFuncHasParam = (func) => !['Задано', 'Не задано'].includes(func);
 
 export const chartIcons = {
     table: {icon: 'table'},

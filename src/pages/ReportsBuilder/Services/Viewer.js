@@ -29,7 +29,8 @@ const getFilterValueExecute = (viewsData, filter) => {
 }
 
 const allowedEmptyFunctions = [
-    'Равно', '='
+    'Задано', 'is not null',
+    'Не задано', 'is null'
 ];
 const isEmptyAllowed = (func, value) => {
     if (value)
