@@ -1,52 +1,21 @@
-import React from 'react';
+import React from "react";
 import {
-    LineChart,
-    Line,
-    LabelList,
-    XAxis,
-    YAxis,
-    CartesianGrid,
+    Chart,
+    Geom,
+    Axis,
     Tooltip,
     Legend,
     Label
-} from 'recharts';
+} from "bizcharts";
+import DataSet from "@antv/data-set";
 
 import {
-    prepareChartData,
-    chartFormatData,
-    charTooltipLabelFormatter,
-    getDataDomain,
-    getValueDomain
+    prepareChartData
 } from '../utils';
 
 import './ReportsBuilderChart.css';
 
-const renderLabel = (color) => (props) => {
-    const { x, y, value } = props;
-    return (
-        <g>
-            <text x={x} y={y - 8} fill={color} textAnchor="middle" dominantBaseline="bottom">
-                {value}
-            </text>
-        </g>
-    );
-};
-
-const lineRender = (showLabel, {key, dataKey, color, ...props}) => {
-    return (
-        <Line 
-            key={key} 
-            type="monotone" 
-            isAnimationActive={false} 
-            dataKey={dataKey} 
-            stroke={color}
-            {...props}>
-            {showLabel && <LabelList dataKey={dataKey} position="top" content={renderLabel(color)} />}
-        </Line>
-    );
-}
-
-const RbcLinear = ({
+export default ({
     dataAxis,
     valueAxis,
     data,
@@ -57,42 +26,74 @@ const RbcLinear = ({
     isCalculatedYRange,
     isShowedDotValues,
     ...props
-}) => { 
+}) => {
     const preparedData = prepareChartData(data, valueAxis, dataAxis);
-    return (
-        <LineChart 
-            data={preparedData}
-            margin={{ 
-                top: isShowedDotValues ? 15 : 5, 
-                right: 30, 
-                left: 30, 
-                bottom: dataAxisName ? 30 : 5 }} 
-            {...props}
-        >
-            <XAxis 
-                dataKey={dataAxis.dataKey} 
-                allowDataOverflow={true}
-                type={dataAxis.dataType} 
-                name={dataAxis.dataTitle}
-                domain={getDataDomain('linear', preparedData, dataAxis, isCalculatedXRange)}
-                tickFormatter={value => chartFormatData(value, dataAxis)}
-            >
-                <Label position='bottom'>{dataAxisName}</Label>
-            </XAxis>
-            <YAxis domain={getValueDomain('bar', preparedData, valueAxis, isCalculatedYRange)} allowDataOverflow={true}>
-                <Label angle={270} position='left' style={{textAnchor: 'middle'}}>{valueAxisName}</Label>
-            </YAxis>
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip labelFormatter={value=>charTooltipLabelFormatter(value, dataAxis)} />
-            {isLegendVisible && <Legend
-                verticalAlign="top"
-                align="right"
-                layout="vertical"
-                iconType="line"
-                wrapperStyle={{ paddingLeft: '10px' }} />}
-            {valueAxis.map(props => lineRender(isShowedDotValues, props))}}
-        </LineChart>
-    );
-}
 
-export default RbcLinear;
+    const ds = new DataSet();
+    const dv = ds.createView().source(preparedData);
+    dv.transform({
+        type: "fold",
+        fields: valueAxis.map(row => row.dataKey),
+        key: "chart",
+        value: "value",
+        retains: [dataAxis.dataKey]
+    });
+
+    const position = `${dataAxis.dataKey}*value`;
+    const color = ['chart', valueAxis.map(row => row.color)];
+
+    const notAutoX = isCalculatedXRange ? {} : {min: 0};
+    const notAutoY = isCalculatedYRange ? {} : {min: 0};
+
+    const range = isShowedDotValues ? {range: [0, 0.9]} : {};
+
+    const scales = {
+        [dataAxis.dataKey]: {
+            alias: dataAxisName || '  ',
+            tickCount: 5,
+            ...notAutoX
+        },
+        'value': {
+            alias: valueAxisName || '  ',
+            ...notAutoY,
+            ...range
+        }
+    };
+
+    return (
+        <Chart padding='auto' data={dv} scale={scales} {...props}>
+            {isLegendVisible && <Legend position="right-top" />}
+            <Axis name={dataAxis.dataKey} title={{position: 'center'}} />
+            <Axis name="value" title={{position: 'center'}} />
+            <Tooltip
+                crosshairs={{
+                    type: "y"
+                }}
+            />
+            <Geom
+                type="line"
+                position={position}
+                size={2}
+                color={color}
+                shape="smooth"
+            />
+            <Geom
+                type="point"
+                position={position}
+                size={4}
+                color={color}
+                shape="circle"
+                style={{
+                    stroke: "#fff",
+                    lineWidth: 1
+                }}
+            >
+                {isShowedDotValues && <Label content="value" textStyle={(value, point) => {
+                    return {
+                        fill: point.color
+                    }
+                }} />}
+            </Geom>
+        </Chart>
+    );
+};

@@ -9,7 +9,8 @@ import {
     requestRemoveValueAxis,
     requestChangeValueAxis
 } from 'Actions/ReportActions';
-import { 
+import {
+    reportTypeSelector,
     fieldsDataSelector,
     chartNamesSelector,
     dataAxisSelector,
@@ -97,6 +98,7 @@ class ChartSettingsWrapper extends React.Component {
 export default applyContext(
     connect((state, ownProps) => {
         return {
+            type: reportTypeSelector(ownProps.reportId)(state),
             axisData: fieldsDataSelector(ownProps.reportId)(state),
             chartNames: chartNamesSelector(ownProps.reportId)(state),
             dataAxis: dataAxisSelector(ownProps.reportId)(state),

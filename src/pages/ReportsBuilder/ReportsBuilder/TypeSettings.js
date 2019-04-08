@@ -32,6 +32,22 @@ const chartTypes = [{
     type: 'hbar',
     className: 'rbu-builder-image-hbar',
     title: 'Линейчатая диаграмма'
+}, {
+    type: 'scatter',
+    className: 'rbu-builder-image-scatter',
+    title: 'Точечная диаграмма'
+}, {
+    type: 'pie',
+    className: 'rbu-builder-image-pie',
+    title: 'Круговая диаграмма'
+}, {
+    type: 'cascade',
+    className: 'rbu-builder-image-cascade',
+    title: 'Каскадная диаграмма'
+}, {
+    type: 'combo',
+    className: 'rbu-builder-image-combo',
+    title: 'Комбинированная диаграмма'
 }];
 
 const getImages = () => settings.get().reportImages;

@@ -83,7 +83,11 @@ export const chartIcons = {
     table: {icon: 'table'},
     linear: {icon: 'line-chart'},
     bar: {icon: 'bar-chart'},
-    hbar: {icon: 'bar-chart', className: 'rbu-builder-item-title-hbar-icon'}
+    hbar: {icon: 'bar-chart', className: 'rbu-builder-item-title-hbar-icon'},
+    scatter: {icon: 'dot-chart'},
+    pie: {icon: 'pie-chart'},
+    cascade: {icon: 'bar-chart'},
+    combo: {icon: 'area-chart'},
 }
 
 export const getCurrentChartIconSafe = (reportType) => {

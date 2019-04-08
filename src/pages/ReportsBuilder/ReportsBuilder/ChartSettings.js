@@ -201,8 +201,10 @@ class RowsSelector extends React.Component {
 } 
 
 const AxisSettings = ({
+    type,
     axisData,
     dataKey,
+    dataKey2,
     color,
     name,
     rows,
@@ -211,7 +213,9 @@ const AxisSettings = ({
     onColorChange,
     onValueNameChange,
     onRowsChange
-}) => { 
+}) => {
+    const valueTitle1 = type === 'cascade' ? 'Значениме 1:' : 'Значение:';
+
     return (
         <div className="rbu-builder-editor-chart-st-axis-desc">
             <div>
@@ -220,7 +224,7 @@ const AxisSettings = ({
                 </Popconfirm>
             </div>
             <div>
-                <label>Значение:</label>
+                <label>{valueTitle1}</label>
                 <div>
                     <Select
                         value={dataKey}
@@ -233,6 +237,22 @@ const AxisSettings = ({
                     </Select>
                 </div>
             </div>
+            {type === 'cascade' &&
+            <div>
+                <label>Значение 2</label>
+                <div>
+                    <Select
+                        value={dataKey2}
+                        size="small"
+                        style={{width: '100%'}}
+                        onChange={onValueKeyChange}>
+                        {axisData.filter((item) => item.type === 'numeric').map((item) =>
+                            <Option key={item.column} value={item.title}>{item.title}</Option>
+                        )}
+                    </Select>
+                </div>
+            </div>
+            }
             <div>
                 <label>Цвет:</label>
                 <div><Color color={color} onChange={onColorChange} /></div>
@@ -250,6 +270,7 @@ const AxisSettings = ({
 }
 
 const GeneralSettings = ({
+    type,
     isLegendVisible,
     isCalculatedXRange,
     isCalculatedYRange,
@@ -262,8 +283,8 @@ const GeneralSettings = ({
     <div className="rbu-builder-editor-chart-st-general">
         <Checkbox checked={isLegendVisible} onChange={onLegendVisibilityChange}>Отображение легенды</Checkbox>
         <Checkbox checked={isShowedDotValues} onChange={onShowDotValuesChange}>Показывать значения</Checkbox>
-        <Checkbox checked={isCalculatedXRange} onChange={onCalculateXRangeChange}>Вычислять границы оси X</Checkbox>
-        <Checkbox checked={isCalculatedYRange} onChange={onCalculateYRangeChange}>Вычислять границы оси Y</Checkbox>
+        {type !== 'pie' && <Checkbox checked={isCalculatedXRange} onChange={onCalculateXRangeChange}>Вычислять границы оси X</Checkbox> }
+        {type !== 'pie' && <Checkbox checked={isCalculatedYRange} onChange={onCalculateYRangeChange}>Вычислять границы оси Y</Checkbox> }
     </div>
 )
 
@@ -328,27 +349,34 @@ class ChartSettings extends Component {
     }
 
     render() {
+        const showXAxis = this.props.type !== 'pie';
+        const canAddYAxis = this.props.type !== 'pie' || this.props.valueAxis.length < 1;
+        const axisYTitle = this.props.type === 'pie' ? 'Ось' : 'Ось Y';
+
         return (
             <div className="rbu-builder-editor-chart-st-root">
                 <SettingsItem title="Подписи">
                     <TitleItem title="Заголовок:" value={this.props.chartTitle} onChange={this.props.onChartTitleChange} />
-                    <TitleItem title="Ось X:" value={this.props.dataAxisName} onChange={this.props.onDataAxisNameChange} />
+                    {showXAxis && <TitleItem title="Ось X:" value={this.props.dataAxisName} onChange={this.props.onDataAxisNameChange} />}
                     <TitleItem title="Ось Y:" value={this.props.valueAxisName} onChange={this.props.onValueAxisNameChange} />
                 </SettingsItem>
+                {showXAxis &&
                 <SettingsItem title="Ось X">
                     <Select
                         value={this.props.dataAxisKey}
                         size="small"
-                        style={{ width: '100%' }}
+                        style={{width: '100%'}}
                         onChange={this.props.onDataAxisKeyChange}>
                         {this.props.axisData.map((item) =>
                             <Option key={item.column} value={item.title}>{item.title}</Option>
                         )}
                     </Select>
                 </SettingsItem>
-                <SettingsItem title="Ось Y" action="+ Добавить" onAction={this.props.onValueAxisAdd}>
+                }
+                <SettingsItem title={axisYTitle} action="+ Добавить" onAction={this.props.onValueAxisAdd}>
                     {this.props.valueAxis.map((props, index) =>
                         <AxisSettings
+                            type={this.props.type}
                             key={index}
                             axisData={this.props.axisData}
                             onRemove={this.removeHandler(index)}
@@ -361,6 +389,7 @@ class ChartSettings extends Component {
                 </SettingsItem>
                 <SettingsItem title="Общие настройки">
                     <GeneralSettings
+                        type={this.props.type}
                         isLegendVisible={this.props.isLegendVisible}
                         isCalculatedXRange={this.props.isCalculatedXRange}
                         isCalculatedYRange={this.props.isCalculatedYRange}
