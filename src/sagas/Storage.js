@@ -56,36 +56,64 @@ const loadRowsConverter = (rows) => {
     ];
 }
 
+const generateStateChartNames = (cd) => {
+    return {
+        title: cd.names.chart,
+        valueAxis: cd.names.yAxis,
+        dataAxis: cd.names.xAxis
+    }
+};
+
+const generateStateChartDataAxis = (cd, fd) => {
+    if (!cd.dataAxis)
+        return {};
+
+    const dataAxisField = fd.find(item => item.title === cd.dataAxis.key) || {};
+    return  {
+        dataKey: cd.dataAxis.key,
+        dataType: dataAxisField.type,
+        dataTitle: dataAxisField.title
+    }
+};
+
+const generateStateChartValueAxis = (cd, fd, keyCounter) => {
+    if (!cd.valueAxis)
+        return [];
+
+    return cd.valueAxis.map(item => ({
+        key: keyCounter++,
+        chartType: item.type,
+        dataAxisKey: item.dataKey,
+        dataKey: item.key,
+        dataKey2: item.key2,
+        color: item.color,
+        color2: item.color2,
+        name: item.name,
+        rows: loadRowsConverter(item.rows)
+    }));
+};
+
+const generateStateChartSettings = (cd) => {
+    return {
+        isLegendVisible: !!cd.general.showLegend,
+        isCalculatedXRange: !!cd.general.calculatedXRange,
+        isCalculatedYRange: !!cd.general.calculatedYRange,
+        isShowedDotValues: !!cd.general.showDotValues
+    };
+};
+
 const generateStateChartData = (cd, fd, keyCounter) => {
     if (cd && cd.version === 1) {
-        const dataAxisField = fd.find(item => item.title === cd.dataAxis.key) || {};
         return {
-            chartNames: {
-                title: cd.names.chart,
-                valueAxis: cd.names.xAxis,
-                dataAxis: cd.names.yAxis
-            },
-            dataAxis: {
-                dataKey: cd.dataAxis.key,
-                dataType: dataAxisField.type,
-                dataTitle: dataAxisField.title
-            },
-            valueAxis: cd.valueAxis.map(item => ({
-                key: keyCounter++,
-                dataKey: item.key,
-                color: item.color,
-                name: item.name,
-                rows: loadRowsConverter(item.rows)
-            })),
-            isLegendVisible: !!cd.general.showLegend,
-            isCalculatedXRange: !!cd.general.calculatedXRange,
-            isCalculatedYRange: !!cd.general.calculatedYRange,
-            isShowedDotValues: !!cd.general.showDotValues
+            chartNames: generateStateChartNames(cd, fd, keyCounter),
+            dataAxis: generateStateChartDataAxis(cd, fd, keyCounter),
+            valueAxis: generateStateChartValueAxis(cd, fd, keyCounter),
+            ...generateStateChartSettings(cd, fd, keyCounter)
         };
     }
 
     return {};
-}
+};
 
 const generateReduxData = (data) => {
     const rd = data.reportData;
@@ -210,31 +238,94 @@ const saveRowsConverter = (rows) => {
     }
 }
 
-const generateChartSaveData = (data) => {
+const generateChartSaveNames = (type, data) => {
+    const mainData = {
+        chart: data.chartNames.title
+    };
+
+    if (type === 'pie')
+        return mainData;
+
     return {
-        version: 1,
-        names: {
-            chart: data.chartNames.title,
-            xAxis: data.chartNames.dataAxis,
-            yAxis: data.chartNames.valueAxis
-        },
-        dataAxis: {
-            key: data.dataAxis.dataKey
-        },
-        valueAxis: data.valueAxis.map(item => ({
+        ...mainData,
+        xAxis: data.chartNames.dataAxis,
+        yAxis: data.chartNames.valueAxis
+    }
+};
+
+const generateChartSaveDataAxis = (type, data) => (type === 'pie' || type === 'scatter'
+    ? {key: undefined}
+    : {key: data.dataAxis.dataKey});
+
+const generateChartSaveValueAxis = (type, data) => (
+    data.valueAxis.map(item => {
+        const mainData = {
             key: item.dataKey,
-            color: item.color,
             name: item.name,
             rows: saveRowsConverter(item.rows)
-        })),
-        general: {
-            showLegend: data.isLegendVisible,
-            calculatedXRange: data.isCalculatedXRange,
-            calculatedYRange: data.isCalculatedYRange,
-            showDotValues: data.isShowedDotValues
+        };
+
+        const colorData = {
+            color: item.color
+        };
+
+        if (type === 'pie')
+            return mainData;
+
+        if (type === 'scatter')
+            return {
+                ...mainData,
+                ...colorData,
+                dataKey: item.dataAxisKey
+            };
+
+        if (type === 'cascade')
+            return {
+                ...mainData,
+                ...colorData,
+                key2: item.dataKey2,
+                color2: item.color2
+            };
+
+        if (type === 'combo')
+            return {
+                ...mainData,
+                ...colorData,
+                type: item.chartType,
+            };
+
+        return {
+            ...mainData,
+            ...colorData
         }
+    })
+);
+
+const generateChartSaveSettings = (type, data) => {
+    const mainData = {
+        showLegend: data.isLegendVisible,
+        showDotValues: data.isShowedDotValues
+    };
+
+    if (type === 'pie')
+        return mainData;
+
+    return {
+        ...mainData,
+        calculatedYRange: data.isCalculatedYRange,
+        calculatedXRange: data.isCalculatedXRange,
     }
-}
+};
+
+const generateChartSaveData = (type, data) => {
+    return {
+        version: 1,
+        names: generateChartSaveNames(type, data),
+        dataAxis: generateChartSaveDataAxis(type, data),
+        valueAxis: generateChartSaveValueAxis(type, data),
+        general: generateChartSaveSettings(type, data)
+    }
+};
 
 const generateSaveData = (data) => {
     return {
@@ -245,7 +336,7 @@ const generateSaveData = (data) => {
         isPublic: data.isPublic,
         isFavorite: data.isFavorite,
         createdBy: 'username',
-        description: generateChartSaveData(data),
+        description: generateChartSaveData(data.reportType, data),
         queryDescriptor: {
             aggregations: data.totalData.map(row => ({
                 column: buildFullColumnName(row.table, row.column),

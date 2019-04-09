@@ -77,6 +77,17 @@ export const defaultColors = [
     '#D4C4FB'
 ];
 
+export const chartLineTypes = [{
+    type: 'line',
+    title: 'Линия'
+}, {
+    type: 'bar',
+    title: 'Столбец'
+}, {
+    type: 'area',
+    title: 'Заливка'
+}];
+
 export const compareFuncHasParam = (func) => !['Задано', 'Не задано'].includes(func);
 
 export const chartIcons = {
@@ -165,8 +176,8 @@ export const aggregationType = (row) => {
     return aggregationRow && aggregationRow.type;
 };
 
-export const getNextDefaultColor = (valueAxis) => {
-    const sc = valueAxis.map(a => a.color.toLowerCase());
+export const getNextDefaultColor = (valueAxis, ...additionalColors) => {
+    const sc = [...valueAxis.map(a => a.color), ...additionalColors].map(a => a.toLowerCase());
     const colors = defaultColors.filter(c => !sc.includes(c.toLowerCase()));
     if (colors.length)
         return colors[0];

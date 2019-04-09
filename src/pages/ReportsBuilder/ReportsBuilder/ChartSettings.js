@@ -4,6 +4,8 @@ import { PropTypes } from 'prop-types';
 import { Button, Input, Radio, Select, Popconfirm, Checkbox } from 'antd';
 import { GithubPicker } from 'react-color';
 
+import { chartLineTypes } from '../Services/Editor';
+
 import './Editor.css';
 import './ChartEditor.css';
 
@@ -202,19 +204,26 @@ class RowsSelector extends React.Component {
 
 const AxisSettings = ({
     type,
+    chartType,
     axisData,
+    dataAxisKey,
     dataKey,
     dataKey2,
     color,
+    color2,
     name,
     rows,
     onRemove,
+    onChartTypeChange,
     onValueKeyChange,
+    onValueKey2Change,
+    onDataKeyChange,
     onColorChange,
+    onColor2Change,
     onValueNameChange,
     onRowsChange
 }) => {
-    const valueTitle1 = type === 'cascade' ? 'Значениме 1:' : 'Значение:';
+    const valueTitle1 = type === 'cascade' ? 'Значение 1:' : type === 'scatter' ? 'Значение Y:' : 'Значение:';
 
     return (
         <div className="rbu-builder-editor-chart-st-axis-desc">
@@ -223,6 +232,38 @@ const AxisSettings = ({
                     <Button icon="close" size="small" />
                 </Popconfirm>
             </div>
+            {type === 'combo' &&
+            <div>
+                <label>Тип:</label>
+                <div>
+                    <Select
+                        value={chartType}
+                        size="small"
+                        style={{width: '100%'}}
+                        onChange={onChartTypeChange}>
+                        {chartLineTypes.map((item) =>
+                            <Option key={item.type} value={item.type}>{item.title}</Option>
+                        )}
+                    </Select>
+                </div>
+            </div>
+            }
+            {type === 'scatter' &&
+            <div>
+                <label>Значение X:</label>
+                <div>
+                    <Select
+                        value={dataAxisKey}
+                        size="small"
+                        style={{width: '100%'}}
+                        onChange={onDataKeyChange}>
+                        {axisData.filter((item) => item.type === 'numeric').map((item) =>
+                            <Option key={item.column} value={item.title}>{item.title}</Option>
+                        )}
+                    </Select>
+                </div>
+            </div>
+            }
             <div>
                 <label>{valueTitle1}</label>
                 <div>
@@ -239,13 +280,13 @@ const AxisSettings = ({
             </div>
             {type === 'cascade' &&
             <div>
-                <label>Значение 2</label>
+                <label>Значение 2:</label>
                 <div>
                     <Select
                         value={dataKey2}
                         size="small"
                         style={{width: '100%'}}
-                        onChange={onValueKeyChange}>
+                        onChange={onValueKey2Change}>
                         {axisData.filter((item) => item.type === 'numeric').map((item) =>
                             <Option key={item.column} value={item.title}>{item.title}</Option>
                         )}
@@ -253,10 +294,16 @@ const AxisSettings = ({
                 </div>
             </div>
             }
-            <div>
+            {type !== 'pie' && <div>
                 <label>Цвет:</label>
-                <div><Color color={color} onChange={onColorChange} /></div>
+                <div><Color color={color} onChange={onColorChange}/></div>
             </div>
+            }
+            {type === 'cascade' && <div>
+                <label>Цвет 2:</label>
+                <div><Color color={color2} onChange={onColor2Change}/></div>
+            </div>
+            }
             <div>
                 <label>Наименование ряда:</label>
                 <div><Input size="small" style={{ width: '100%' }} value={name} onChange={onValueNameChange} /></div>
@@ -320,10 +367,10 @@ class ChartSettings extends Component {
         this.props.onValueAxisRemove && this.props.onValueAxisRemove(index)
     }
 
-    valueKeyHandler = (index) => (key) => {
+    valueKeyHandler = (keyName) => (index) => (key) => {
         this.props.onValueAxisChange && this.props.onValueAxisChange(index, {
             ...this.props.valueAxis[index],
-            dataKey: key
+            [keyName]: key
         })
     }
 
@@ -331,6 +378,13 @@ class ChartSettings extends Component {
         this.props.onValueAxisChange && this.props.onValueAxisChange(index, {
             ...this.props.valueAxis[index],
             color: color.hex
+        })
+    }
+
+    colorHandler = (keyName) => (index) => (color) => {
+        this.props.onValueAxisChange && this.props.onValueAxisChange(index, {
+            ...this.props.valueAxis[index],
+            [keyName]: color.hex
         })
     }
 
@@ -349,16 +403,16 @@ class ChartSettings extends Component {
     }
 
     render() {
-        const showXAxis = this.props.type !== 'pie';
-        const canAddYAxis = this.props.type !== 'pie' || this.props.valueAxis.length < 1;
-        const axisYTitle = this.props.type === 'pie' ? 'Ось' : 'Ось Y';
+        const showXAxis = this.props.type !== 'pie' && this.props.type !== 'scatter';
+        const addAction = this.props.type !== 'pie' || this.props.valueAxis.length < 1 ? '+ Добавить' : undefined;
+        const axisYTitle = this.props.type === 'pie' || this.props.type === 'scatter' ? 'Ось' : 'Ось Y';
 
         return (
             <div className="rbu-builder-editor-chart-st-root">
                 <SettingsItem title="Подписи">
                     <TitleItem title="Заголовок:" value={this.props.chartTitle} onChange={this.props.onChartTitleChange} />
-                    {showXAxis && <TitleItem title="Ось X:" value={this.props.dataAxisName} onChange={this.props.onDataAxisNameChange} />}
-                    <TitleItem title="Ось Y:" value={this.props.valueAxisName} onChange={this.props.onValueAxisNameChange} />
+                    {this.props.type !== 'pie' && <TitleItem title="Ось X:" value={this.props.dataAxisName} onChange={this.props.onDataAxisNameChange} />}
+                    {this.props.type !== 'pie' && <TitleItem title="Ось Y:" value={this.props.valueAxisName} onChange={this.props.onValueAxisNameChange} />}
                 </SettingsItem>
                 {showXAxis &&
                 <SettingsItem title="Ось X">
@@ -373,15 +427,19 @@ class ChartSettings extends Component {
                     </Select>
                 </SettingsItem>
                 }
-                <SettingsItem title={axisYTitle} action="+ Добавить" onAction={this.props.onValueAxisAdd}>
+                <SettingsItem title={axisYTitle} action={addAction} onAction={this.props.onValueAxisAdd}>
                     {this.props.valueAxis.map((props, index) =>
                         <AxisSettings
                             type={this.props.type}
                             key={index}
                             axisData={this.props.axisData}
                             onRemove={this.removeHandler(index)}
-                            onValueKeyChange={this.valueKeyHandler(index)}
-                            onColorChange={this.colorHandler(index)}
+                            onChartTypeChange={this.valueKeyHandler('chartType')(index)}
+                            onValueKeyChange={this.valueKeyHandler('dataKey')(index)}
+                            onValueKey2Change={this.valueKeyHandler('dataKey2')(index)}
+                            onDataKeyChange={this.valueKeyHandler('dataAxisKey')(index)}
+                            onColorChange={this.colorHandler('color')(index)}
+                            onColor2Change={this.colorHandler('color2')(index)}
                             onValueNameChange={this.valueNameHandler(index)}
                             onRowsChange={this.valueRowsHandler(index)}
                             {...props} 

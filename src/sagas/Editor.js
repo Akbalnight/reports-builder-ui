@@ -15,7 +15,8 @@ import {
     groupDataSelector,
     totalDataSelector,
     dataAxisSelector,
-    valueAxisSelector
+    valueAxisSelector,
+    reportTypeSelector
 } from 'Selectors/ReportsBuilder';
 
 import { 
@@ -458,12 +459,20 @@ function* addValueAxisHandler(action) {
     const { reportId } = action.payload;
     const keyCounter = yield select(keyCounterSelector(reportId));
     const valueAxis = yield select(valueAxisSelector(reportId));
+    const reportType = yield select(reportTypeSelector(reportId));
+
+    const mainColor = getNextDefaultColor(valueAxis);
+    const cascadeSecondColor = reportType === 'cascade'
+        ? {color2: getNextDefaultColor(valueAxis, mainColor)}
+        : {};
+
     const newEditorState = {
         keyCounter: keyCounter + 1,
         valueAxis: [
             ...valueAxis, {
+                ...cascadeSecondColor,
                 key: keyCounter,
-                color: getNextDefaultColor(valueAxis)
+                color: mainColor
             }
         ],
         isChanged: true
