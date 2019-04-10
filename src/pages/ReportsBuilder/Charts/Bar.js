@@ -25,7 +25,6 @@ const RbcBar = ({
     isShowedDotValues,
     ...props
 }) => {
-    console.log('bar');
     const preparedData = prepareChartData(data, valueAxis, dataAxis);
 
     const ds = new DataSet();

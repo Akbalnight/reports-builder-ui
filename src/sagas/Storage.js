@@ -253,7 +253,7 @@ const generateChartSaveNames = (type, data) => {
     }
 };
 
-const generateChartSaveDataAxis = (type, data) => (type === 'pie' || type === 'scatter'
+const generateChartSaveDataAxis = (type, data) => (type === 'scatter'
     ? {key: undefined}
     : {key: data.dataAxis.dataKey});
 

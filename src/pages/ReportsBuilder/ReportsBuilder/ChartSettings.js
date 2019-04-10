@@ -304,10 +304,10 @@ const AxisSettings = ({
                 <div><Color color={color2} onChange={onColor2Change}/></div>
             </div>
             }
-            <div>
+            {false && <div>
                 <label>Наименование ряда:</label>
                 <div><Input size="small" style={{ width: '100%' }} value={name} onChange={onValueNameChange} /></div>
-            </div>
+            </div>}
             <div>
                 <label>Строка:</label>
                 <div><RowsSelector rows={rows} onChange={onRowsChange} /></div>
@@ -403,9 +403,9 @@ class ChartSettings extends Component {
     }
 
     render() {
-        const showXAxis = this.props.type !== 'pie' && this.props.type !== 'scatter';
-        const addAction = this.props.type !== 'pie' || this.props.valueAxis.length < 1 ? '+ Добавить' : undefined;
-        const axisYTitle = this.props.type === 'pie' || this.props.type === 'scatter' ? 'Ось' : 'Ось Y';
+        const showXAxis = this.props.type !== 'scatter';
+        const addAction = this.props.type !== 'scatter' || this.props.valueAxis.length < 1 ? '+ Добавить' : undefined;
+        const axisYTitle = this.props.type === 'scatter' ? 'Ось' : 'Ось Y';
 
         return (
             <div className="rbu-builder-editor-chart-st-root">

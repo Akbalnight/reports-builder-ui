@@ -1,32 +1,162 @@
-import React from 'react';
-import { 
-    ComposedChart,
-    Area, 
-    Bar, 
-    Line,
-    XAxis, 
-    YAxis, 
-    CartesianGrid, 
-    Tooltip, 
-    Legend
-} from 'recharts';
+import React from "react";
+import {
+    Chart,
+    Geom,
+    Axis,
+    Tooltip,
+    Legend,
+    Label
+} from "bizcharts";
+import DataSet from "@antv/data-set";
+
+import {
+    getValueDomain,
+    prepareChartData
+} from '../utils';
 
 import './ReportsBuilderChart.css';
 
-const RbcCombo = ({data, ...props}) => (
-    <ComposedChart 
-        data={data}
-        margin={{top: 5, right: 30, left: 30, bottom: 5}} 
-        {...props}>
-        <XAxis dataKey="name" />
-        <YAxis />
-        <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip />
-        <Legend />
-        <Area type="monotone" dataKey="pv" fill="#8884d8" stroke="#8884d8" />
-        <Bar dataKey="uv" barSize={20} fill="#413ea0" />
-        <Line type="monotone" dataKey="amt" fill="#ff7300" />
-    </ComposedChart>
-);
+const legendMarkers = {
+    'line': 'hyphen',
+    'bar': 'square',
+    'area': 'circle'
+};
 
-export default RbcCombo;
+export default ({
+    dataAxis,
+    valueAxis,
+    data,
+    dataAxisName,
+    valueAxisName,
+    isLegendVisible,
+    isCalculatedXRange,
+    isCalculatedYRange,
+    isShowedDotValues,
+    ...props
+}) => {
+    const preparedData = prepareChartData(data, valueAxis, dataAxis);
+
+    const ds = new DataSet();
+    const dv = ds.createView().source(preparedData);
+    dv.transform({
+        type: "map",
+        callback: row => ({
+            ...row,
+            value: Math.max(...valueAxis.map(axis => row[axis.dataKey]))
+        })
+    });
+
+    const notAutoX = isCalculatedXRange ? {} : {min: 0};
+    const notAutoY = isCalculatedYRange ? {} : {min: 0};
+
+    const valueDomain = getValueDomain('line', preparedData, valueAxis, true);
+    const minMax = {
+        min: valueDomain[0],
+        max: valueDomain[1]
+    };
+
+    const range = isShowedDotValues ? {range: [0, 0.9]} : {};
+
+    let scales = {
+        [dataAxis.dataKey]: {
+            alias: dataAxisName || '  ',
+            tickCount: 5,
+            ...notAutoX
+        },
+        'value': {
+            alias: valueAxisName || '  ',
+            ...range,
+            ...minMax,
+            ...notAutoY
+        }
+    };
+
+    valueAxis.forEach(axis => {
+        scales = {
+            ...scales,
+            [axis.dataKey]: {
+                alias: valueAxisName || '  ',
+                ...range,
+                ...minMax,
+                ...notAutoY
+            }
+        }
+    });
+
+    const legendItems = valueAxis.map(axis => ({
+        value: axis.dataKey,
+        fill: axis.color,
+        marker: legendMarkers[axis.chartType]
+    }));
+
+    return (
+        <Chart padding='auto' data={dv} scale={scales} {...props}>
+            {isLegendVisible && <Legend position="right-top" custom={true} items={legendItems} />}
+            <Axis name={dataAxis.dataKey} title={{position: 'center'}} />
+            {valueAxis.map((axis, index) => (
+                <Axis name={axis.dataKey} title={{position: 'center'}} visible={!index} />
+            ))}
+            <Tooltip
+                crosshairs={{
+                    type: "y"
+                }}
+            />
+            {valueAxis.map((axis, index) => {
+                const position = `${dataAxis.dataKey}*${axis.dataKey}`;
+                const color = [axis.dataKey, [axis.color]];
+                if (axis.chartType === 'area') {
+                    return (
+                        <Geom
+                            key={`la_${index}`}
+                            type="area"
+                            position={position}
+                            color={color}
+                        />
+                    );
+                }
+                if (axis.chartType === 'bar') {
+                    return (
+                        <Geom
+                            key={`li_${index}`}
+                            type="interval"
+                            position={position}
+                            color={color}
+                        />
+                    );
+                }
+                if (axis.chartType === 'line') {
+                    return (
+                        <React.Fragment key={index}>
+                            <Geom
+                                key={`lg_${index}`}
+                                type="line"
+                                position={position}
+                                size={2}
+                                color={color}
+                                shape="smooth"
+                            />
+                            <Geom
+                                key={`ll_${index}`}
+                                type="point"
+                                position={position}
+                                size={4}
+                                color={color}
+                                shape="circle"
+                                style={{
+                                    stroke: "#fff",
+                                    lineWidth: 1
+                                }}
+                            >
+                                {isShowedDotValues && <Label content="value" textStyle={(value, point) => {
+                                    return {
+                                        fill: point.color
+                                    }
+                                }}/>}
+                            </Geom>
+                        </React.Fragment>
+                    );
+                }
+            })}
+        </Chart>
+    );
+};

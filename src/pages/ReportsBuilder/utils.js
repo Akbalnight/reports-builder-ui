@@ -90,10 +90,19 @@ const prepareChartData = (data, valueAxis, dataAxis) => {
                     !Array.isArray(item.rows) || 
                     !item.rows.length ||
                     ((!item.rows[0] || index >= item.rows[0] - 1) && 
-                    (!item.rows[1] || index <= item.rows[1] - 1)))
+                    (!item.rows[1] || index <= item.rows[1] - 1))) {
+
+                    let secondItem = {};
+                    if (item.dataKey2)
+                        secondItem = {
+                            [item.dataKey2]: Math.round(row[item.dataKey2] * 100) / 100
+                        };
+
                     return {
-                        [item.dataKey]: Math.round(row[item.dataKey] * 100) / 100
+                        [item.dataKey]: Math.round(row[item.dataKey] * 100) / 100,
+                        ...secondItem
                     };
+                }
                 
                 return {};
             }).reduce((a, c) => ({...a, ...c}), {})

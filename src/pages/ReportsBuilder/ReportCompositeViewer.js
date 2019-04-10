@@ -313,28 +313,37 @@ class ReportCompositeViewer extends React.Component {
         if (this.props.reportData && this.props.reportData.description && this.state.chartData) {
             const cd = this.props.reportData.description;
             const qd = this.props.reportData.queryDescriptor;
+            const withoutX = this.props.reportData.type === 'scatter';
 
-            const dataAxisDescription = qd.select.find(f => f.title === cd.dataAxis.key);
+            let dataAxis = {};
 
-            if (!dataAxisDescription)
-                return <this.Placeholder />;
+            if (!withoutX) {
+                const dataAxisDescription = qd.select.find(f => f.title === cd.dataAxis.key);
 
-            const dataRowDescription = findTableAndColumn(this.props.viewsData, dataAxisDescription.column);
-            if (!dataRowDescription)
-                return <this.Placeholder />;
+                if (!dataAxisDescription)
+                    return <this.Placeholder />;
 
-            const dataAxisField = qd.select.find(item => item.title === cd.dataAxis.key) || {};
-            const dataAxis = {
-                dataKey: cd.dataAxis.key,
-                dataType: dataRowDescription.field.type,
-                dataTitle: dataAxisField.title
-            };
+                const dataRowDescription = findTableAndColumn(this.props.viewsData, dataAxisDescription.column);
+                if (!dataRowDescription)
+                    return <this.Placeholder />;
+
+                const dataAxisField = qd.select.find(item => item.title === cd.dataAxis.key) || {};
+                dataAxis = {
+                    dataKey: cd.dataAxis.key,
+                    dataType: dataRowDescription.field.type,
+                    dataTitle: dataAxisField.title
+                };
+            }
             
             let keyCounter = 0;
             const valueAxis = cd.valueAxis.map(item => ({
+                chartType: item.type,
                 key: keyCounter++,
+                dataAxisKey: item.dataKey,
                 dataKey: item.key,
+                dataKey2: item.key2,
                 color: item.color,
+                color2: item.color2,
                 name: item.name,
                 rows: this.loadRowsConverter(item.rows)
             }))

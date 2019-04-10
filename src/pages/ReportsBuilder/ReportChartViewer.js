@@ -5,10 +5,10 @@ import { ResponsiveContainer } from 'recharts';
 
 import RbcLinear from './Charts/Linear';
 import { RbcBar, RbcHBar } from './Charts/Bar';
-// import RbcCascade from './Charts/Cascade';
-// import RbcPie from './Charts/Pie';
-// import RbcCombo from './Charts/Combo';
-// import RbcScatter from './Charts/Scatter';
+import RbcCascade from './Charts/Cascade';
+import RbcPie from './Charts/Pie';
+import RbcCombo from './Charts/Combo';
+import RbcScatter from './Charts/Scatter';
 
 class ReportChartViewer extends React.Component {
     static propTypes = {
@@ -73,15 +73,14 @@ class ReportChartViewer extends React.Component {
                 return <RbcBar {...props} />
             case 'hbar':
                 return <RbcHBar {...props} />
-            // TODO: Disabled temporarily
-            /*case 'cascade':
-                return <RbcCascade data={data} />
-            case 'pie':
-                return <RbcPie data={data} />
+            case 'cascade':
+                return <RbcCascade {...props} />
             case 'combo':
-                return <RbcCombo data={data} />
+                return <RbcCombo {...props} />
+            case 'pie':
+                return <RbcPie {...props} />
             case 'scatter':
-                return <RbcScatter data={data} />*/
+                return <RbcScatter {...props} />
             default:
                 return (<div></div>);
         }
