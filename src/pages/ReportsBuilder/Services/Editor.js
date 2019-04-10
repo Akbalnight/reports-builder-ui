@@ -1,8 +1,15 @@
 import { 
-    Button, 
     Modal, 
     notification, 
 } from 'antd';
+
+export const stringCompareTypes = [{
+    type: 'contains',
+    title: 'Содержит'
+}, {
+    type: 'not contains',
+    title: 'Не содержит'
+}];
 
 export const generalCompareTypes = [{
     type: '=',
@@ -19,7 +26,15 @@ export const generalCompareTypes = [{
 }, {
     type: '>=',
     title: 'Больше или равно'
+}, {
+    type: 'is not null',
+    title: 'Задано'
+}, {
+    type: 'is null',
+    title: 'Не задано'
 }];
+
+export const allCompareTypes = [...stringCompareTypes, ...generalCompareTypes];
 
 export const generalOrderTypes = [{
     type: 'ASC',
@@ -62,6 +77,8 @@ export const defaultColors = [
     '#D4C4FB'
 ];
 
+export const compareFuncHasParam = (func) => !['Задано', 'Не задано'].includes(func);
+
 export const chartIcons = {
     table: {icon: 'table'},
     linear: {icon: 'line-chart'},
@@ -82,7 +99,7 @@ export const getCurrentChartIconSafe = (reportType) => {
 export const findViewsTable = (tree, name) => {
     for (let node of tree) {
         if (node.isFirstParent) {
-            if (node.title === name)
+            if (node.name === name)
                 return node;
         } else {
             const resultNode = findViewsTable(node.children, name);
@@ -106,7 +123,7 @@ export const getViewsAllowedParents = (viewsData, rows) => {
             const join = p.parent.join;
             if (join) {
                 join.forEach(item => {
-                    if (item.includes(p.title)) {
+                    if (item.includes(p.name)) {
                         item.forEach(name => {
                             const td = findViewsTable(viewsData, name);
                             push(td.key);
@@ -196,6 +213,11 @@ export const showSavingError = () => notification.error({
     description: 'В настоящее время не удалсь сохранить отчёт, попробуйте позже.'
 });
 
+export const showLoadingPreviewError = () => notification.error({
+    message: 'Не удалось загрузить данные',
+    description: 'Не удалось загрузить данные.'
+});
+
 export const askActionAfterSaving = ({onClose, onCancel}) => Modal.confirm({
     title: 'Отчёт успешно сохранён',
     content: 'Отчёт успешно сохранён.',
@@ -272,4 +294,20 @@ export const processStoringResult = (textStatus) => {
         }
         reject();
     });
+}
+
+export const findTableAndColumn = (tree, name) => {
+    const {table, column} = parseFullColumnName(name);
+    const tableDescription = findViewsTable(tree, table);
+    if (!tableDescription)
+        return undefined;
+
+    const fieldDescription = tableDescription.children.find(f => f.column === column);
+    if (!fieldDescription)
+        return undefined;
+
+    return {
+        table: tableDescription,
+        field: fieldDescription
+    }
 }

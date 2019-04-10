@@ -39,35 +39,46 @@ const normalizeTree = (tree) => {
     return tree;
 }
 
+const parseDate = (value) => {
+    return moment(value, 'DD.MM.YYYY HH:mm').utcOffset(0);
+}
+
 let keyCounter = 0;
-const prepareTree = (tree) => {
-    const join = Object.entries(tree).find(([key]) => key === 'join');
-    if (join) {
-        delete tree.join;
-    }
-    const result = Object.entries(tree).map(([key, value]) => {
-        if (Array.isArray(value)) {
-            return {
+const prepareTree = (node) => {
+    if (Array.isArray(node))
+    {
+        const children = node.map(item => {
+            let newNode = {
                 key: keyCounter++,
-                title: key,
-                children: value.map(item => ({
+                title: item.displayName
+            };
+
+            if (item.children) {
+                newNode = {
+                    ...newNode,
+                    ...prepareTree(item.children),
+                    name: item.name,
+                    join: item.join
+                };
+            } else {
+                newNode = {
+                    ...newNode,
                     ...item,
+                    column: item.name,
                     canWhere: true,
                     canOrder: true,
                     canGroup: item.type !== 'numeric',
-                    canAggregate: item.type === 'numeric',
-                    key: keyCounter++
-                }))
+                    canAggregate: item.type === 'numeric'
+                };
             }
-        } else {
-            return {
-                ...prepareTree(value),
-                key: keyCounter++,
-                title: key
-            }
-        }
-    });
-    return {children: result, join: join && join[1]};
+
+            return newNode;
+        });
+
+        return {children};
+    }
+
+    return {};
 }
 
 const prepareChartData = (data, valueAxis, dataAxis) => {
@@ -80,7 +91,9 @@ const prepareChartData = (data, valueAxis, dataAxis) => {
                     !item.rows.length ||
                     ((!item.rows[0] || index >= item.rows[0] - 1) && 
                     (!item.rows[1] || index <= item.rows[1] - 1)))
-                    return {[item.dataKey]: row[item.dataKey]};
+                    return {
+                        [item.dataKey]: Math.round(row[item.dataKey] * 100) / 100
+                    };
                 
                 return {};
             }).reduce((a, c) => ({...a, ...c}), {})
@@ -90,7 +103,7 @@ const prepareChartData = (data, valueAxis, dataAxis) => {
     if (dataAxis.dataOriginalType === 'date') {
         result = result.map(row => ({
             ...row,
-            [dataAxis.dataKey]: moment(row[dataAxis.dataKey], 'DD.MM.YYYY HH:mm').utcOffset(0).format('X')
+            [dataAxis.dataKey]: parseDate(row[dataAxis.dataKey]).format('X')
         }));
     }
 
@@ -146,16 +159,24 @@ const numberRange = (min, max) => (p, n) => {
 }
 
 const getDataDomain = (reportType, data, axis, isCalculated) => {
-    if (isCalculated) {
+    if (isCalculated && axis.dataType === 'number') {
         const d = data.map(row => row[axis.dataKey]);
         const min = Math.min(...d);
         const max = Math.max(...d);
 
-        let rowValue = 20;
-        if (reportType === 'bar')
-            rowValue = d.filter((v, i, self) => self.indexOf(v) === i).length;
+        if (isNaN(min) || isNaN(max))
+            return [0, 'auto'];
 
-        const margin = Math.abs((max - min) / rowValue);
+            if (max - min === 0)
+            return ['auto', 'auto'];
+
+        const rowValues = [20];
+        if (reportType === 'bar')
+            rowValues.push(d.filter((v, i, self) => self.indexOf(v) === i).length);
+
+        const margins = rowValues.map(v => Math.abs((max - min) / v));
+
+        const margin = Math.min(...margins);
 
         return [
             Math.trunc((min - margin) * 100) / 100,
@@ -177,6 +198,13 @@ const getValueDomain = (reportType, data, axis, isCalculated) => {
         });
         const min = Math.min(...byAxis.map(ba => ba.min));
         const max = Math.max(...byAxis.map(ba => ba.max));
+
+        if (isNaN(min) || isNaN(max))
+            return [0, 'auto'];
+
+        if (max - min === 0)
+            return ['auto', 'auto'];
+
         let margin = Math.abs((max - min) / 15);
 
         return [
@@ -200,6 +228,7 @@ export {
     formatDate,
     debounce,
     numberRange,
+    parseDate,
     getDataDomain,
     getValueDomain
 };

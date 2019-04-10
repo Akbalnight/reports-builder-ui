@@ -28,7 +28,7 @@ class ChartSettingsWrapper extends React.Component {
     constructor(props) {
         super(props);
 
-        if (!props.reportId)
+        if (!props.reportId && (!props.valueAxis || props.valueAxis.length === 0 ))
             props.addValueAxis();
     }
 

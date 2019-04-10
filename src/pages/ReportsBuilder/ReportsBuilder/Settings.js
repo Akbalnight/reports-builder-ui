@@ -5,10 +5,12 @@ import { Icon, Tabs } from 'antd';
 
 import EditableTable from './EditableTable';
 
-import { 
+import {
+    allCompareTypes,
     generalCompareTypes,
     generalOrderTypes,
-    generalAggregationTypes
+    generalAggregationTypes,
+    compareFuncHasParam
 } from '../Services/Editor';
 
 const { TabPane } = Tabs;
@@ -30,13 +32,19 @@ const filterColumns = [{
     placeholder: 'Выберите функцию',
     editor: 'select',
     editorSource: (row) => {
+        if (row && row.type === 'string')
+            return allCompareTypes.map(item => item.title);
         return generalCompareTypes.map(item => item.title);
     }
 }, {
     title: 'Значение',
     dataIndex: 'value',
-    placeholder: 'Введите значение',
+    placeholder: (row) => {
+        if (!compareFuncHasParam(row.func)) return '';
+        return 'Введите значение'
+    },
     editor: (row) => {
+        if (!compareFuncHasParam(row.func)) return null;
         return row.type;
     },
 }];

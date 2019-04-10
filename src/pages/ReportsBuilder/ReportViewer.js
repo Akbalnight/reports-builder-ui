@@ -61,6 +61,14 @@ class ReportViewer extends React.Component {
                     continue;
                 } else {
                     switch (filterObject.operation) {
+                        case "Содержит":
+                            if (row[fieldIndex].toString().includes(filterObject.value.toString()))
+                                return false;
+                            break;
+                        case "Не содержит":
+                            if (!row[fieldIndex].toString().includes(filterObject.value.toString()))
+                                return false;
+                            break;
                         case "Равно":
                             if (row[fieldIndex].toString() !== filterObject.value.toString())
                                 return false;
@@ -113,6 +121,11 @@ class ReportViewer extends React.Component {
     };
 
     filterChange = (filterObject) => {
+        const updateFieldsAndData = () => {
+            this.updateColumnsFromProps();
+            this.props.serverProcessing && this.fetchData()
+        };
+
         if (filterObject.operation) {
             const newfilteringFields = [...this.state.filteringFields];
             const newFilterObject = newfilteringFields.find(filterField => filterObject.id === filterField.field);
@@ -121,11 +134,11 @@ class ReportViewer extends React.Component {
             } else {
                 newfilteringFields.push(filterObject);
             }
-            this.setState({ filteringFields: newfilteringFields }, this.props.serverProcessing ? this.fetchData : null);
+            this.setState({ filteringFields: newfilteringFields }, updateFieldsAndData);
         } else {
             this.setState({
                 filteringFields: this.state.filteringFields.filter(f => f.id !== filterObject.id)
-            }, this.props.serverProcessing ? this.fetchData : null);
+            }, updateFieldsAndData);
         }
     }
 
@@ -169,33 +182,51 @@ class ReportViewer extends React.Component {
                 }))), 
                 ...this.props.sorting];
 
+            const internalFiltersColumns = this.state.filteringFields.map(filter => filter.column);
             filtering = [
-                ...(this.state.filteringFields.map(entry => ({
-                    id: entry.field,
-                    column: entry.field,
-                    table: entry.table,
-                    func: entry.operation,
-                    value: entry.value
-                }))), 
-                ...this.props.filtering];
+                ...(this.state.filteringFields
+                    .map(entry => ({
+                        id: entry.field,
+                        column: entry.field,
+                        table: entry.table,
+                        func: entry.operation,
+                        value: entry.value
+                    }))), 
+                ...this.props.filtering.filter(filter => !internalFiltersColumns.includes(filter.column))];
         }
 
-        this.props.dataSource(sorting, filtering, this.state.page, this.state.pageSize, this.props.pagination).then(data => {
-            this.setState({
-                columns: this.state.newColumns,
-                rows: data.data,
-                groupBy: this.props.grouping.map(entry => entry.title),
-                expandedRows: {},
-                loading: false,
-                totalcount: data.total.count,
-                ...this.updateNumerationScroll(this.state.grid),
-                total: data.total.data,
-                isLoaded: true
-            }, () => {
-                this.fetchBarrier = false;
-                ResponsibleContainer.trigger();
-            });
-        })
+        const clearBarrier = () => {
+            this.fetchBarrier = false;
+            ResponsibleContainer.trigger();
+        };
+
+        this.props.dataSource(sorting, filtering, this.state.page, this.state.pageSize, this.props.pagination)
+            .then(data => {
+                this.setState({
+                    columns: this.state.newColumns,
+                    rows: data.data,
+                    groupBy: this.props.grouping.map(entry => entry.title),
+                    expandedRows: {},
+                    loading: false,
+                    totalcount: data.total.count,
+                    ...this.updateNumerationScroll(this.state.grid),
+                    total: data.total.data,
+                    isLoaded: true
+                }, clearBarrier);
+            })
+            .catch(() => {
+                this.setState({
+                    columns: [],
+                    rows: [],
+                    groupBy: [],
+                    expandedRows: {},
+                    loading: false,
+                    totalcount: 0,
+                    //...this.updateNumerationScroll(this.state.grid),
+                    total: [],
+                    isLoaded: false
+                }, clearBarrier);
+            })
     }
 
     onRowExpandToggle = ({ columnGroupName, name, shouldExpand }) => {
@@ -217,7 +248,6 @@ class ReportViewer extends React.Component {
 
     static updateColumnsFromPropsStatic(columns, state) {
         const newColumns = columns.map(column => {
-
             const ret = { ...column };
             const filterObject = state.filteringFields.find(entry => entry.field === column.id);
             const sortingObject = state.sortingFields.find(entry => entry.field === column.id);
@@ -227,6 +257,15 @@ class ReportViewer extends React.Component {
             ret.key = column.title;
             ret.sortable = column.sort;
             ret.filterable = column.filter;
+
+            const filteringField = state.filteringFields.find(field => field.table === ret.table && field.column === ret.column);
+            if (filteringField) {
+                ret.filterValue = {
+                    value: filteringField.value,
+                    operation: filteringField.operation
+                }
+            }
+
             ret.formatter = <CellFormatter digitsAfterPoint={state.self.props.digitsAfterPoint} />;
             ret.headerRenderer = <ReportViewerHeader
                 onFilterChange={state.self.filterChange}
@@ -235,6 +274,7 @@ class ReportViewer extends React.Component {
                 column={ret} />
             return ret;
         })
+
         if (!state.self.props.dataSource.data)
             return {
                 newColumns: newColumns,

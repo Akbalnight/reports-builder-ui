@@ -1,7 +1,5 @@
 import { fork, call, select, put, takeEvery } from 'redux-saga/effects';
 
-import moment from 'moment';
-
 import * as types from 'Constants/ReportTypes'
 
 import { 
@@ -16,6 +14,7 @@ import {
 } from 'Selectors/ReportsBuilder';
 
 import { getReport, storeReport } from 'Pages/ReportsBuilder/network';
+import { clearChangedKey } from 'Pages/ReportsBuilder/Services/IsChanged';
 
 import { 
     getViewsAllowedParents,
@@ -24,13 +23,11 @@ import {
     getSelectedViews,
     generalOrderTypes,
     generalAggregationTypes,
-    generalCompareTypes,
+    allCompareTypes,
     buildFullColumnName,
     aggregationType,
     processStoringResult
 } from 'Pages/ReportsBuilder/Services/Editor';
-
-import { formatDate } from 'Pages/ReportsBuilder/utils';
 
 const orderTitle = (type) => {
     const orderRow = generalOrderTypes.find(item => item.type === type);
@@ -43,17 +40,12 @@ const aggregationTitle = (func) => {
 };
 
 const operatorTitle = (func) => {
-    const operatorRow = generalCompareTypes.find(item => item.type === func);
+    const operatorRow = allCompareTypes.find(item => item.type === func);
     return operatorRow && operatorRow.title;
 }
 
 const createFilterValue = (value, type) => {
-    switch (type) {
-        case 'date':
-            return formatDate(value);
-        default:
-            return value;
-    }
+    return value;
 }
 
 const loadRowsConverter = (rows) => {
@@ -103,7 +95,7 @@ const generateReduxData = (data) => {
     let keyCounter = data.keyCounter;
 
     const fieldsData = qd.select.map(row => {
-        const {column, table} = parseFullColumnName(row.column, qd.table);
+        const {column, table} = parseFullColumnName(row.column);
         const td = findViewsTable(data.viewsData, table).children;
         const field = td.find(f => f.column === column);
 
@@ -130,15 +122,15 @@ const generateReduxData = (data) => {
         isReportInitialized: true,
         reportId: rd.id,
         reportName: rd.title,
-        tableName: qd.table,
         reportType: rd.type,
         isChartView: rd.type !== 'table',
         isPublic: rd.isPublic,
+        isFavorite: rd.isFavorite,
         fieldsData,
         viewsSelected: getSelectedViews(fieldsData),
         viewsAllowedParents: getViewsAllowedParents(data.viewsData, fieldsData),
         filterData: qd.where ? qd.where.map(row => {
-            const {column, table} = parseFullColumnName(row.column, qd.table)
+            const {column, table} = parseFullColumnName(row.column)
             const field = fieldsData.find(f => f.id === row.column);
 
             return {
@@ -154,7 +146,7 @@ const generateReduxData = (data) => {
         }) : [],
         sortData: qd.orderBy ? qd.orderBy.map(row => {
             return {
-                ...parseFullColumnName(row.column, qd.table),
+                ...parseFullColumnName(row.column),
                 id: row.column,
                 key: keyCounter++,
                 title: row.title,
@@ -163,7 +155,7 @@ const generateReduxData = (data) => {
         }) : [],
         groupData: qd.groupBy ? qd.groupBy.map(row => {
             return {
-                ...parseFullColumnName(row.column, qd.table),
+                ...parseFullColumnName(row.column),
                 id: row.column,
                 key: keyCounter++,
                 title: row.title,
@@ -171,7 +163,7 @@ const generateReduxData = (data) => {
         }) : [],
         totalData: qd.aggregations ? qd.aggregations.map(row => {
             return {
-                ...parseFullColumnName(row.column, qd.table),
+                ...parseFullColumnName(row.column),
                 id: row.column,
                 key: keyCounter++,
                 title: row.title,
@@ -188,7 +180,7 @@ const orderType = (row) => {
 };
 
 const operatorType = (row) => {
-    const operatorRow = generalCompareTypes.find(item => item.title === row.func);
+    const operatorRow = allCompareTypes.find(item => item.title === row.func);
     return operatorRow && operatorRow.type;
 }
 
@@ -198,7 +190,7 @@ const filterValue = (row) => {
     switch (row.type) {
         case 'date':
             if (!row.value) return null;
-            return moment(row.value, 'DD.MM.YYYY').format();
+            return row.value;
         case 'numeric':
             return +row.value;
         default:
@@ -251,32 +243,32 @@ const generateSaveData = (data) => {
         title: data.reportName,
         type: data.reportType,
         isPublic: data.isPublic,
+        isFavorite: data.isFavorite,
         createdBy: 'username',
         description: generateChartSaveData(data),
         queryDescriptor: {
             aggregations: data.totalData.map(row => ({
-                column: buildFullColumnName(row.table, row.column, data.tableName),
+                column: buildFullColumnName(row.table, row.column),
                 title: row.title,
                 function: aggregationType(row)
             })),
             groupBy: data.groupData.map(row => ({
-                column: buildFullColumnName(row.table, row.column, data.tableName),
+                column: buildFullColumnName(row.table, row.column),
                 title: row.title
             })),
             orderBy: data.sortData.map(row => ({
-                column: buildFullColumnName(row.table, row.column, data.tableName),
+                column: buildFullColumnName(row.table, row.column),
                 title: row.title,
                 order: orderType(row)
             })),
             select: data.fieldsData.map(row => ({
-                column: buildFullColumnName(row.table, row.column, data.tableName),
+                column: buildFullColumnName(row.table, row.column),
                 title: row.title,
                 sortable: !!row.sort,
                 filterable: !!row.filter
             })),
-            table: data.tableName,
             where: data.filterData.map(row => ({
-                column: buildFullColumnName(row.table, row.column, data.tableName),
+                column: buildFullColumnName(row.table, row.column),
                 title: row.title,
                 operator: operatorType(row),
                 value: filterValue(row)
@@ -317,6 +309,7 @@ function* saveHandler(action) {
             yield put(applyNewState(reportId, {
                 reportId: data && data.id
             }));
+        yield call(clearChangedKey, reportId);
         yield put(requestReportsList());
         yield call(processStoringResult, textStatus);
     } catch (e) {

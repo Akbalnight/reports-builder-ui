@@ -1,4 +1,5 @@
 import * as types from 'Constants/ReportTypes';
+import { setChangedKey, clearChangedKey } from 'Pages/ReportsBuilder/Services/IsChanged';
 
 const initialState = {
     subsystems: null,
@@ -52,6 +53,13 @@ const createNewEditorData = () => ({
     isShowedDotValues: false
 });
 
+const setIsChangedKeyHandler = (key, isChanged) => {
+    if (isChanged)
+        setChangedKey(key);
+    else
+        clearChangedKey(key);
+}
+
 const reports = (state = initialState, action) => {
     switch (action.type) {
         case types.SET_SUBSYSTEMS:
@@ -65,6 +73,7 @@ const reports = (state = initialState, action) => {
                 isSubsystemsLoading: !!action.payload
             }
         case types.INITIALIZE_EDITOR:
+            setIsChangedKeyHandler(action.payload.reportId, false);
             return {
                 ...state,
                 editors: {
@@ -76,6 +85,7 @@ const reports = (state = initialState, action) => {
                 }
             };
         case types.LOAD:
+            setIsChangedKeyHandler(action.payload.reportId, action.payload.reportData.isChanged);
             return {
                 ...state,
                 editors: {
@@ -87,6 +97,7 @@ const reports = (state = initialState, action) => {
                 }
             };
         case types.CLEAR_EDITOR:
+            setIsChangedKeyHandler(action.payload.reportId, false);
             return {
                 ...state,
                 editors: Object
@@ -100,6 +111,8 @@ const reports = (state = initialState, action) => {
 
             if (!newEditorState)
                 return state;
+
+            setIsChangedKeyHandler(action.payload.reportId, newEditorState.isChanged);
 
             return {
                 ...state,
@@ -117,6 +130,8 @@ const reports = (state = initialState, action) => {
 
             if (!newChartNames)
                 return state;
+
+            setIsChangedKeyHandler(action.payload.reportId, true);
 
             return {
                 ...state,

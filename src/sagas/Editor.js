@@ -37,17 +37,17 @@ const prepareFieldsData = (editorState, subsystems, fieldsData) => {
     let tableName;
     if (fieldsData.children) {
         toAdd = fieldsData.children.filter(child => !editorState.viewsSelected.includes(child.key));
-        tableName = fieldsData.title;
+        tableName = fieldsData.name;
     } else {
         toAdd = [fieldsData];
-        tableName = fieldsData.parent.title;
+        tableName = fieldsData.parent.name;
     }
 
     const newFieldsData = [
         ...editorState.fieldsData,
         ...toAdd.map(child => ({
-            id: buildFullColumnName(child.parent.title, child.column),
-            table: child.parent.title,
+            id: buildFullColumnName(child.parent.name, child.column),
+            table: child.parent.name,
             parent: child.parent,
             key: keyCounter++,
             fieldKey: child.key,

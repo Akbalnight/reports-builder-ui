@@ -72,6 +72,7 @@ const DatePickerEditor = ({
 const SelectEditor = ({
     editorSource,
     ref,
+    row,
     onChange,
     onSave,
     editorPopupStatusChange,
@@ -91,7 +92,7 @@ const SelectEditor = ({
         style={{width: '100%'}}
         {...rest}
     >
-    {editorSource().map(item => <Select.Option key={item} value={item}>{item}</Select.Option>)}
+    {editorSource(row).map(item => <Select.Option key={item} value={item}>{item}</Select.Option>)}
     </Select>);
 }
 
@@ -99,14 +100,15 @@ const editors = {
     'string': TextEditor,
     'numeric': TextEditor,
     'date': DatePickerEditor,
-    'select': SelectEditor
+    'select': SelectEditor,
+    [null]: null
 }
 
 const Editor = React.forwardRef(({editor, editorSource, row, ...rest}) => {
     const Component = editors[typeof editor === 'function' ? editor(row) : editor];
     if (Component)
-        return <Component editorSource={editorSource} {...rest} />;
-    return <div>В реализации</div>;
+        return <Component editorSource={editorSource} row={row} {...rest} />;
+    return <div></div>;
 });
 
 class EditableCell extends React.Component {
@@ -180,12 +182,14 @@ class EditableCell extends React.Component {
             dataIndex,
             title,
             tooltipContentRender,
-            placeholder,
             record,
             index,
             handleSave,
+            placeholder: originalPlaceholder,
             ...restProps
         } = this.props;
+
+        const placeholder = typeof originalPlaceholder === 'function' ? originalPlaceholder(record) : originalPlaceholder;
 
         const isEmpty = placeholder && (Array.isArray(restProps.children) && (typeof restProps.children[2] === 'undefined' || restProps.children[2] === ''));
         const cellClasses = classNames('rbu-be-editable-cell', {'rbu-be-editable-cell-placeholder': isEmpty});

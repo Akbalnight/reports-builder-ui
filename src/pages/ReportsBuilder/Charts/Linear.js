@@ -74,12 +74,12 @@ const RbcLinear = ({
                 allowDataOverflow={true}
                 type={dataAxis.dataType} 
                 name={dataAxis.dataTitle}
-                domain={getDataDomain('linear', data, dataAxis, isCalculatedXRange)}
+                domain={getDataDomain('linear', preparedData, dataAxis, isCalculatedXRange)}
                 tickFormatter={value => chartFormatData(value, dataAxis)}
             >
                 <Label position='bottom'>{dataAxisName}</Label>
             </XAxis>
-            <YAxis domain={getValueDomain('bar', data, valueAxis, isCalculatedYRange)} allowDataOverflow={true}>
+            <YAxis domain={getValueDomain('bar', preparedData, valueAxis, isCalculatedYRange)} allowDataOverflow={true}>
                 <Label angle={270} position='left' style={{textAnchor: 'middle'}}>{valueAxisName}</Label>
             </YAxis>
             <CartesianGrid strokeDasharray="3 3" />

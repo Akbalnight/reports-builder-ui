@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 
-import { Button, Icon, Popover, Input, Pagination, Spin, Select } from 'antd';
+import { Button, Icon, Popover, Input, Select } from 'antd';
+
+import { settings } from 'Settings';
+
+import { allCompareTypes, generalCompareTypes } from '../Services/Editor';
 
 const Option = Select.Option;
 
@@ -11,12 +15,15 @@ class CellFormatter extends Component {
     }
 
     render() {
-        switch (typeof this.props.value) {
-            case "number":
-                return <div title={this.props.value}>{this.props.value.toFixed(this.props.digitsAfterPoint)}</div>;
-            default:
-                return <div title={this.props.value}>{this.props.value}</div>;
-        }
+        const value = this.props.value;
+        const type = typeof value;
+        if (type === "number")
+            return <div title={value}>{value.toFixed(this.props.digitsAfterPoint)}</div>;
+
+        if (type === "undefined" || value === null)
+            return <div title="–">–</div>;
+
+        return <div title={value}>{value}</div>;
     }
 }
 
@@ -26,7 +33,28 @@ class FilterContent extends Component {
         this.state = {
             value: props.value,
             operation: props.operation,
+            prevValue: props.value,
+            prevOperation: props.operation
         }
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        let newState = {};
+
+        if (nextProps.value !== prevState.prevValue) {
+            newState = {
+                value: nextProps.value,
+                prevValue: nextProps.value
+            }
+        }
+        if (nextProps.operation !== prevState.prevOperation) {
+            newState = {
+                operation: nextProps.operation,
+                prevOperation: nextProps.operation
+            }
+        }
+
+        return newState;
     }
 
     valueHandler = (event) => {
@@ -40,6 +68,10 @@ class FilterContent extends Component {
     }
 
     render() {
+        const operators = this.props.type === 'string'
+            ? allCompareTypes
+            : generalCompareTypes;
+
         return (
             <div className="rbu-viewer-filter-popover-content">
                 <div>
@@ -49,11 +81,7 @@ class FilterContent extends Component {
                         dropdownMatchSelectWidth={false}
                         onChange={this.operationHandler}
                     >
-                        <Option value="Равно">Равно</Option>
-                        <Option value="Меньше">Меньше</Option>
-                        <Option value="Больше">Больше</Option>
-                        <Option value="Меньше или равно">Меньше или равно</Option>
-                        <Option value="Больше или равно">Больше или равно</Option>
+                        {operators.map(item => <Option value={item.title}>{item.title}</Option>)}
                     </Select>
                     <Input type="text" value={this.state.value} onChange={this.valueHandler} />
                 </div>
@@ -67,11 +95,6 @@ class FilterContent extends Component {
 }
 
 class FilterPopover extends Component {
-    state = {
-        visible: false,
-        isLoaded: false
-    };
-
     value = '';
     operation = null;
 
@@ -79,6 +102,34 @@ class FilterPopover extends Component {
         super(props);
         this.value = props.value;
         this.operation = props.operation;
+        this.state = {
+            self: this,
+            visible: false,
+            isLoaded: false
+        }
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        let newState = {};
+
+        if (nextProps.value !== prevState.prevValue) {
+            prevState.self.value = nextProps.value;
+
+            newState = {
+                ...newState,
+                prevValue: nextProps.value
+            }
+        }
+        if (nextProps.operation !== prevState.prevOperation) {
+            prevState.self.operation = nextProps.operation;
+
+            newState = {
+                ...newState,
+                prevOperation: nextProps.operation
+            }
+        }
+
+        return newState;
     }
 
     hide = () => {
@@ -110,12 +161,17 @@ class FilterPopover extends Component {
     }
 
     render() {
+        const isSet = this.value && this.operation;
+        const theme = isSet ? {
+            theme: 'twoTone'
+        } : {};
         return (
             <Popover
                 content={
                     <FilterContent
                         value={this.value}
                         operation={this.operation}
+                        type={this.props.type}
                         onValueChange={this.valueHandler}
                         onOperationChange={this.operationHandler}
                         onSave={this.save}
@@ -129,6 +185,7 @@ class FilterPopover extends Component {
                 <div className="rbu-viewer-header-button">
                     <Icon
                         type="filter"
+                        {...theme}
                     />
                 </div>
             </Popover>
@@ -153,12 +210,14 @@ const ReportViewerHeader = ({
                     table: column.table,
                     field: column.id,
                     title: column.title,
+                    type: column.type,
                     value: value,
                     operation: operation
                 })}
                 onClear={() => onFilterChange({ id: column.id })}
                 value={column.filterValue ? column.filterValue.value : ""}
                 operation={column.filterValue && column.filterValue.operation ? column.filterValue.operation : "Равно"}
+                type={column.type}
             />}
             {column.sortable && <div
                 className="rbu-viewer-header-button"
@@ -209,8 +268,16 @@ const Placeholder = ({fetched}) => {
         'no-data-placeholder': fetched,
         'not-built-placeholder': !fetched
     });
+
+    const imagePath = fetched ? settings.get().noDataImage : settings.get().notBuiltImage;
+
     return (
-        <div className={classes} style={{ display: 'flex', flexGrow: 1, flexDirection: 'column', overflow: 'hidden' }}>
+        <div className={classes} style={{ 
+            display: 'flex', 
+            flexGrow: 1, 
+            flexDirection: 'column',
+            overflow: 'hidden',
+            backgroundImage: `url("${imagePath}")` }}>
             {!fetched && <span>Задайте необходимые параметры и нажмите кнопку "Построить отчёт"</span>}
             {fetched && <span>Отчёт не содержит данных</span>}
         </div>

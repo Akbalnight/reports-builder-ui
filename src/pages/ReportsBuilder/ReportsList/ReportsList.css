@@ -126,6 +126,10 @@
     margin-right: 0;
 }
 
+.rbu-rl-menu-item-button-custom .anticon {
+    margin-top: 3px;
+}
+
 .rbu-rl-body-content {
     flex: auto;
     background-color: white;
