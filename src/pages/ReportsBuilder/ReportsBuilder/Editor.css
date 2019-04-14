@@ -71,6 +71,9 @@
     overflow: hidden;
     display: flex;
 }
+.rbu-builder-item-content>div:first-child>.ant-spin-nested-loading{
+    height: auto;
+}
 
 .rbu-builder-editor-views,
 .rbu-builder-editor-fields,

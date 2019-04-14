@@ -25,14 +25,16 @@ class ReportsBuilder extends React.Component {
     constructor(props) {
         super(props);
 
-        if (props.description && props.description.id) {
+        if (props.reportId) {
+            props.requestLoad(props.reportId);
+        } else if (props.description && props.description.id) {
             props.requestLoad(props.description.id);
         } else {
             props.initializeEditor(0);
         }
     }
 
-    getReportIdSafe = () => (this.props.description && this.props.description.id) || 0;
+    getReportIdSafe = () => this.props.reportId || (this.props.description && this.props.description.id) || 0;
 
     componentWillUnmount() {
         this.props.clearEditor(this.getReportIdSafe());
@@ -51,7 +53,7 @@ class ReportsBuilder extends React.Component {
 }
 
 export default connect((state, ownProps) => ({
-    isInitialized: isReportInitializedSelector((ownProps.description && ownProps.description.id) || 0)(state)
+    isInitialized: isReportInitializedSelector(ownProps.reportId || (ownProps.description && ownProps.description.id) || 0)(state)
 }), { 
     initializeEditor,
     requestLoad,

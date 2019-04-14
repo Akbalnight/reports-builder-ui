@@ -2,6 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import classNames from 'classnames';
 import connect from 'react-redux/es/connect/connect';
+import {Spin} from "antd";
 
 import { subsystemsSelector } from 'Selectors/ReportsBuilder';
 
@@ -179,6 +180,7 @@ class ReportCompositeViewer extends React.Component {
             prevRebuildPending: props.rebuildPending,
             rebuildPended: false,
             self: this,
+            loading: false,
 
             // Кэш табличного просмоторщика
             fieldsData: null,
@@ -196,6 +198,10 @@ class ReportCompositeViewer extends React.Component {
             })
             return Promise.resolve({data: [], total: {}});
         }
+
+        this.setState({
+            loading: true
+        });
 
         const qd = {...this.props.reportData.queryDescriptor};
         qd.orderBy = sorting ? sorting.map(sort => ({
@@ -243,6 +249,7 @@ class ReportCompositeViewer extends React.Component {
                     }
                 }
                 this.setState({
+                    loading: false,
                     chartData: reportData.data
                 })
                 return reportData;
@@ -280,16 +287,18 @@ class ReportCompositeViewer extends React.Component {
         const imagePath = this.state.rebuildPended ? settings.get().noDataImage : settings.get().notBuiltImage;
 
         return (
-            <div className={classes} style={{
-                display: 'flex', 
-                flexGrow: 1,
-                flexDirection: 'column', 
-                overflow: 'hidden',
-                backgroundImage: `url("${imagePath}")`
-                }}>
-                {!this.state.rebuildPended && <span>Задайте необходимые параметры и нажмите кнопку "Построить отчёт"</span>}
-                {this.state.rebuildPended && <span>Отчёт не содержит данных</span>}
-            </div>
+            <Spin spinning={this.state.loading}>
+                <div className={classes} style={{
+                    display: 'flex',
+                    flexGrow: 1,
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                    backgroundImage: `url("${imagePath}")`
+                    }}>
+                    {!this.state.rebuildPended && <span>Задайте необходимые параметры и нажмите кнопку "Построить отчёт"</span>}
+                    {this.state.rebuildPended && <span>Отчёт не содержит данных</span>}
+                </div>
+            </Spin>
         );
     }
 
