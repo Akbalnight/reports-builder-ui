@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 
-import { Button, Icon, Popover, Input, Select } from 'antd';
+import { Button, Icon, Popover, Input, Select, Spin } from 'antd';
 
 import { settings } from 'Settings';
 
@@ -263,7 +263,7 @@ const NumerationColumn = ({
     )
 }
 
-const Placeholder = ({fetched}) => {
+const Placeholder = ({fetched, loading}) => {
     const classes = classNames('rbu-viewer', {
         'no-data-placeholder': fetched,
         'not-built-placeholder': !fetched
@@ -272,15 +272,17 @@ const Placeholder = ({fetched}) => {
     const imagePath = fetched ? settings.get().noDataImage : settings.get().notBuiltImage;
 
     return (
-        <div className={classes} style={{ 
-            display: 'flex', 
-            flexGrow: 1, 
-            flexDirection: 'column',
-            overflow: 'hidden',
-            backgroundImage: `url("${imagePath}")` }}>
-            {!fetched && <span>Задайте необходимые параметры и нажмите кнопку "Построить отчёт"</span>}
-            {fetched && <span>Отчёт не содержит данных</span>}
-        </div>
+        <Spin spinning={loading}>
+            <div className={classes} style={{
+                display: 'flex',
+                flexGrow: 1,
+                flexDirection: 'column',
+                overflow: 'hidden',
+                backgroundImage: `url("${imagePath}")` }}>
+                {!fetched && <span>Задайте необходимые параметры и нажмите кнопку "Построить отчёт"</span>}
+                {fetched && <span>Отчёт не содержит данных</span>}
+            </div>
+        </Spin>
     );
 }
 

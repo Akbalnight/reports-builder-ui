@@ -31,7 +31,7 @@ class ReportViewer extends React.Component {
             sortingFields: [], 
             filteringFields: [], 
             expandedRows: {}, 
-            loading: false, 
+            loading: typeof props.dataSource === 'function',
             page: 1, 
             pageSize: 10, 
             self: this, 
@@ -179,7 +179,7 @@ class ReportViewer extends React.Component {
                     column: entry.field,
                     table: entry.table,
                     order: entry.ascOrder ? "По возрастанию" : "По убыванию"
-                }))), 
+                }))),
                 ...this.props.sorting];
 
             const internalFiltersColumns = this.state.filteringFields.map(filter => filter.column);
@@ -191,7 +191,7 @@ class ReportViewer extends React.Component {
                         table: entry.table,
                         func: entry.operation,
                         value: entry.value
-                    }))), 
+                    }))),
                 ...this.props.filtering.filter(filter => !internalFiltersColumns.includes(filter.column))];
         }
 
@@ -375,7 +375,7 @@ class ReportViewer extends React.Component {
 
     render() {
         if (this.state.columns.length === 0 || !this.state.isLoaded) {
-            return <Placeholder fetched={this.state.fetched} />;
+            return <Placeholder fetched={this.state.fetched} isLoading={this.state.loading} />;
         }
 
         let totalRow = {};

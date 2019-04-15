@@ -5,7 +5,7 @@ import { setSubsystemsLoading, setSubsystems } from 'Actions/ReportActions';
 import { getSubsystems } from 'Pages/ReportsBuilder/network';
 import { normalizeTree, prepareTree } from 'Pages/ReportsBuilder/utils';
 
-function* fetchSubsystems(action) {
+export function* fetchSubsystems(action) {
     yield put(setSubsystemsLoading(true));
     try {
         const {data} = yield call(getSubsystems);
