@@ -16,6 +16,8 @@ import {
 import { getReport, storeReport } from 'Pages/ReportsBuilder/network';
 import { clearChangedKey } from 'Pages/ReportsBuilder/Services/IsChanged';
 
+import { fetchSubsystems } from './Subsystems';
+
 import { 
     getViewsAllowedParents,
     parseFullColumnName,
@@ -372,6 +374,9 @@ function* loadHandler(action) {
     const { reportId } = action.payload;
 
     try {
+        const viewData = yield select(subsystemsSelector);
+        if (!viewData)
+            yield call(fetchSubsystems);
         const { data } = yield call(getReport, reportId);
         const reportData = generateReduxData({
             reportData: data,
