@@ -1,5 +1,7 @@
 import * as types from 'Constants/ReportTypes';
 import { setChangedKey, clearChangedKey } from 'Pages/ReportsBuilder/Services/IsChanged';
+import { chartsWithOneAxis } from 'Pages/ReportsBuilder/Services/Editor';
+
 
 const initialState = {
     subsystems: null,
@@ -121,6 +123,27 @@ const reports = (state = initialState, action) => {
                     [action.payload.reportId]: {
                         ...state.editors[action.payload.reportId],
                         ...newEditorState
+                    }
+                }
+            }
+        }
+        case types.SET_REPORT_TYPE: {
+            const { reportId, reportType } = action.payload;
+
+            let valueAxis = state.editors[reportId].valueAxis;
+            if (chartsWithOneAxis.includes(reportType)) {
+                valueAxis = Array.isArray(valueAxis) && valueAxis.length > 1 ? valueAxis.splice(0, 1) : valueAxis;
+            }
+
+            return {
+                ...state,
+                editors: {
+                    ...state.editors,
+                    [reportId]: {
+                        ...state.editors[action.payload.reportId],
+                        valueAxis,
+                        isChanged: true,
+                        reportType
                     }
                 }
             }

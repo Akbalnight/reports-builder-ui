@@ -68,7 +68,7 @@ const RbcScatter = ({
                     value: `${round2(data)} - ${round2(value)}`
                 })]}
             >
-                {isShowedDotValues && <Label content="value" textStyle={(value, point) => {
+                {isShowedDotValues && <Label content={valueAxis[0].dataKey} textStyle={(value, point) => {
                     return {
                         fill: point.color
                     }

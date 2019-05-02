@@ -24,7 +24,7 @@ const RbcPie = ({
     isShowedDotValues,
     ...props
 }) => {
-    if (!valueAxis.length)
+    if (!valueAxis.length || !dataAxis.dataKey)
         return null;
 
     const { DataView } = DataSet;

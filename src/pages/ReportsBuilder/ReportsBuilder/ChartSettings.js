@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import { Button, Input, Radio, Select, Popconfirm, Checkbox } from 'antd';
 import { GithubPicker } from 'react-color';
 
-import { chartLineTypes } from '../Services/Editor';
+import { chartLineTypes, calculateXFor, calculateYFor, chartsWithOneAxis } from '../Services/Editor';
 
 import './Editor.css';
 import './ChartEditor.css';
@@ -130,6 +130,7 @@ class Color extends React.Component {
                         colors={colors} 
                         color={this.props.color} 
                         onChange={this.handleChange}
+                        triangle='hide'
                         width={212} />
                 </div>}
 
@@ -208,22 +209,25 @@ const AxisSettings = ({
     axisData,
     dataAxisKey,
     dataKey,
-    dataKey2,
     color,
-    color2,
+    colorNegative,
+    colorInitial,
+    colorTotal,
     name,
     rows,
     onRemove,
     onChartTypeChange,
     onValueKeyChange,
-    onValueKey2Change,
     onDataKeyChange,
     onColorChange,
-    onColor2Change,
+    onColorNegativeChange,
+    onColorInitialChange,
+    onColorTotalChange,
     onValueNameChange,
     onRowsChange
 }) => {
-    const valueTitle1 = type === 'cascade' ? 'Значение 1:' : type === 'scatter' ? 'Значение Y:' : 'Значение:';
+    const valueTitle1 = type === 'scatter' ? 'Значение Y:' : 'Значение:';
+    const colorTitle = type === 'cascade' ? 'Цвет роста' : 'Цвет';
 
     return (
         <div className="rbu-builder-editor-chart-st-axis-desc">
@@ -278,30 +282,24 @@ const AxisSettings = ({
                     </Select>
                 </div>
             </div>
-            {type === 'cascade' &&
-            <div>
-                <label>Значение 2:</label>
-                <div>
-                    <Select
-                        value={dataKey2}
-                        size="small"
-                        style={{width: '100%'}}
-                        onChange={onValueKey2Change}>
-                        {axisData.filter((item) => item.type === 'numeric').map((item) =>
-                            <Option key={item.column} value={item.title}>{item.title}</Option>
-                        )}
-                    </Select>
-                </div>
-            </div>
-            }
             {type !== 'pie' && <div>
-                <label>Цвет:</label>
+                <label>{colorTitle}:</label>
                 <div><Color color={color} onChange={onColorChange}/></div>
             </div>
             }
             {type === 'cascade' && <div>
-                <label>Цвет 2:</label>
-                <div><Color color={color2} onChange={onColor2Change}/></div>
+                <label>Цвет спада:</label>
+                <div><Color color={colorNegative} onChange={onColorNegativeChange}/></div>
+            </div>
+            }
+            {type === 'cascade' && <div>
+                <label>Цвет начала:</label>
+                <div><Color color={colorInitial} onChange={onColorInitialChange}/></div>
+            </div>
+            }
+            {type === 'cascade' && <div>
+                <label>Цвет итого:</label>
+                <div><Color color={colorTotal} onChange={onColorTotalChange}/></div>
             </div>
             }
             {false && <div>
@@ -314,7 +312,7 @@ const AxisSettings = ({
             </div>
         </div>
     )
-}
+};
 
 const GeneralSettings = ({
     type,
@@ -330,10 +328,10 @@ const GeneralSettings = ({
     <div className="rbu-builder-editor-chart-st-general">
         <Checkbox checked={isLegendVisible} onChange={onLegendVisibilityChange}>Отображение легенды</Checkbox>
         <Checkbox checked={isShowedDotValues} onChange={onShowDotValuesChange}>Показывать значения</Checkbox>
-        {type !== 'pie' && <Checkbox checked={isCalculatedXRange} onChange={onCalculateXRangeChange}>Вычислять границы оси X</Checkbox> }
-        {type !== 'pie' && <Checkbox checked={isCalculatedYRange} onChange={onCalculateYRangeChange}>Вычислять границы оси Y</Checkbox> }
+        {calculateXFor.includes(type) && <Checkbox checked={isCalculatedXRange} onChange={onCalculateXRangeChange}>Вычислять границы оси X</Checkbox> }
+        {calculateYFor.includes(type) && <Checkbox checked={isCalculatedYRange} onChange={onCalculateYRangeChange}>Вычислять границы оси Y</Checkbox> }
     </div>
-)
+);
 
 class ChartSettings extends Component {
     static propTypes = {
@@ -365,46 +363,46 @@ class ChartSettings extends Component {
 
     removeHandler = (index) => () => {
         this.props.onValueAxisRemove && this.props.onValueAxisRemove(index)
-    }
+    };
 
     valueKeyHandler = (keyName) => (index) => (key) => {
         this.props.onValueAxisChange && this.props.onValueAxisChange(index, {
             ...this.props.valueAxis[index],
             [keyName]: key
         })
-    }
+    };
 
     colorHandler = (index) => (color) => {
         this.props.onValueAxisChange && this.props.onValueAxisChange(index, {
             ...this.props.valueAxis[index],
             color: color.hex
         })
-    }
+    };
 
     colorHandler = (keyName) => (index) => (color) => {
         this.props.onValueAxisChange && this.props.onValueAxisChange(index, {
             ...this.props.valueAxis[index],
             [keyName]: color.hex
         })
-    }
+    };
 
     valueNameHandler = (index) => (e) => {
         this.props.onValueAxisChange && this.props.onValueAxisChange(index, {
             ...this.props.valueAxis[index],
             name: e.target.value
         })
-    }
+    };
 
     valueRowsHandler = (index) => (rows) => {
         this.props.onValueAxisChange && this.props.onValueAxisChange(index, {
             ...this.props.valueAxis[index],
             rows: rows
         })
-    }
+    };
 
     render() {
         const showXAxis = this.props.type !== 'scatter';
-        const addAction = this.props.type !== 'scatter' || this.props.valueAxis.length < 1 ? '+ Добавить' : undefined;
+        const addAction = !chartsWithOneAxis.includes(this.props.type) || this.props.valueAxis.length < 1 ? '+ Добавить' : undefined;
         const axisYTitle = this.props.type === 'scatter' ? 'Ось' : 'Ось Y';
 
         return (
@@ -436,10 +434,11 @@ class ChartSettings extends Component {
                             onRemove={this.removeHandler(index)}
                             onChartTypeChange={this.valueKeyHandler('chartType')(index)}
                             onValueKeyChange={this.valueKeyHandler('dataKey')(index)}
-                            onValueKey2Change={this.valueKeyHandler('dataKey2')(index)}
                             onDataKeyChange={this.valueKeyHandler('dataAxisKey')(index)}
                             onColorChange={this.colorHandler('color')(index)}
-                            onColor2Change={this.colorHandler('color2')(index)}
+                            onColorNegativeChange={this.colorHandler('colorNegative')(index)}
+                            onColorInitialChange={this.colorHandler('colorInitial')(index)}
+                            onColorTotalChange={this.colorHandler('colorTotal')(index)}
                             onValueNameChange={this.valueNameHandler(index)}
                             onRowsChange={this.valueRowsHandler(index)}
                             {...props} 

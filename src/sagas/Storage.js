@@ -16,6 +16,8 @@ import {
 import { getReport, storeReport } from 'Pages/ReportsBuilder/network';
 import { clearChangedKey } from 'Pages/ReportsBuilder/Services/IsChanged';
 
+import { calculateXFor, calculateYFor, chartsWithOneAxis } from 'Pages/ReportsBuilder/Services/Editor';
+
 import { fetchSubsystems } from './Subsystems';
 
 import { 
@@ -66,7 +68,7 @@ const generateStateChartNames = (cd) => {
     }
 };
 
-const generateStateChartDataAxis = (cd, fd) => {
+const generateStateChartDataAxis = (cd, rd, fd) => {
     if (!cd.dataAxis)
         return {};
 
@@ -78,21 +80,24 @@ const generateStateChartDataAxis = (cd, fd) => {
     }
 };
 
-const generateStateChartValueAxis = (cd, fd, keyCounter) => {
+const generateStateChartValueAxis = (cd, rd, fd, keyCounter) => {
     if (!cd.valueAxis)
         return [];
 
-    return cd.valueAxis.map(item => ({
-        key: keyCounter++,
-        chartType: item.type,
-        dataAxisKey: item.dataKey,
-        dataKey: item.key,
-        dataKey2: item.key2,
-        color: item.color,
-        color2: item.color2,
-        name: item.name,
-        rows: loadRowsConverter(item.rows)
-    }));
+    return cd.valueAxis
+        .slice(0, chartsWithOneAxis.includes(rd.type) ? 1 : cd.valueAxis.length)
+        .map(item => ({
+            key: keyCounter++,
+            chartType: item.type,
+            dataAxisKey: item.dataKey,
+            dataKey: item.key,
+            color: (rd.type === 'cascade' ? item.colorPositive : item.color),
+            colorNegative: item.colorNegative,
+            colorInitial: item.colorInitial,
+            colorTotal: item.colorTotal,
+            name: item.name,
+            rows: loadRowsConverter(item.rows)
+        }));
 };
 
 const generateStateChartSettings = (cd) => {
@@ -104,13 +109,13 @@ const generateStateChartSettings = (cd) => {
     };
 };
 
-const generateStateChartData = (cd, fd, keyCounter) => {
+const generateStateChartData = (cd, rd, fd, keyCounter) => {
     if (cd && cd.version === 1) {
         return {
-            chartNames: generateStateChartNames(cd, fd, keyCounter),
-            dataAxis: generateStateChartDataAxis(cd, fd, keyCounter),
-            valueAxis: generateStateChartValueAxis(cd, fd, keyCounter),
-            ...generateStateChartSettings(cd, fd, keyCounter)
+            chartNames: generateStateChartNames(cd, rd, fd, keyCounter),
+            dataAxis: generateStateChartDataAxis(cd, rd, fd, keyCounter),
+            valueAxis: generateStateChartValueAxis(cd, rd, fd, keyCounter),
+            ...generateStateChartSettings(cd, rd, fd, keyCounter)
         };
     }
 
@@ -148,7 +153,7 @@ const generateReduxData = (data) => {
     });
 
     return {
-        ...generateStateChartData(cd, fieldsData, keyCounter),
+        ...generateStateChartData(cd, rd, fieldsData, keyCounter),
         isReportInitialized: true,
         reportId: rd.id,
         reportName: rd.title,
@@ -260,47 +265,50 @@ const generateChartSaveDataAxis = (type, data) => (type === 'scatter'
     : {key: data.dataAxis.dataKey});
 
 const generateChartSaveValueAxis = (type, data) => (
-    data.valueAxis.map(item => {
-        const mainData = {
-            key: item.dataKey,
-            name: item.name,
-            rows: saveRowsConverter(item.rows)
-        };
-
-        const colorData = {
-            color: item.color
-        };
-
-        if (type === 'pie')
-            return mainData;
-
-        if (type === 'scatter')
-            return {
-                ...mainData,
-                ...colorData,
-                dataKey: item.dataAxisKey
+    data.valueAxis
+        .slice(0, chartsWithOneAxis.includes(type) ? 1 : data.valueAxis.length)
+        .map(item => {
+            const mainData = {
+                key: item.dataKey,
+                name: item.name,
+                rows: saveRowsConverter(item.rows)
             };
 
-        if (type === 'cascade')
-            return {
-                ...mainData,
-                ...colorData,
-                key2: item.dataKey2,
-                color2: item.color2
+            const colorData = {
+                color: item.color
             };
 
-        if (type === 'combo')
+            if (type === 'pie')
+                return mainData;
+
+            if (type === 'scatter')
+                return {
+                    ...mainData,
+                    ...colorData,
+                    dataKey: item.dataAxisKey
+                };
+
+            if (type === 'cascade')
+                return {
+                    ...mainData,
+                    colorPositive: item.color,
+                    colorNegative: item.colorNegative,
+                    colorInitial: item.colorInitial,
+                    colorTotal: item.colorTotal
+                };
+
+            if (type === 'combo')
+                return {
+                    ...mainData,
+                    ...colorData,
+                    type: item.chartType,
+                };
+
             return {
                 ...mainData,
-                ...colorData,
-                type: item.chartType,
-            };
-
-        return {
-            ...mainData,
-            ...colorData
-        }
-    })
+                ...colorData
+            }
+        })
 );
 
 const generateChartSaveSettings = (type, data) => {
@@ -309,13 +317,17 @@ const generateChartSaveSettings = (type, data) => {
         showDotValues: data.isShowedDotValues
     };
 
-    if (type === 'pie')
-        return mainData;
+    const calculateXRange = calculateXFor.includes(type) ? {
+        calculatedXRange: data.isCalculatedXRange
+    } : {};
+    const calculateYRange = calculateYFor.includes(type) ? {
+        calculatedYRange: data.isCalculatedYRange,
+    } : {};
 
     return {
         ...mainData,
-        calculatedYRange: data.isCalculatedYRange,
-        calculatedXRange: data.isCalculatedXRange,
+        ...calculateXRange,
+        ...calculateYRange,
     }
 };
 

@@ -122,6 +122,7 @@
     position: absolute;
     z-index: 2;
     top: 24px;
+    left: -50px;
 }
 .rbu-builder-editor-chart-st-color-picker-cover {
     position: fixed;

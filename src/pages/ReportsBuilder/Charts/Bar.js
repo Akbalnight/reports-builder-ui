@@ -35,6 +35,12 @@ const RbcBar = ({
         key: "chart",
         value: "value",
         retains: [dataAxis.dataKey]
+    }).transform({
+        type: 'map',
+        callback: row => ({
+            ...row,
+            [dataAxis.dataKey]: '' + row[dataAxis.dataKey]
+        })
     });
 
     const position = `${dataAxis.dataKey}*value`;
@@ -114,6 +120,12 @@ const RbcHBar  = ({
         key: "chart",
         value: "value",
         retains: [dataAxis.dataKey]
+    }).transform({
+        type: 'map',
+        callback: row => ({
+            ...row,
+            [dataAxis.dataKey]: '' + row[dataAxis.dataKey]
+        })
     });
 
     const position = `${dataAxis.dataKey}*value`;

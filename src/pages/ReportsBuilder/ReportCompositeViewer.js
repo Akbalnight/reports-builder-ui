@@ -350,9 +350,10 @@ class ReportCompositeViewer extends React.Component {
                 key: keyCounter++,
                 dataAxisKey: item.dataKey,
                 dataKey: item.key,
-                dataKey2: item.key2,
-                color: item.color,
-                color2: item.color2,
+                color: this.props.reportData.type === 'cascade' ? item.colorPositive : item.color,
+                colorNegative: item.colorNegative,
+                colorInitial: item.colorInitial,
+                colorTotal: item.colorTotal,
                 name: item.name,
                 rows: this.loadRowsConverter(item.rows)
             }))

@@ -94,7 +94,7 @@ export default ({
             {isLegendVisible && <Legend position="right-top" custom={true} items={legendItems} />}
             <Axis name={dataAxis.dataKey} title={{position: 'center'}} />
             {valueAxis.map((axis, index) => (
-                <Axis name={axis.dataKey} title={{position: 'center'}} visible={!index} />
+                <Axis key={axis.dataKey} name={axis.dataKey} title={{position: 'center'}} visible={!index} />
             ))}
             <Tooltip
                 crosshairs={{
@@ -111,7 +111,14 @@ export default ({
                             type="area"
                             position={position}
                             color={color}
-                        />
+                            shape="smooth"
+                        >
+                            {isShowedDotValues && <Label content="value" textStyle={(value, point) => {
+                                return {
+                                    fill: point.color
+                                }
+                            }}/>}
+                        </Geom>
                     );
                 }
                 if (axis.chartType === 'bar') {
@@ -121,7 +128,13 @@ export default ({
                             type="interval"
                             position={position}
                             color={color}
-                        />
+                        >
+                            {isShowedDotValues && <Label content="value" textStyle={(value, point) => {
+                                return {
+                                    fill: point.color
+                                }
+                            }}/>}
+                        </Geom>
                     );
                 }
                 if (axis.chartType === 'line') {

@@ -92,15 +92,8 @@ const prepareChartData = (data, valueAxis, dataAxis) => {
                     ((!item.rows[0] || index >= item.rows[0] - 1) && 
                     (!item.rows[1] || index <= item.rows[1] - 1))) {
 
-                    let secondItem = {};
-                    if (item.dataKey2)
-                        secondItem = {
-                            [item.dataKey2]: Math.round(row[item.dataKey2] * 100) / 100
-                        };
-
                     return {
-                        [item.dataKey]: Math.round(row[item.dataKey] * 100) / 100,
-                        ...secondItem
+                        [item.dataKey]: Math.round(row[item.dataKey] * 100) / 100
                     };
                 }
                 
@@ -119,7 +112,7 @@ const prepareChartData = (data, valueAxis, dataAxis) => {
         }
     }
 
-    result = result.filter(row => valueAxis.some(axis => row[axis.dataKey]));
+    result = result.filter(row => valueAxis.some(axis => typeof row[axis.dataKey] !== 'undefined'));
 
     return result;
 }
