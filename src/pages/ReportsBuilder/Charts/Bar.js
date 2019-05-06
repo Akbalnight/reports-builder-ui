@@ -1,53 +1,21 @@
-import React from 'react';
-
-import { 
-    BarChart, 
-    Bar, 
-    Cell,
-    XAxis, 
-    YAxis, 
-    CartesianGrid, 
-    Tooltip, 
-    Legend,
-    Label
-} from 'recharts';
-
+import React from "react";
 import {
-    prepareChartData,
-    chartFormatData,
-    charTooltipLabelFormatter,
-    getDataDomain,
-    getValueDomain
-} from '../utils';
+    Chart,
+    Geom,
+    Axis,
+    Tooltip,
+    Label,
+    Coord,
+    Legend,
+} from "bizcharts";
+import DataSet from "@antv/data-set";
+import {prepareChartData, getValueDomain} from "../utils";
 
 import './ReportsBuilderChart.css';
 
-const legend = (
-    <Legend 
-        verticalAlign="top" 
-        align="right" 
-        layout="vertical" 
-        iconType="rect"
-        wrapperStyle={{paddingLeft: '10px'}} 
-    />
-)
-
-const barRender = (data, position, showLabel, {key, dataKey, color, ...props}) => {
-    const label = showLabel ? {position} : false;
-    return (
-        <Bar key={key} isAnimationActive={false} dataKey={dataKey} fill={color} label={label} {...props}>
-            {
-                data.map((e, i) => (
-                    <Cell key={`cell-${i}`} fill={color} />
-                ))
-            }
-        </Bar>
-    );
-}
-
 const RbcBar = ({
-    dataAxis, 
-    valueAxis, 
+    dataAxis,
+    valueAxis,
     data,
     dataAxisName,
     valueAxisName,
@@ -57,79 +25,170 @@ const RbcBar = ({
     isShowedDotValues,
     ...props
 }) => {
-    const processedData = prepareChartData(data, valueAxis, dataAxis);
+    const preparedData = prepareChartData(data, valueAxis, dataAxis);
+
+    const ds = new DataSet();
+    const dv = ds.createView().source(preparedData);
+    dv.transform({
+        type: "fold",
+        fields: valueAxis.map(row => row.dataKey),
+        key: "chart",
+        value: "value",
+        retains: [dataAxis.dataKey]
+    }).transform({
+        type: 'map',
+        callback: row => ({
+            ...row,
+            [dataAxis.dataKey]: '' + row[dataAxis.dataKey]
+        })
+    });
+
+    const position = `${dataAxis.dataKey}*value`;
+    const color = ['chart', valueAxis.map(row => row.color)];
+
+    const range = isShowedDotValues ? {range: [0, 0.9]} : {};
+
+    let minMax = {};
+    if (isCalculatedYRange) {
+        const valueDomain = getValueDomain('bar', preparedData, valueAxis, isCalculatedYRange);
+        minMax.min = valueDomain[0];
+        minMax.max = valueDomain[1];
+    }
+
+    const scales = {
+        [dataAxis.dataKey]: {
+            alias: dataAxisName || '  ',
+            tickCount: 5,
+            type: 'cat'
+        },
+        'value': {
+            alias: valueAxisName || '  ',
+            ...range,
+            ...minMax
+        }
+    };
     return (
-        <BarChart data={processedData}
-            margin={{
-                top: isShowedDotValues ? 15 : 5, 
-                right: 30, 
-                left: 30, 
-                bottom: dataAxisName ? 30 : 5}} 
-                {...props}>
-            <XAxis 
-                dataKey={dataAxis.dataKey} 
-                allowDataOverflow={true}
-                type={dataAxis.dataType} 
-                name={dataAxis.dataTitle}
-                domain={getDataDomain('bar', processedData, dataAxis, isCalculatedXRange)}
-                tickFormatter={value => chartFormatData(value, dataAxis)}
+        <Chart padding="auto" scale={scales} data={dv} {...props}>
+            {isLegendVisible && <Legend position="right-top" />}
+            <Axis name={dataAxis.dataKey} title={{position: 'center'}} />
+            <Axis name="value" title={{position: 'center'}} />
+            <Tooltip
+                crosshairs={{
+                    type: "y"
+                }}
+            />
+            <Geom
+                type="interval"
+                position={position}
+                color={color}
+                adjust={[
+                    {
+                        type: "dodge",
+                        marginRatio: 1 / 32
+                    }
+                ]}
             >
-                <Label position='bottom'>{dataAxisName}</Label>
-            </XAxis>
-            <YAxis domain={getValueDomain('bar', processedData, valueAxis, isCalculatedYRange)} allowDataOverflow={true}>
-                <Label angle={270} position='left' style={{textAnchor: 'middle'}}>{valueAxisName}</Label>
-            </YAxis>
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip labelFormatter={value=>charTooltipLabelFormatter(value, dataAxis)} />
-            {isLegendVisible && legend}
-            {valueAxis.map(props => barRender(processedData, 'top', isShowedDotValues, props))}
-        </BarChart>
-        );
+                {isShowedDotValues && <Label content="value" textStyle={(value, point) => {
+                    return {
+                        fill: point.color
+                    }
+                }} />}
+            </Geom>
+        </Chart>
+    );
 };
 
-const RbcHBar = ({
-    dataAxis, 
-    valueAxis, 
-    data,
-    dataAxisName,
-    valueAxisName,
-    isLegendVisible,
-    isCalculatedXRange,
-    isCalculatedYRange,
-    isShowedDotValues,
-    ...props}) => {
-        const processedData = prepareChartData(data, valueAxis, dataAxis);
-        return (
-            <BarChart 
-                data={processedData}
-                layout="vertical"
-                margin={{
-                    top: 15, 
-                    right: 30, 
-                    left: 30, 
-                    bottom: valueAxisName ? 30 : 5}} 
-                    {...props}>
-                <XAxis type="number" domain={getValueDomain('bar', processedData, valueAxis, isCalculatedXRange)} allowDataOverflow={true}>
-                    <Label position='bottom'>{valueAxisName}</Label>
-                </XAxis>
-                <YAxis 
-                    dataKey={dataAxis.dataKey}
-                    reversed={true}
-                    allowDataOverflow={true}
-                    type={dataAxis.dataType}
-                    name={dataAxis.dataTitle}
-                    domain={getDataDomain('bar', processedData, dataAxis, isCalculatedYRange)}
-                    tickFormatter={value => chartFormatData(value, dataAxis)}
-                >
-                    <Label angle={270} position='left' style={{textAnchor: 'middle'}}>{dataAxisName}</Label>
-                </YAxis>
-                <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip labelFormatter={value=>charTooltipLabelFormatter(value, dataAxis)} />
-                {isLegendVisible && legend}
-                {valueAxis.map(props => barRender(processedData, 'right', isShowedDotValues, props))}
-            </BarChart>
-        );
-}
+const RbcHBar  = ({
+   dataAxis,
+   valueAxis,
+   data,
+   dataAxisName,
+   valueAxisName,
+   isLegendVisible,
+   isCalculatedXRange,
+   isCalculatedYRange,
+   isShowedDotValues,
+   ...props
+}) => {
+    const preparedData = prepareChartData(data, valueAxis, dataAxis);
+
+    const ds = new DataSet();
+    const dv = ds.createView().source(preparedData);
+    dv.transform({
+        type: "fold",
+        fields: valueAxis.map(row => row.dataKey),
+        key: "chart",
+        value: "value",
+        retains: [dataAxis.dataKey]
+    }).transform({
+        type: 'map',
+        callback: row => ({
+            ...row,
+            [dataAxis.dataKey]: '' + row[dataAxis.dataKey]
+        })
+    });
+
+    const position = `${dataAxis.dataKey}*value`;
+    const color = ['chart', valueAxis.map(row => row.color)];
+
+    const range = isShowedDotValues ? {range: [0, 0.9]} : {};
+
+    let minMax = {};
+    if (isCalculatedXRange) {
+        const valueDomain = getValueDomain('bar', preparedData, valueAxis, isCalculatedXRange);
+        minMax.min = valueDomain[0];
+        minMax.max = valueDomain[1];
+    }
+
+    const scales = {
+        [dataAxis.dataKey]: {
+            alias: valueAxisName || '  ',
+            tickCount: 5,
+            type: 'cat'
+        },
+        'value': {
+            alias: dataAxisName || '  ',
+            ...range,
+            ...minMax
+        }
+    };
+
+    return (
+        <Chart padding="auto" scale={scales} data={dv} {...props}>
+            <Coord transpose scale={[1, -1]} />
+            {isLegendVisible && <Legend position="right-top" />}
+            <Axis name={dataAxis.dataKey} title={{
+                position: 'center'
+            }} label={{
+                offset: 12,
+                autoRotate: false
+            }} />
+            <Axis name="value" title={{position: 'center'}} position="right" />
+            <Tooltip
+                crosshairs={{
+                    type: "y"
+                }}
+            />
+            <Geom
+                type="interval"
+                position={position}
+                color={color}
+                adjust={[
+                    {
+                        type: "dodge",
+                        marginRatio: 1 / 32
+                    }
+                ]}
+            >
+                {isShowedDotValues && <Label content="value" textStyle={(value, point) => {
+                    return {
+                        fill: point.color
+                    }
+                }} />}
+            </Geom>
+        </Chart>
+    );
+};
 
 export {
     RbcBar,

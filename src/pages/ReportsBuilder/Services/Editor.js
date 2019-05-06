@@ -77,13 +77,32 @@ export const defaultColors = [
     '#D4C4FB'
 ];
 
+export const chartsWithOneAxis = ['scatter', 'pie', 'cascade'];
+export const calculateXFor = ['linear', 'hbar'];
+export const calculateYFor = ['linear', 'bar', 'combo'];
+
+export const chartLineTypes = [{
+    type: 'line',
+    title: 'Линия'
+}, {
+    type: 'bar',
+    title: 'Столбец'
+}, {
+    type: 'area',
+    title: 'Заливка'
+}];
+
 export const compareFuncHasParam = (func) => !['Задано', 'Не задано'].includes(func);
 
 export const chartIcons = {
     table: {icon: 'table'},
     linear: {icon: 'line-chart'},
     bar: {icon: 'bar-chart'},
-    hbar: {icon: 'bar-chart', className: 'rbu-builder-item-title-hbar-icon'}
+    hbar: {icon: 'bar-chart', className: 'rbu-builder-item-title-hbar-icon'},
+    scatter: {icon: 'dot-chart'},
+    pie: {icon: 'pie-chart'},
+    cascade: {icon: 'bar-chart'},
+    combo: {icon: 'area-chart'},
 }
 
 export const getCurrentChartIconSafe = (reportType) => {
@@ -161,8 +180,8 @@ export const aggregationType = (row) => {
     return aggregationRow && aggregationRow.type;
 };
 
-export const getNextDefaultColor = (valueAxis) => {
-    const sc = valueAxis.map(a => a.color.toLowerCase());
+export const getNextDefaultColor = (valueAxis, ...additionalColors) => {
+    const sc = [...valueAxis.map(a => a.color), ...additionalColors].map(a => a.toLowerCase());
     const colors = defaultColors.filter(c => !sc.includes(c.toLowerCase()));
     if (colors.length)
         return colors[0];

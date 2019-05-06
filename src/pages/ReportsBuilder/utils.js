@@ -90,26 +90,29 @@ const prepareChartData = (data, valueAxis, dataAxis) => {
                     !Array.isArray(item.rows) || 
                     !item.rows.length ||
                     ((!item.rows[0] || index >= item.rows[0] - 1) && 
-                    (!item.rows[1] || index <= item.rows[1] - 1)))
+                    (!item.rows[1] || index <= item.rows[1] - 1))) {
+
                     return {
                         [item.dataKey]: Math.round(row[item.dataKey] * 100) / 100
                     };
+                }
                 
                 return {};
             }).reduce((a, c) => ({...a, ...c}), {})
         }
     });
 
-    if (dataAxis.dataOriginalType === 'date') {
-        result = result.map(row => ({
-            ...row,
-            [dataAxis.dataKey]: parseDate(row[dataAxis.dataKey]).format('X')
-        }));
+    if (dataAxis.dataKey && dataAxis.dataType === 'number') {
+        if (dataAxis.dataOriginalType === 'date') {
+            result.sort((row1, row2) =>
+                parseDate(row1[dataAxis.dataKey]).format('X') -
+                parseDate(row2[dataAxis.dataKey]).format('X'));
+        } else {
+            result.sort((row1, row2) => row1[dataAxis.dataKey] - row2[dataAxis.dataKey]);
+        }
     }
 
-    if (dataAxis.dataKey && dataAxis.dataType === 'number') {
-        result.sort((row1, row2) => row1[dataAxis.dataKey] - row2[dataAxis.dataKey]);
-    }
+    result = result.filter(row => valueAxis.some(axis => typeof row[axis.dataKey] !== 'undefined'));
 
     return result;
 }

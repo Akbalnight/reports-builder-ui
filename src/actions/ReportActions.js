@@ -152,13 +152,10 @@ export const setChartData = (reportId, chartData) => ({
 });
 
 export const setReportType = (reportId, reportType) => ({
-    type: types.APPLY_NEW_STATE,
+    type: types.SET_REPORT_TYPE,
     payload: {
-        reportId, 
-        editorState: {
-            reportType,
-            isChanged: true
-        }
+        reportId,
+        reportType
     }
 });
 

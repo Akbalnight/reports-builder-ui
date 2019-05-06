@@ -16,6 +16,8 @@ import {
 import { getReport, storeReport } from 'Pages/ReportsBuilder/network';
 import { clearChangedKey } from 'Pages/ReportsBuilder/Services/IsChanged';
 
+import { calculateXFor, calculateYFor, chartsWithOneAxis } from 'Pages/ReportsBuilder/Services/Editor';
+
 import { fetchSubsystems } from './Subsystems';
 
 import { 
@@ -58,36 +60,67 @@ const loadRowsConverter = (rows) => {
     ];
 }
 
-const generateStateChartData = (cd, fd, keyCounter) => {
+const generateStateChartNames = (cd) => {
+    return {
+        title: cd.names.chart,
+        valueAxis: cd.names.yAxis,
+        dataAxis: cd.names.xAxis
+    }
+};
+
+const generateStateChartDataAxis = (cd, rd, fd) => {
+    if (!cd.dataAxis)
+        return {};
+
+    const dataAxisField = fd.find(item => item.title === cd.dataAxis.key) || {};
+    return  {
+        dataKey: cd.dataAxis.key,
+        dataType: dataAxisField.type,
+        dataTitle: dataAxisField.title
+    }
+};
+
+const generateStateChartValueAxis = (cd, rd, fd, keyCounter) => {
+    if (!cd.valueAxis)
+        return [];
+
+    return cd.valueAxis
+        .slice(0, chartsWithOneAxis.includes(rd.type) ? 1 : cd.valueAxis.length)
+        .map(item => ({
+            key: keyCounter++,
+            chartType: item.type,
+            dataAxisKey: item.dataKey,
+            dataKey: item.key,
+            color: (rd.type === 'cascade' ? item.colorPositive : item.color),
+            colorNegative: item.colorNegative,
+            colorInitial: item.colorInitial,
+            colorTotal: item.colorTotal,
+            name: item.name,
+            rows: loadRowsConverter(item.rows)
+        }));
+};
+
+const generateStateChartSettings = (cd) => {
+    return {
+        isLegendVisible: !!cd.general.showLegend,
+        isCalculatedXRange: !!cd.general.calculatedXRange,
+        isCalculatedYRange: !!cd.general.calculatedYRange,
+        isShowedDotValues: !!cd.general.showDotValues
+    };
+};
+
+const generateStateChartData = (cd, rd, fd, keyCounter) => {
     if (cd && cd.version === 1) {
-        const dataAxisField = fd.find(item => item.title === cd.dataAxis.key) || {};
         return {
-            chartNames: {
-                title: cd.names.chart,
-                valueAxis: cd.names.xAxis,
-                dataAxis: cd.names.yAxis
-            },
-            dataAxis: {
-                dataKey: cd.dataAxis.key,
-                dataType: dataAxisField.type,
-                dataTitle: dataAxisField.title
-            },
-            valueAxis: cd.valueAxis.map(item => ({
-                key: keyCounter++,
-                dataKey: item.key,
-                color: item.color,
-                name: item.name,
-                rows: loadRowsConverter(item.rows)
-            })),
-            isLegendVisible: !!cd.general.showLegend,
-            isCalculatedXRange: !!cd.general.calculatedXRange,
-            isCalculatedYRange: !!cd.general.calculatedYRange,
-            isShowedDotValues: !!cd.general.showDotValues
+            chartNames: generateStateChartNames(cd, rd, fd, keyCounter),
+            dataAxis: generateStateChartDataAxis(cd, rd, fd, keyCounter),
+            valueAxis: generateStateChartValueAxis(cd, rd, fd, keyCounter),
+            ...generateStateChartSettings(cd, rd, fd, keyCounter)
         };
     }
 
     return {};
-}
+};
 
 const generateReduxData = (data) => {
     const rd = data.reportData;
@@ -120,7 +153,7 @@ const generateReduxData = (data) => {
     });
 
     return {
-        ...generateStateChartData(cd, fieldsData, keyCounter),
+        ...generateStateChartData(cd, rd, fieldsData, keyCounter),
         isReportInitialized: true,
         reportId: rd.id,
         reportName: rd.title,
@@ -212,31 +245,101 @@ const saveRowsConverter = (rows) => {
     }
 }
 
-const generateChartSaveData = (data) => {
+const generateChartSaveNames = (type, data) => {
+    const mainData = {
+        chart: data.chartNames.title
+    };
+
+    if (type === 'pie')
+        return mainData;
+
+    return {
+        ...mainData,
+        xAxis: data.chartNames.dataAxis,
+        yAxis: data.chartNames.valueAxis
+    }
+};
+
+const generateChartSaveDataAxis = (type, data) => (type === 'scatter'
+    ? {key: undefined}
+    : {key: data.dataAxis.dataKey});
+
+const generateChartSaveValueAxis = (type, data) => (
+    data.valueAxis
+        .slice(0, chartsWithOneAxis.includes(type) ? 1 : data.valueAxis.length)
+        .map(item => {
+            const mainData = {
+                key: item.dataKey,
+                name: item.name,
+                rows: saveRowsConverter(item.rows)
+            };
+
+            const colorData = {
+                color: item.color
+            };
+
+            if (type === 'pie')
+                return mainData;
+
+            if (type === 'scatter')
+                return {
+                    ...mainData,
+                    ...colorData,
+                    dataKey: item.dataAxisKey
+                };
+
+            if (type === 'cascade')
+                return {
+                    ...mainData,
+                    colorPositive: item.color,
+                    colorNegative: item.colorNegative,
+                    colorInitial: item.colorInitial,
+                    colorTotal: item.colorTotal
+                };
+
+            if (type === 'combo')
+                return {
+                    ...mainData,
+                    ...colorData,
+                    type: item.chartType,
+                };
+
+            return {
+                ...mainData,
+                ...colorData
+            }
+        })
+);
+
+const generateChartSaveSettings = (type, data) => {
+    const mainData = {
+        showLegend: data.isLegendVisible,
+        showDotValues: data.isShowedDotValues
+    };
+
+    const calculateXRange = calculateXFor.includes(type) ? {
+        calculatedXRange: data.isCalculatedXRange
+    } : {};
+    const calculateYRange = calculateYFor.includes(type) ? {
+        calculatedYRange: data.isCalculatedYRange,
+    } : {};
+
+    return {
+        ...mainData,
+        ...calculateXRange,
+        ...calculateYRange,
+    }
+};
+
+const generateChartSaveData = (type, data) => {
     return {
         version: 1,
-        names: {
-            chart: data.chartNames.title,
-            xAxis: data.chartNames.dataAxis,
-            yAxis: data.chartNames.valueAxis
-        },
-        dataAxis: {
-            key: data.dataAxis.dataKey
-        },
-        valueAxis: data.valueAxis.map(item => ({
-            key: item.dataKey,
-            color: item.color,
-            name: item.name,
-            rows: saveRowsConverter(item.rows)
-        })),
-        general: {
-            showLegend: data.isLegendVisible,
-            calculatedXRange: data.isCalculatedXRange,
-            calculatedYRange: data.isCalculatedYRange,
-            showDotValues: data.isShowedDotValues
-        }
+        names: generateChartSaveNames(type, data),
+        dataAxis: generateChartSaveDataAxis(type, data),
+        valueAxis: generateChartSaveValueAxis(type, data),
+        general: generateChartSaveSettings(type, data)
     }
-}
+};
 
 const generateSaveData = (data) => {
     return {
@@ -247,7 +350,7 @@ const generateSaveData = (data) => {
         isPublic: data.isPublic,
         isFavorite: data.isFavorite,
         createdBy: 'username',
-        description: generateChartSaveData(data),
+        description: generateChartSaveData(data.reportType, data),
         queryDescriptor: {
             aggregations: data.totalData.map(row => ({
                 column: buildFullColumnName(row.table, row.column),
