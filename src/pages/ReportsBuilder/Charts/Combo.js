@@ -34,6 +34,8 @@ export default ({
     isShowedDotValues,
     ...props
 }) => {
+    valueAxis = valueAxis.filter(axis => axis.dataKey && axis.chartType);
+
     const preparedData = prepareChartData(data, valueAxis, dataAxis);
 
     const ds = new DataSet();
@@ -94,7 +96,7 @@ export default ({
             {isLegendVisible && <Legend position="right-top" custom={true} items={legendItems} />}
             <Axis name={dataAxis.dataKey} title={{position: 'center'}} />
             {valueAxis.map((axis, index) => (
-                <Axis key={axis.dataKey} name={axis.dataKey} title={{position: 'center'}} visible={!index} />
+                <Axis key={`a_${index}`} name={axis.dataKey} title={{position: 'center'}} visible={!index} />
             ))}
             <Tooltip
                 crosshairs={{
@@ -139,7 +141,7 @@ export default ({
                 }
                 if (axis.chartType === 'line') {
                     return (
-                        <React.Fragment key={index}>
+                        <React.Fragment key={`line_${index}`}>
                             <Geom
                                 key={`lg_${index}`}
                                 type="line"

@@ -31,7 +31,7 @@ class ReportViewer extends React.Component {
             sortingFields: [], 
             filteringFields: [], 
             expandedRows: {}, 
-            loading: typeof props.dataSource === 'function',
+            loading: false,
             page: 1, 
             pageSize: 10, 
             self: this, 
@@ -375,7 +375,7 @@ class ReportViewer extends React.Component {
 
     render() {
         if (this.state.columns.length === 0 || !this.state.isLoaded) {
-            return <Placeholder fetched={this.state.fetched} isLoading={this.state.loading} />;
+            return <Placeholder fetched={this.state.fetched} loading={this.state.loading} />;
         }
 
         let totalRow = {};

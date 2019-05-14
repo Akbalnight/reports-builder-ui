@@ -419,7 +419,7 @@ class ChartSettings extends Component {
                         size="small"
                         style={{width: '100%'}}
                         onChange={this.props.onDataAxisKeyChange}>
-                        {this.props.axisData.map((item) =>
+                        {this.props.axisData.map((item, index) =>
                             <Option key={item.column} value={item.title}>{item.title}</Option>
                         )}
                     </Select>
@@ -428,6 +428,7 @@ class ChartSettings extends Component {
                 <SettingsItem title={axisYTitle} action={addAction} onAction={this.props.onValueAxisAdd}>
                     {this.props.valueAxis.map((props, index) =>
                         <AxisSettings
+                            {...props}
                             type={this.props.type}
                             key={index}
                             axisData={this.props.axisData}
@@ -441,7 +442,6 @@ class ChartSettings extends Component {
                             onColorTotalChange={this.colorHandler('colorTotal')(index)}
                             onValueNameChange={this.valueNameHandler(index)}
                             onRowsChange={this.valueRowsHandler(index)}
-                            {...props} 
                             />)}
                 </SettingsItem>
                 <SettingsItem title="Общие настройки">
