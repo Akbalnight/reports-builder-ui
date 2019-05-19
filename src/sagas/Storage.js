@@ -260,9 +260,7 @@ const generateChartSaveNames = (type, data) => {
     }
 };
 
-const generateChartSaveDataAxis = (type, data) => (type === 'scatter'
-    ? {key: undefined}
-    : {key: data.dataAxis.dataKey});
+const generateChartSaveDataAxis = (type, data) => ({key: data.dataAxis.dataKey});
 
 const generateChartSaveValueAxis = (type, data) => (
     data.valueAxis
@@ -280,13 +278,6 @@ const generateChartSaveValueAxis = (type, data) => (
 
             if (type === 'pie')
                 return mainData;
-
-            if (type === 'scatter')
-                return {
-                    ...mainData,
-                    ...colorData,
-                    dataKey: item.dataAxisKey
-                };
 
             if (type === 'cascade')
                 return {

@@ -77,9 +77,9 @@ export const defaultColors = [
     '#D4C4FB'
 ];
 
-export const chartsWithOneAxis = ['scatter', 'pie', 'cascade'];
-export const calculateXFor = ['linear', 'hbar'];
-export const calculateYFor = ['linear', 'bar', 'combo'];
+export const chartsWithOneAxis = ['pie', 'cascade'];
+export const calculateXFor = ['linear', 'scatter', 'hbar'];
+export const calculateYFor = ['linear', 'scatter', 'bar', 'combo'];
 
 export const chartLineTypes = [{
     type: 'line',

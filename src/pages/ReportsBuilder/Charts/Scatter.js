@@ -9,6 +9,8 @@ import {
 } from "bizcharts";
 
 import './ReportsBuilderChart.css';
+import {prepareChartData} from "../utils";
+import DataSet from "@antv/data-set";
 
 const RbcScatter = ({
     data,
@@ -22,53 +24,61 @@ const RbcScatter = ({
     isShowedDotValues,
     ...props}) =>
 {
-    if (!valueAxis.length)
-        return null;
+    const preparedData = prepareChartData(data, valueAxis, dataAxis);
 
-    const position = `${valueAxis[0].dataAxisKey}*${valueAxis[0].dataKey}`;
-    const color = [valueAxis[0].dataAxisKey, [valueAxis[0].color]];
+    const ds = new DataSet();
+    const dv = ds.createView().source(preparedData);
+    dv.transform({
+        type: "fold",
+        fields: valueAxis.map(row => row.dataKey),
+        key: "chart",
+        value: "value",
+        retains: [dataAxis.dataKey]
+    });
+
+    const position = `${dataAxis.dataKey}*value`;
+    const color = ['chart', valueAxis.map(row => row.color)];
+
+    const notAutoX = isCalculatedXRange ? {} : {min: 0};
+    const notAutoY = isCalculatedYRange ? {} : {min: 0};
+
+    const range = isShowedDotValues ? {range: [0, 0.9]} : {};
 
     const scales = {
-        [valueAxis[0].dataAxisKey]: {
-            alias: dataAxisName || '  '
+        [dataAxis.dataKey]: {
+            alias: dataAxisName || '  ',
+            tickCount: 5,
+            ...notAutoX
         },
-        [valueAxis[0].dataKey]: {
-            alias: valueAxisName || '  '
+        'value': {
+            alias: valueAxisName || '  ',
+            ...notAutoY,
+            ...range
         }
     };
 
-    const legendItems = valueAxis.map(axis => ({
-        value: axis.dataKey,
-        fill: axis.color,
-        marker: 'circle'
-    }));
-
-    const round2 = (value) => Math.round(value*100)/100;
-
     return (
-        <Chart padding="auto" data={data} scale={scales} {...props}>
-            {false && <Legend position="right-top" custom={true} items={legendItems} />}
+        <Chart padding='auto' data={dv} scale={scales} {...props}>
+            {isLegendVisible && <Legend position="right-top" />}
+            <Axis name={dataAxis.dataKey} title={{position: 'center'}} />
+            <Axis name="value" title={{position: 'center'}} />
             <Tooltip
-                showTitle={false}
                 crosshairs={{
-                    type: "cross"
+                    type: "y"
                 }}
             />
-            <Axis name={valueAxis[0].dataAxisKey} title={{position: 'center'}} />
-            <Axis name={valueAxis[0].dataKey} title={{position: 'center'}} />
             <Geom
                 type="point"
                 position={position}
-                opacity={0.65}
+                size={4}
                 color={color}
                 shape="circle"
-                size={4}
-                tooltip={[position, (data, value) => ({
-                    name: `${valueAxis[0].dataAxisKey} - ${valueAxis[0].dataKey}`,
-                    value: `${round2(data)} - ${round2(value)}`
-                })]}
+                style={{
+                    stroke: "#fff",
+                    lineWidth: 1
+                }}
             >
-                {isShowedDotValues && <Label content={valueAxis[0].dataKey} textStyle={(value, point) => {
+                {isShowedDotValues && <Label content="value" textStyle={(value, point) => {
                     return {
                         fill: point.color
                     }

@@ -322,28 +322,23 @@ class ReportCompositeViewer extends React.Component {
         if (this.props.reportData && this.props.reportData.description && this.state.chartData) {
             const cd = this.props.reportData.description;
             const qd = this.props.reportData.queryDescriptor;
-            const withoutX = this.props.reportData.type === 'scatter';
 
-            let dataAxis = {};
+            const dataAxisDescription = qd.select.find(f => f.title === cd.dataAxis.key);
 
-            if (!withoutX) {
-                const dataAxisDescription = qd.select.find(f => f.title === cd.dataAxis.key);
+            if (!dataAxisDescription)
+                return <this.Placeholder />;
 
-                if (!dataAxisDescription)
-                    return <this.Placeholder />;
+            const dataRowDescription = findTableAndColumn(this.props.viewsData, dataAxisDescription.column);
+            if (!dataRowDescription)
+                return <this.Placeholder />;
 
-                const dataRowDescription = findTableAndColumn(this.props.viewsData, dataAxisDescription.column);
-                if (!dataRowDescription)
-                    return <this.Placeholder />;
+            const dataAxisField = qd.select.find(item => item.title === cd.dataAxis.key) || {};
+            const dataAxis = {
+                dataKey: cd.dataAxis.key,
+                dataType: dataRowDescription.field.type,
+                dataTitle: dataAxisField.title
+            };
 
-                const dataAxisField = qd.select.find(item => item.title === cd.dataAxis.key) || {};
-                dataAxis = {
-                    dataKey: cd.dataAxis.key,
-                    dataType: dataRowDescription.field.type,
-                    dataTitle: dataAxisField.title
-                };
-            }
-            
             let keyCounter = 0;
             const valueAxis = cd.valueAxis.map(item => ({
                 chartType: item.type,
@@ -356,7 +351,7 @@ class ReportCompositeViewer extends React.Component {
                 colorTotal: item.colorTotal,
                 name: item.name,
                 rows: this.loadRowsConverter(item.rows)
-            }))
+            }));
 
             return (
                 <ReportChartViewer
