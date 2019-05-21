@@ -226,7 +226,6 @@ const AxisSettings = ({
     onValueNameChange,
     onRowsChange
 }) => {
-    const valueTitle1 = type === 'scatter' ? 'Значение Y:' : 'Значение:';
     const colorTitle = type === 'cascade' ? 'Цвет роста' : 'Цвет';
 
     return (
@@ -252,24 +251,8 @@ const AxisSettings = ({
                 </div>
             </div>
             }
-            {type === 'scatter' &&
             <div>
-                <label>Значение X:</label>
-                <div>
-                    <Select
-                        value={dataAxisKey}
-                        size="small"
-                        style={{width: '100%'}}
-                        onChange={onDataKeyChange}>
-                        {axisData.filter((item) => item.type === 'numeric').map((item) =>
-                            <Option key={item.column} value={item.title}>{item.title}</Option>
-                        )}
-                    </Select>
-                </div>
-            </div>
-            }
-            <div>
-                <label>{valueTitle1}</label>
+                <label>Значение:</label>
                 <div>
                     <Select
                         value={dataKey}
@@ -401,7 +384,7 @@ class ChartSettings extends Component {
     };
 
     render() {
-        const showXAxis = this.props.type !== 'scatter';
+        const showXAxis = true;
         const addAction = !chartsWithOneAxis.includes(this.props.type) || this.props.valueAxis.length < 1 ? '+ Добавить' : undefined;
         const axisYTitle = this.props.type === 'scatter' ? 'Ось' : 'Ось Y';
 
