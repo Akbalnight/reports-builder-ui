@@ -47,21 +47,48 @@ const getFillAttrs = (cfg) => {
     return attrs;
 };
 
+const normalizeRect = (rectPath) => {
+    const left = rectPath[0][1];
+    const right = rectPath[2][1];
+
+    const firstVertical = rectPath[0][2];
+    const secondVertical = rectPath[1][2];
+
+    const top = Math.max(firstVertical, secondVertical);
+    const bottom = Math.min(firstVertical, secondVertical);
+
+    return [
+        ["M", left, top],
+        ["L", left, bottom],
+        ["L", right, bottom],
+        ["L", right, top],
+        ["L", left, top],
+        ["z"]
+    ];
+}
+
 Shape.registerShape("interval", "waterfall", {
     draw(cfg, container) {
         const attrs = getFillAttrs(cfg);
         let rectPath = getRectPath(cfg.points);
+        rectPath = normalizeRect(rectPath);
         rectPath = this.parsePath(rectPath);
-        const interval = container.addShape("path", {
+        const interval = null;
+
+        container.addShape("path", {
             attrs: Util.mix(attrs, {
                 path: rectPath
             })
         });
 
         if (cfg.nextPoints) {
+            const isInv = cfg.origin._origin && cfg.origin._origin.meta === 'neg';
+
+            const y = isInv ? cfg.points[0].y : cfg.points[2].y;
+
             let linkPath = [
-                ["M", cfg.points[2].x, cfg.points[2].y],
-                ["L", cfg.nextPoints[0].x, cfg.nextPoints[0].y]
+                ["M", cfg.points[2].x, y],
+                ["L", cfg.nextPoints[0].x, y]
             ];
 
             if (cfg.nextPoints[0].y === cfg.nextPoints[2].y) {
@@ -124,11 +151,24 @@ const RbcCascade = ({
         }
     }
 
+    preparedData.forEach(item => {
+        if (!item[2]) {
+            if (item[valueDataKey][0] > item[valueDataKey][1]) {
+                item['meta'] = 'neg';
+                const c = item[valueDataKey][0];
+                item[valueDataKey][0] = item[valueDataKey][1];
+                item[valueDataKey][1] = c;
+                item[valueDataKey][2] = 'neg';
+            }
+        }
+    })
+
     if (preparedData.length > 0) {
         const lastItem = preparedData[preparedData.length - 1];
         preparedData.push({
             [dataAxis.dataKey]: 'Итог',
-            [valueDataKey]: [lastItem[valueDataKey][1], 0, 'last']
+            [valueDataKey]: [0, lastItem[valueDataKey][2] === 'neg' ? lastItem[valueDataKey][0] : lastItem[valueDataKey][1], 'last'],
+            meta: lastItem[valueDataKey][1] > 0 ? 'neg' : undefined
         })
     }
 
@@ -141,7 +181,7 @@ const RbcCascade = ({
             return valueAxisFirst.colorInitial;
 
         if (!value) return;
-        return value[0] < value[1] ? valueAxisFirst.color : valueAxisFirst.colorNegative;
+        return value[2] !== 'neg' ? valueAxisFirst.color : valueAxisFirst.colorNegative;
     }];
     const range = isShowedDotValues ? {range: [0, 0.9]} : {};
 
@@ -200,7 +240,7 @@ const RbcCascade = ({
                 position={position}
                 color={color}
                 tooltip={[position, (data, value) => ({
-                    value: data === 'Итог' ? value[0] - value[1] : value[1] - value[0]
+                    value: value[1] - value[0]
                 })]}
                 shape="waterfall"
             >
