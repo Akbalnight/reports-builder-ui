@@ -23,8 +23,7 @@ import {
     getSelectedViews,
     getViewsAllowedParents,
     getNextDefaultColor,
-    buildFullColumnName,
-    chartsWithOneAxis
+    buildFullColumnName
 } from 'Pages/ReportsBuilder/Services/Editor';
 
 const getEditorState = (reportId) => (store) => store.reports.editors[reportId];

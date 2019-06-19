@@ -1,6 +1,6 @@
 import * as types from 'Constants/ReportTypes';
 import { setChangedKey, clearChangedKey } from 'Pages/ReportsBuilder/Services/IsChanged';
-import { chartsWithOneAxis } from 'Pages/ReportsBuilder/Services/Editor';
+import { chartsCount } from 'Pages/ReportsBuilder/Services/Editor';
 
 
 const initialState = {
@@ -131,8 +131,8 @@ const reports = (state = initialState, action) => {
             const { reportId, reportType } = action.payload;
 
             let valueAxis = state.editors[reportId].valueAxis;
-            if (chartsWithOneAxis.includes(reportType)) {
-                valueAxis = Array.isArray(valueAxis) && valueAxis.length > 1 ? valueAxis.splice(0, 1) : valueAxis;
+            if (chartsCount[reportType]) {
+                valueAxis = Array.isArray(valueAxis) && valueAxis.length > chartsCount[reportType] ? valueAxis.splice(0, chartsCount[reportType]) : valueAxis;
             }
 
             return {

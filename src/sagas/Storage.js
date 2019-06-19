@@ -16,7 +16,7 @@ import {
 import { getReport, storeReport } from 'Pages/ReportsBuilder/network';
 import { clearChangedKey } from 'Pages/ReportsBuilder/Services/IsChanged';
 
-import { calculateXFor, calculateYFor, chartsWithOneAxis } from 'Pages/ReportsBuilder/Services/Editor';
+import { calculateXFor, calculateYFor, chartsCount } from 'Pages/ReportsBuilder/Services/Editor';
 
 import { fetchSubsystems } from './Subsystems';
 
@@ -85,7 +85,7 @@ const generateStateChartValueAxis = (cd, rd, fd, keyCounter) => {
         return [];
 
     return cd.valueAxis
-        .slice(0, chartsWithOneAxis.includes(rd.type) ? 1 : cd.valueAxis.length)
+        .slice(0, chartsCount[rd.type] || cd.valueAxis.length)
         .map(item => ({
             key: keyCounter++,
             chartType: item.type,
