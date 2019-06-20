@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import { Button, Input, Radio, Select, Popconfirm, Checkbox } from 'antd';
 import { GithubPicker } from 'react-color';
 
-import { chartLineTypes, calculateXFor, calculateYFor, chartsWithOneAxis } from '../Services/Editor';
+import { chartLineTypes, calculateXFor, calculateYFor, chartsCount } from '../Services/Editor';
 
 import './Editor.css';
 import './ChartEditor.css';
@@ -385,7 +385,10 @@ class ChartSettings extends Component {
 
     render() {
         const showXAxis = true;
-        const addAction = !chartsWithOneAxis.includes(this.props.type) || this.props.valueAxis.length < 1 ? '+ Добавить' : undefined;
+        let addAction = '+ Добавить';
+        if (chartsCount[this.props.type] && this.props.valueAxis.length >= chartsCount[this.props.type]) {
+            addAction = undefined;
+        }
         const axisYTitle = this.props.type === 'scatter' ? 'Ось' : 'Ось Y';
 
         return (

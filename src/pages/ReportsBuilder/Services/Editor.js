@@ -77,7 +77,11 @@ export const defaultColors = [
     '#D4C4FB'
 ];
 
-export const chartsWithOneAxis = ['pie', 'cascade'];
+export const chartsCount = {
+    pie: 1,
+    cascade: 1,
+    combo: 2
+};
 export const calculateXFor = ['linear', 'scatter', 'hbar'];
 export const calculateYFor = ['linear', 'scatter', 'bar', 'combo'];
 

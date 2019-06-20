@@ -73,18 +73,6 @@ export default ({
         }
     };
 
-    valueAxis.forEach(axis => {
-        scales = {
-            ...scales,
-            [axis.dataKey]: {
-                alias: valueAxisName || '  ',
-                ...range,
-                ...minMax,
-                ...notAutoY
-            }
-        }
-    });
-
     const legendItems = valueAxis.map(axis => ({
         value: axis.dataKey,
         fill: axis.color,
@@ -96,7 +84,7 @@ export default ({
             {isLegendVisible && <Legend position="right-top" custom={true} items={legendItems} />}
             <Axis name={dataAxis.dataKey} title={{position: 'center'}} />
             {valueAxis.map((axis, index) => (
-                <Axis key={`a_${index}`} name={axis.dataKey} title={{position: 'center'}} visible={!index} />
+                <Axis key={`a_${index}`} name={axis.dataKey} title={{position: 'center'}} />
             ))}
             <Tooltip
                 crosshairs={{
