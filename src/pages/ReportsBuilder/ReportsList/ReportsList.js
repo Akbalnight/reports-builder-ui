@@ -19,7 +19,7 @@ import { settings } from 'Settings';
 
 import './ReportsList.css';
 
-const getUrlPrefix = () => settings.get().apiPrefix;
+const getUrlPrefix = () => settings.get().apiPrefix + settings.get().reportApiPrefix;
 
 const Search = Input.Search;
 const SubMenu = Menu.SubMenu;
@@ -164,12 +164,12 @@ class ReportsList extends Component {
                         overlay={(
                             <Menu>
                                 <Menu.Item key='pdf'>
-                                    <form target="_blank" method="post" action={`${getUrlPrefix()}/reports/analytics/reports/${selectedKey}/_export?format=PDF`}>
+                                    <form target="_blank" method="post" action={`${getUrlPrefix()}/reports/${selectedKey}/_export?format=PDF`}>
                                         <Button className="rbu-rl-menu-item-button item-export" size="small" htmlType="submit" ><Icon type="file-pdf" /> PDF</Button>
                                     </form>
                                 </Menu.Item>
                                 <Menu.Item key='excel'>
-                                    <form target="_blank" method="post" action={`${getUrlPrefix()}/reports/analytics/reports/${selectedKey}/_export?format=XLSX`}>
+                                    <form target="_blank" method="post" action={`${getUrlPrefix()}/reports/${selectedKey}/_export?format=XLSX`}>
                                         <Button className="rbu-rl-menu-item-button item-export" size="small" htmlType="submit" ><Icon type="file-excel" /> Excel</Button>
                                     </form>
                                 </Menu.Item>
