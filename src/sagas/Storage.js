@@ -264,7 +264,7 @@ const generateChartSaveDataAxis = (type, data) => ({key: data.dataAxis.dataKey})
 
 const generateChartSaveValueAxis = (type, data) => (
     data.valueAxis
-        .slice(0, chartsWithOneAxis.includes(type) ? 1 : data.valueAxis.length)
+        .slice(0, chartsCount[type] || data.valueAxis.length)
         .map(item => {
             const mainData = {
                 key: item.dataKey,
