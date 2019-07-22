@@ -25,10 +25,9 @@ const EditableFormRow = Form.create()(EditableRow);
 
 const TextEditor = React.forwardRef(({
     editorSource,
-    forwardedRef,
     onSave,
     editorPopupStatusChange,
-    ...rest}) => (
+    ...rest}, forwardedRef) => (
     <Input
         {...rest}
         ref={forwardedRef}
@@ -104,10 +103,10 @@ const editors = {
     [null]: null
 }
 
-const Editor = React.forwardRef(({editor, editorSource, row, ...rest}) => {
+const Editor = React.forwardRef(({editor, editorSource, row, ...rest}, ref) => {
     const Component = editors[typeof editor === 'function' ? editor(row) : editor];
     if (Component)
-        return <Component editorSource={editorSource} row={row} {...rest} />;
+        return <Component editorSource={editorSource} row={row} {...rest} ref={ref} />;
     return <div></div>;
 });
 
