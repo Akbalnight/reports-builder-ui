@@ -1,17 +1,18 @@
 import React, { Fragment, Component } from 'react';
 import { PropTypes } from 'prop-types';
 import connect from 'react-redux/es/connect/connect';
+import * as types from 'Constants/ReportTypes'
 
 import { message, Input, Button, Popconfirm, Menu, Icon, Dropdown, Spin, Tooltip } from 'antd';
 
 import ReportCompositeViewer from '../ReportCompositeViewer';
 
-import { 
-    requestReportsList, 
-    requestReportRemove, 
-    requestReportUpdate,
-    requestSubsystems
-} from 'Actions/ReportActions';
+// import {
+//     requestReportsList,
+//     requestReportRemove,
+//     requestReportUpdate,
+//     requestSubsystems
+// } from 'Actions/ReportActions';
 
 import { getCurrentChartIconSafe } from '../Services/Editor.js';
 
@@ -237,9 +238,18 @@ const mapStateToProps = (store) => ({
     isError: store.reportsList.isError
 });
 
-export default connect(mapStateToProps, {
-    requestReportsList, 
-    requestReportRemove, 
-    requestReportUpdate,
-    requestSubsystems
-})(ReportsList);
+const mapDispatchToProps = dispatch => {
+    return {
+        requestReportsList: () => dispatch({
+            type: types.REPORTS_LIST_FETCH_REQUESTED
+        }),
+        requestReportUpdate: report => dispatch({ type: types.STORE_REPORT_REQUESTED, payload: report }),
+        requestSubsystems: () => dispatch({type: types.SUBSYSTEMS_FETCH_REQUESTED}),
+        requestReportRemove: key => {
+            dispatch({ type: types.REMOVE_REPORT, payload: key });
+            dispatch({ type: types.REMOVE_REPORT_REQUESTED, payload: key });
+        }
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReportsList);
