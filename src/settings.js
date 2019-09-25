@@ -5,6 +5,7 @@ let _settings = {
     doPost: methodIsNotSet('doPost'),
     doPut: methodIsNotSet('doPut'),
     doDelete: methodIsNotSet('doDelete'),
+    doExport: methodIsNotSet('doExport'),
     onReportEdit: methodIsNotSet('onReportEdit'),
     noDataImage: null,
     notBuildImage: null,
