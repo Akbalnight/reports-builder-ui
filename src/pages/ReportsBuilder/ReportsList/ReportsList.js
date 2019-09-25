@@ -96,6 +96,15 @@ class ReportsList extends Component {
         message.error('Данная функция находится в разработке');
     }
 
+    onExportPress = (format, selectedReport) => {
+        const {selectedKey} = this.state;
+        const {doExport} = settings.get();
+
+        if (typeof doExport === 'function') {
+            doExport(selectedKey, format, selectedReport.name)
+        }
+    };
+
     onSearchHandle = (e) => {
         this.setState({filter: e.target.value})
     }
@@ -165,14 +174,22 @@ class ReportsList extends Component {
                         overlay={(
                             <Menu>
                                 <Menu.Item key='pdf'>
-                                    <form target="_blank" method="post" action={`${getUrlPrefix()}/reports/${selectedKey}/_export?format=PDF`}>
-                                        <Button className="rbu-rl-menu-item-button item-export" size="small" htmlType="submit" ><Icon type="file-pdf" /> PDF</Button>
-                                    </form>
+                                    <Button
+                                        className="rbu-rl-menu-item-button item-export" size="small"
+                                        onClick={() => this.onExportPress('PDF', selectedReport)}
+                                    >
+                                        <Icon type="file-pdf" />
+                                        PDF
+                                    </Button>
                                 </Menu.Item>
                                 <Menu.Item key='excel'>
-                                    <form target="_blank" method="post" action={`${getUrlPrefix()}/reports/${selectedKey}/_export?format=XLSX`}>
-                                        <Button className="rbu-rl-menu-item-button item-export" size="small" htmlType="submit" ><Icon type="file-excel" /> Excel</Button>
-                                    </form>
+                                    <Button
+                                        className="rbu-rl-menu-item-button item-export" size="small"
+                                        onClick={() => this.onExportPress('XLSX', selectedReport)}
+                                    >
+                                        <Icon type="file-excel" />
+                                        Excel
+                                    </Button>
                                 </Menu.Item>
                             </Menu>
                         )}
