@@ -14,7 +14,7 @@ import TypeSettingsWrapper from './TypeSettingsWrapper';
 
 import { Item, ItemActions, ItemFooter } from './Item';
 
-import { 
+import {
     confirmDialog,
     getCurrentChartIconSafe,
     validateStoringData,
@@ -194,7 +194,7 @@ class Editor extends Component {
     SettingsButton = () => {
         const icon = getCurrentChartIconSafe(this.props.reportType);
         return (
-            <Button 
+            <Button
                 className={classNames("rbu-builder-editor-type-settings", icon.className)}
                 size='small'
                 type='ghost'
@@ -263,7 +263,7 @@ class Editor extends Component {
     render() {
         return (
             <div className="rbu-builder-type-root">
-                <TypeSettingsWrapper 
+                <TypeSettingsWrapper
                     visible={this.state.typeSettingsVisible}
                     highlightName={this.state.validationStatus === VALIDATION_EMPTY_NAME}
                     highlightTypes={this.state.validationStatus === VALIDATION_NO_TYPE}

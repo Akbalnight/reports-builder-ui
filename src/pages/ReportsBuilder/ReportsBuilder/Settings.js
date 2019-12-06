@@ -108,7 +108,7 @@ class Settings extends React.Component {
             <Tabs defaultActiveKey="filter" animated={false} size="small" onChange={this.props.onTabChange}>
                 <TabPane tab={TC('filter', 'Фильтрация')} key="filter">
                     <EditableTable
-                        columns={filterColumns} 
+                        columns={filterColumns}
                         dataSource={this.props.filterDataSource}
                         onChange={this.props.onFilterChange}
                         onDelete={this.props.onFilterDelete}
@@ -116,7 +116,7 @@ class Settings extends React.Component {
                 </TabPane>
                 <TabPane tab={TC('sort-ascending', 'Сортировка')} key="sort">
                     <EditableTable
-                        columns={sortColumns} 
+                        columns={sortColumns}
                         dataSource={this.props.sortDataSource}
                         sortable={true}
                         onChange={this.props.onSortChange}
@@ -126,7 +126,7 @@ class Settings extends React.Component {
                 </TabPane>
                 <TabPane tab={TC('cluster', 'Группировка')} key="group">
                     <EditableTable
-                        columns={groupColumns} 
+                        columns={groupColumns}
                         dataSource={this.props.groupDataSource}
                         sortable={true}
                         onDelete={this.props.onGroupDelete}
@@ -135,7 +135,7 @@ class Settings extends React.Component {
                 </TabPane>
                 <TabPane tab={TC('table', 'Итоги')} key="total">
                     <EditableTable
-                        columns={totalColumns} 
+                        columns={totalColumns}
                         dataSource={this.props.totalDataSource}
                         onChange={this.props.onTotalChange}
                         onDelete={this.props.onTotalDelete}

@@ -226,6 +226,18 @@
     font-weight: bold;
 }
 
+.rbu-builder-editor-settings .ant-tabs-tabpane-inactive {
+    display: none !important;
+}
+
+.rbu-builder-editor-settings .ant-tabs-tabpane-active {
+    display: flex !important;
+}
+
+.rbu-builder-editor-settings .ant-tabs-content {
+    margin-left: 0 !important;
+}
+
 .rbu-builder-editor-settings .ant-tabs > .ant-tabs-bar .ant-tabs-tab-active {
     color: black;
 }
@@ -236,7 +248,7 @@
     flex-basis: auto;
 }
 
-.rbu-builder-editor-settings .ant-tabs > .ant-tabs-bar { 
+.rbu-builder-editor-settings .ant-tabs > .ant-tabs-bar {
     height: 32px;
     margin-bottom: 0;
 }

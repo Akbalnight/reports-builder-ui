@@ -1,6 +1,6 @@
 {
   "name": "reports-builder-ui",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "description": "Reports builder library and components with state management",
   "author": "",
   "license": "Commercial",
@@ -22,7 +22,7 @@
   },
   "peerDependencies": {
     "@antv/data-set": "^0.10.2",
-    "antd": "^3.10.1",
+    "antd": "^3.25.0",
     "classnames": "^2.2.6",
     "bizcharts": "^3.5.2",
     "moment": "^2.22.2",
