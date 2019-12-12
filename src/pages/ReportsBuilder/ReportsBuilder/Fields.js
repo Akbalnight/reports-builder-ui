@@ -95,12 +95,15 @@ class ReportsBuilderFields extends React.Component {
         }, {
             title: <Icon type="filter" />,
             dataIndex: 'filter',
+            align: 'center',
             render: this.checkBoxRenderer("filter", "Добавить фильтр")
         }, {
             title: <Icon type="sort-ascending" />,
+            align: 'center',
             dataIndex: 'sort',
             render: this.checkBoxRenderer("sort", "Добавить сортировку")
         }, {
+            align: 'center',
             render: (text, record) => {
                 return <Tooltip title="Удалить"><Icon href="#" type="close" onClick={() => this.onDelete(record.key)} className="rbu-fe-icon-button" /></Tooltip>
             }

@@ -193,11 +193,6 @@
     margin-right: -17px;
 }
 
-.rbu-builder-item-content .ant-table-header table th:last-child,
-.rbu-builder-editor-settings .ant-table-header table thead>tr>th:last-child {
-    padding-right: 21px;
-}
-
 .rbu-builder-editor-settings {
     margin: 10px 0 0 10px;
     flex-shrink: 1;
