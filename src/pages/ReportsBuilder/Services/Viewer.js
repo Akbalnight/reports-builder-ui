@@ -1,5 +1,5 @@
-import { 
-    findViewsTable, 
+import {
+    findViewsTable,
     buildFullColumnName,
     allCompareTypes,
     aggregationType,
@@ -15,6 +15,18 @@ const getFilterValue = (viewsData, filter) => {
         return filter.value;
     }
         
+    return filter.value || null;
+}
+
+const getFilterValue2 = (viewsData, filter) => {
+    const td = findViewsTable(viewsData, filter.table);
+    const cd = td.children.find(c => c.column === filter.column);
+    if (cd.type === 'numeric') {
+        return +filter.value2 || null;
+    } else if (cd.type === 'date') {
+        return filter.value2;
+    }
+
     return filter.value || null;
 }
 
@@ -72,6 +84,11 @@ export const prepareFilterForPreview = (viewsData, filters) => {
                 column: buildFullColumnName(table, column),
                 operator: allCompareTypes.find(type => type.title === filter.func).type,
                 value: getFilterValue(viewsData, {
+                    ...filter,
+                    table,
+                    column
+                }),
+                value2: getFilterValue2(viewsData, {
                     ...filter,
                     table,
                     column

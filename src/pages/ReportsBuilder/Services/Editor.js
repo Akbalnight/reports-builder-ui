@@ -27,6 +27,12 @@ export const generalCompareTypes = [{
     type: '>=',
     title: 'Больше или равно'
 }, {
+    type: 'between',
+    title: 'Между'
+}, {
+    type: 'not between',
+    title: 'Не между'
+}, {
     type: 'is not null',
     title: 'Задано'
 }, {
@@ -97,6 +103,7 @@ export const chartLineTypes = [{
 }];
 
 export const compareFuncHasParam = (func) => !['Задано', 'Не задано'].includes(func);
+export const compareFuncHasParamBetween = (func) => ['Между', 'Не между'].includes(func);
 
 export const chartIcons = {
     table: {icon: 'table'},
