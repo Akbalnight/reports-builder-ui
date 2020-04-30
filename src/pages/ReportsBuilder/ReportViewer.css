@@ -10,7 +10,7 @@
 .rbu-viewer-filter-popover-content {
     display:flex;
     flex-direction: column;
-    width: 300px;
+    width: auto;
 }
 .rbu-viewer-filter-popover-content>div {
     display:flex;
@@ -20,6 +20,8 @@
 }
 .rbu-viewer-filter-popover-content>div:first-child .ant-input {
     height: 24px;
+    width: 100px;
+    margin-right: 10px;
 }
 .rbu-viewer-filter-popover-content>div>div:first-child {
     margin-right: 10px;
