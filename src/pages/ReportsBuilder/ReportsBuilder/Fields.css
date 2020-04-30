@@ -65,7 +65,7 @@ table tr.rbu-fe-drop-over-upward td {
 .rbu-builder-editor-fields thead.ant-table-thead>tr>th:first-child,
 .rbu-builder-editor-fields tbody.ant-table-tbody>tr>td:first-child {
   padding: 4px 16px;
-  width: 100%;
+  width: 80%;
 }
 .rbu-builder-editor-fields thead.ant-table-thead>tr>th,
 .rbu-builder-editor-fields tbody.ant-table-tbody>tr>td {
