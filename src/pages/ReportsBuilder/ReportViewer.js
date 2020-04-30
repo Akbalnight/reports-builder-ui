@@ -25,17 +25,17 @@ class ReportViewer extends React.Component {
         super(props);
 
         let state = {
-            columns: [], 
-            groupBy: props.grouping ? props.grouping.map(entry => entry.title) : [], 
-            rows: [], 
-            sortingFields: [], 
-            filteringFields: [], 
-            expandedRows: {}, 
+            columns: [],
+            groupBy: props.grouping ? props.grouping.map(entry => entry.title) : [],
+            rows: [],
+            sortingFields: [],
+            filteringFields: [],
+            expandedRows: {},
             loading: false,
-            page: 1, 
-            pageSize: 10, 
-            self: this, 
-            scrollTop: 0 
+            page: 1,
+            pageSize: 10,
+            self: this,
+            scrollTop: 0
         };
 
         if (props.dataSource && props.dataSource.data) {
@@ -78,6 +78,14 @@ class ReportViewer extends React.Component {
                                 return false;
                             break;
                         case "Меньше":
+                            if (row[fieldIndex] >= filterObject.value)
+                                return false;
+                            break;
+                        case "Между":
+                            if (row[fieldIndex] <= filterObject.value)
+                                return false;
+                            break;
+                        case "Не между":
                             if (row[fieldIndex] >= filterObject.value)
                                 return false;
                             break;
@@ -190,7 +198,8 @@ class ReportViewer extends React.Component {
                         column: entry.field,
                         table: entry.table,
                         func: entry.operation,
-                        value: entry.value
+                        value: entry.value,
+                        value2: entry.value2
                     }))),
                 ...this.props.filtering.filter(filter => !internalFiltersColumns.includes(filter.column))];
         }

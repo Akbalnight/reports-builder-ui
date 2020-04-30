@@ -32,6 +32,7 @@ class FilterContent extends Component {
         super(props);
         this.state = {
             value: props.value,
+            value2: props.value2,
             operation: props.operation,
             prevValue: props.value,
             prevOperation: props.operation
@@ -62,6 +63,11 @@ class FilterContent extends Component {
         this.props.onValueChange(event.target.value);
     }
 
+    valueHandler2 = (event) => {
+        this.setState({ value2: event.target.value });
+        this.props.onValueChange2(event.target.value);
+    }
+
     operationHandler = (event) => {
         this.setState({ operation: event });
         this.props.onOperationChange(event);
@@ -84,6 +90,7 @@ class FilterContent extends Component {
                         {operators.map(item => <Option value={item.title}>{item.title}</Option>)}
                     </Select>
                     <Input type="text" value={this.state.value} onChange={this.valueHandler} />
+                    <Input type="text" value={this.state.value2} onChange={this.valueHandler2} hidden={!(this.state.operation === 'Между'||this.state.operation === 'Не между')}  />
                 </div>
                 <div>
                     <Button size="small" onClick={this.props.onSave}>Сохранить</Button>
@@ -96,11 +103,13 @@ class FilterContent extends Component {
 
 class FilterPopover extends Component {
     value = '';
+    value2 = '';
     operation = null;
 
     constructor(props) {
         super(props);
         this.value = props.value;
+        this.value2 = props.value2;
         this.operation = props.operation;
         this.state = {
             self: this,
@@ -139,7 +148,7 @@ class FilterPopover extends Component {
     }
 
     save = () => {
-        this.props.onSave(this.value, this.operation);
+        this.props.onSave(this.value, this.value2, this.operation);
         this.hide();
     }
 
@@ -156,6 +165,10 @@ class FilterPopover extends Component {
         this.value = value;
     }
 
+    valueHandler2 = (value) => {
+        this.value2 = value;
+    }
+
     operationHandler = (operation) => {
         this.operation = operation;
     }
@@ -170,9 +183,11 @@ class FilterPopover extends Component {
                 content={
                     <FilterContent
                         value={this.value}
+                        value2={this.value2}
                         operation={this.operation}
                         type={this.props.type}
                         onValueChange={this.valueHandler}
+                        onValueChange2={this.valueHandler2}
                         onOperationChange={this.operationHandler}
                         onSave={this.save}
                         onClear={this.clear}
@@ -204,7 +219,7 @@ const ReportViewerHeader = ({
         </span>
         <div>
             {column.filterable && <FilterPopover
-                onSave={(value, operation) => onFilterChange({
+                onSave={(value, value2, operation) => onFilterChange({
                     id: column.id,
                     column: column.column,
                     table: column.table,
@@ -212,10 +227,12 @@ const ReportViewerHeader = ({
                     title: column.title,
                     type: column.type,
                     value: value,
+                    value2: value2,
                     operation: operation
                 })}
                 onClear={() => onFilterChange({ id: column.id })}
                 value={column.filterValue ? column.filterValue.value : ""}
+                value2={column.filterValue ? column.filterValue.value2 : ""}
                 operation={column.filterValue && column.filterValue.operation ? column.filterValue.operation : "Равно"}
                 type={column.type}
             />}

@@ -10,7 +10,8 @@ import {
     generalCompareTypes,
     generalOrderTypes,
     generalAggregationTypes,
-    compareFuncHasParam
+    compareFuncHasParam,
+    compareFuncHasParamBetween
 } from '../Services/Editor';
 
 const { TabPane } = Tabs;
@@ -45,6 +46,17 @@ const filterColumns = [{
     },
     editor: (row) => {
         if (!compareFuncHasParam(row.func)) return null;
+        return row.type;
+    },
+},  {
+    title: 'Значение2',
+    dataIndex: 'value2',
+    placeholder: (row) => {
+        if (!compareFuncHasParamBetween(row.func)) return '';
+        return 'Введите значение'
+    },
+    editor: (row) => {
+        if (!compareFuncHasParamBetween(row.func)) return null;
         return row.type;
     },
 }];
