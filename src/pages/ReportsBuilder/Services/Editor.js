@@ -1,6 +1,6 @@
-import { 
-    Modal, 
-    notification, 
+import {
+    Modal,
+    notification,
 } from 'antd';
 
 export const stringCompareTypes = [{
@@ -208,7 +208,7 @@ export const parseFullColumnName = (column, defaultTable) => {
             column: column,
             table: defaultTable
         };
-    
+
     return {
         table: column.substr(0, index),
         column: column.substr(index + 1)

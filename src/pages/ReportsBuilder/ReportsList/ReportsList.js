@@ -233,7 +233,7 @@ class ReportsList extends Component {
                                                 report={report}
                                             />
                                         </Menu.Item>)
-                                    }   
+                                    }
                                 </SubMenu>
                             </Menu>
                         </Spin>

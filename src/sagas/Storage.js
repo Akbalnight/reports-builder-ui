@@ -2,13 +2,13 @@ import { fork, call, select, put, takeEvery } from 'redux-saga/effects';
 
 import * as types from 'Constants/ReportTypes'
 
-import { 
+import {
     load,
     requestReportsList,
     applyNewState
 } from 'Actions/ReportActions';
 
-import { 
+import {
     reportDataSelector,
     subsystemsSelector
 } from 'Selectors/ReportsBuilder';
@@ -20,7 +20,7 @@ import { calculateXFor, calculateYFor, chartsCount } from 'Pages/ReportsBuilder/
 
 import { fetchSubsystems } from './Subsystems';
 
-import { 
+import {
     getViewsAllowedParents,
     parseFullColumnName,
     findViewsTable,
@@ -176,7 +176,8 @@ const generateReduxData = (data) => {
                 type: field.type,
                 title: row.title,
                 func: operatorTitle(row.operator),
-                value: createFilterValue(row.value, field.type)
+                value: createFilterValue(row.value, field.type),
+                value2: createFilterValue(row.value2, field.type)
             }
         }) : [],
         sortData: qd.orderBy ? qd.orderBy.map(row => {
@@ -230,6 +231,20 @@ const filterValue = (row) => {
             return +row.value;
         default:
             return row.value.toString();
+    }
+}
+
+const filterValue2 = (row) => {
+    if (!row.value2)
+        return row.value2;
+    switch (row.type) {
+        case 'date':
+            if (!row.value2) return null;
+            return row.value2;
+        case 'numeric':
+            return +row.value2;
+        default:
+            return row.value2.toString();
     }
 }
 
@@ -367,7 +382,8 @@ const generateSaveData = (data) => {
                 column: buildFullColumnName(row.table, row.column),
                 title: row.title,
                 operator: operatorType(row),
-                value: filterValue(row)
+                value: filterValue(row),
+                value2: filterValue2(row)
             }))
         }
     }
@@ -402,7 +418,7 @@ function* saveHandler(action) {
 
     try {
         const reduxData = yield select(reportDataSelector(reportId));
-        const reportData = generateSaveData(reduxData);        
+        const reportData = generateSaveData(reduxData);
         const { data, textStatus } = yield call(storeReport, reportData);
         if (textStatus === 'success')
             yield put(applyNewState(reportId, {

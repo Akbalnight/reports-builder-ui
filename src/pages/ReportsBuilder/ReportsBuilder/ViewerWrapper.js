@@ -1,10 +1,10 @@
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 
-import { 
+import {
     setChartData
 } from 'Actions/ReportActions';
-import { 
+import {
     subsystemsSelector,
     fieldsDataSelector,
     filterDataSelector,
@@ -14,8 +14,8 @@ import {
     tableNameSelector
 } from 'Selectors/ReportsBuilder';
 
-import { 
-    buildFullColumnName, 
+import {
+    buildFullColumnName,
     showLoadingPreviewError
 } from '../Services/Editor';
 
@@ -33,19 +33,21 @@ import { applyContext } from './Context';
 import Viewer from '../ReportViewer';
 
 class ViewerWrapper extends React.Component {
-    loadReportPreviewData = (sorting, filtration, paginationCurrent, paginationRows, needPagination) => {
+    loadReportPreviewData = (sorting, filtration, paginationCurrent, paginationRows, needPagination, limit, offset) => {
         if (!this.props.fieldsData || !this.props.fieldsData.length) {
             this.props.setChartData([]);
             return Promise.resolve({data: [], total: []});
         }
-    
+
         const apiParams = {
             "aggregations": [],
             "groupBy": [],
             "orderBy": [],
             "select": [],
             "table": this.props.tableName,
-            "where": []
+            "where": [],
+            "limit": limit,
+            "offset": offset
         }
         apiParams.select = this.props.fieldsData.map(f => ({ column: buildFullColumnName(f.table, f.column), filterable: f.filter, sortable: f.sort, title: f.title }));
         apiParams.orderBy = prepareSortingForPreview(sorting);
@@ -64,7 +66,7 @@ class ViewerWrapper extends React.Component {
                                 totalData[headerTitles[columnIndex]] = column.value;
                         });
                     }
-        
+
                     const reportData = {
                         data: (needPagination ? result.data.rows.slice((paginationCurrent - 1) * paginationRows, paginationCurrent * paginationRows) : result.data.rows).map((row) => {
                             const rowObject = {};
@@ -75,11 +77,11 @@ class ViewerWrapper extends React.Component {
                                 else
                                     rowObject[c.title] = row[i];
                             });
-        
+
                             return rowObject;
                         }),
                         total: {
-                            count: result.data.rows.length, 
+                            count: result.data.rows.length,
                             data: [totalData]
                         }
                     }
@@ -92,7 +94,7 @@ class ViewerWrapper extends React.Component {
                 return e;
             });
     }
-    
+
     render () {
         const {
             fieldsData,
@@ -112,7 +114,7 @@ class ViewerWrapper extends React.Component {
                 aggregating={totalData}
 //                onSortChange = {this.onSortChanged}
 //                onFilterChange = {this.onFilterChanged}
-                dataSource={this.loadReportPreviewData} 
+                dataSource={this.loadReportPreviewData}
                 serverProcessing={true}
                 {...rest}
             />
@@ -127,12 +129,12 @@ export default applyContext(
             fieldsData: fieldsDataSelector(ownProps.reportId)(state),
             filterData: filterDataSelector(ownProps.reportId)(state),
             sortData: sortDataSelector(ownProps.reportId)(state),
-            groupData: groupDataSelector(ownProps.reportId)(state),                        
+            groupData: groupDataSelector(ownProps.reportId)(state),
             totalData: totalDataSelector(ownProps.reportId)(state),
             tableName: tableNameSelector(ownProps.reportId)(state)
         };
     }, (dispatch, ownProps) => {
-        return { 
+        return {
             setChartData: (data) => dispatch(setChartData(ownProps.reportId, data))
         };
     })(ViewerWrapper)
