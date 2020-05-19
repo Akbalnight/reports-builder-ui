@@ -14,7 +14,6 @@ const getFilterValue = (viewsData, filter) => {
     } else if (cd.type === 'date') {
         return filter.value;
     }
-        
     return filter.value || null;
 }
 
@@ -27,7 +26,7 @@ const getFilterValue2 = (viewsData, filter) => {
         return filter.value2;
     }
 
-    return filter.value || null;
+    return filter.value2 || null;
 }
 
 const getFilterValueExecute = (viewsData, filter) => {
@@ -37,6 +36,16 @@ const getFilterValueExecute = (viewsData, filter) => {
         table,
         column,
         value: filter.value
+    });
+}
+
+const getFilterValue2Execute = (viewsData, filter) => {
+    const {table, column} = parseFullColumnName(filter.column, filter.table);
+
+    return getFilterValue(viewsData, {
+        table,
+        column,
+        value: filter.value2
     });
 }
 
@@ -60,7 +69,8 @@ export const prepareFilterForExecute = (viewsData, filters) => {
         .filter(filter => filter.operator && isEmptyAllowed(filter.operator, filter.value))
         .map(filter => ({
             ...filter,
-            value: getFilterValueExecute(viewsData, filter)
+            value: getFilterValueExecute(viewsData, filter),
+            value2: getFilterValue2Execute(viewsData, filter)
         }));
 }
 
@@ -70,7 +80,7 @@ export const prepareSortingForExecute = (sorting) => {
 
 export const prepareAggregationForExecute = (aggregation) => {
     return aggregation;
-} 
+}
 
 export const prepareFilterForPreview = (viewsData, filters) => {
     if (!filters)

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { PropTypes } from 'prop-types';
 import connect from 'react-redux/es/connect/connect';
 
-import { 
+import {
     requestChangeFilter,
     requestRemoveFilter,
     requestChangeSort,
@@ -13,7 +13,7 @@ import {
     requestChangeTotal,
     requestRemoveTotal
 } from 'Actions/ReportActions';
-import { 
+import {
     filterDataSelector,
     sortDataSelector,
     groupDataSelector,
@@ -75,7 +75,7 @@ export default applyContext(
             totalData: totalDataSelector(ownProps.reportId)(state)
         };
     }, (dispatch, ownProps) => {
-        return { 
+        return {
             changeFilter: (data) => dispatch(requestChangeFilter(ownProps.reportId, data)),
             removeFilter: (data) => dispatch(requestRemoveFilter(ownProps.reportId, data)),
             changeSort: (data) => dispatch(requestChangeSort(ownProps.reportId, data)),

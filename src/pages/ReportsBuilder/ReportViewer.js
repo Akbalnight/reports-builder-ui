@@ -31,7 +31,10 @@ class ReportViewer extends React.Component {
             sortingFields: [],
             filteringFields: [],
             expandedRows: {},
+            limit: 100,
+            offset: 0,
             loading: false,
+            needLoading: false,
             page: 1,
             pageSize: 10,
             self: this,
@@ -39,9 +42,9 @@ class ReportViewer extends React.Component {
         };
 
         if (props.dataSource && props.dataSource.data) {
-            state = { 
+            state = {
                 ...state,
-                rows: props.dataSource.data, 
+                rows: props.dataSource.data,
             };
         }
 
@@ -172,10 +175,10 @@ class ReportViewer extends React.Component {
     }
 
     fetchBarrier = false;
-    fetchData = () => {
+    fetchData = (offset) => {
         if (this.fetchBarrier) return;
         this.fetchBarrier = true;
-        this.setState({ loading: true });
+        this.setState({ loading: offset > 0 ? false : true});
 
         let sorting = this.props.sorting;
         let filtering = this.props.filtering;
@@ -209,18 +212,20 @@ class ReportViewer extends React.Component {
             ResponsibleContainer.trigger();
         };
 
-        this.props.dataSource(sorting, filtering, this.state.page, this.state.pageSize, this.props.pagination)
+        this.props.dataSource(sorting, filtering, this.state.page, this.state.pageSize, this.props.pagination, this.state.limit, offset)
             .then(data => {
+
                 this.setState({
                     columns: this.state.newColumns,
-                    rows: data.data,
+                    rows: this.state.needLoading? this.state.rows.concat(data.data):data.data,
                     groupBy: this.props.grouping.map(entry => entry.title),
                     expandedRows: {},
                     loading: false,
                     totalcount: data.total.count,
                     ...this.updateNumerationScroll(this.state.grid),
                     total: data.total.data,
-                    isLoaded: true
+                    isLoaded: true,
+                    needLoading: false
                 }, clearBarrier);
             })
             .catch(() => {
@@ -304,8 +309,22 @@ class ReportViewer extends React.Component {
     updateNumerationScroll = (grid) => {
         if (grid && grid.state)
             return { scrollTop: this.grid.state.scrollOffset };
-        else
+        else if (!this.state.needLoading)
             return { scrollTop: 0 }
+        else
+            return null;
+    }
+
+    scrollHandle = (e) => {
+        this.updateNumerationScrollFromEvent(e);
+        this.addRowsOnScroll(e);
+    }
+
+    addRowsOnScroll = (e) => {
+        if (!this.state.needLoading && this.state.rows.length - e.rowVisibleEndIdx <= 20) {
+            this.setState({needLoading: true});
+            this.fetchData(this.state.rows.length);
+        }
     }
 
     updateNumerationScrollFromEvent = (e) => {
@@ -403,7 +422,7 @@ class ReportViewer extends React.Component {
             <div className="rbu-viewer">
                 <Spin spinning={this.state.loading}>
                     <div className="rbu-viewer-layout">
-                        {this.props.showRowNumbers && 
+                        {this.props.showRowNumbers &&
                             <div className="rbu-viewer-numbers">
                                 <ResponsibleContainer>
                                     {(props) => (<NumerationColumn height={props.height-totalHeight} width={38} rowNumbersStart={rowNumbersStart} rowNumbersEnd={rowNumbersEnd} scrollTop={this.state.scrollTop} />)}
@@ -420,14 +439,14 @@ class ReportViewer extends React.Component {
                                         rowGetter={this.getRowAt}
                                         rowsCount={this.getSize()}
                                         onGridSort={() => { }}
-                                        onScroll={this.updateNumerationScrollFromEvent}
+                                        onScroll={this.scrollHandle}
                                         minHeight={props.height}
                                         minWidth={props.width}
                                         onRowExpandToggle={this.onRowExpandToggle}
                                     />
                                 )}
                             </ResponsibleContainer>
-                            {isTotalRow && 
+                            {isTotalRow &&
                                 <div className="rbu-viewer-total">
                                     <ResponsibleContainer>
                                         {(props) => (
@@ -481,7 +500,7 @@ ReportViewer.propTypes = {
 
 
 ReportViewer.defaultProps = {
-    dataSource: function (sorting, filtration, paginationCurrent, paginationRows) {
+    dataSource: function (sorting, filtration, paginationCurrent, paginationRows){
         return new Promise((resolve, reject) => {
             const totalFakeRows = 100;
             const fakeRowsIndexStart = paginationRows * paginationCurrent - paginationRows;
@@ -509,7 +528,7 @@ ReportViewer.defaultProps = {
         width: 120
     }],
     sorting: [{ field: "title", order: false }],
-    filtering: [{ field: "title", operation: "equals", value: "Один" }],
+    filtering: [{ field: "title", operation: "equals", value: "Один"}],
     grouping: [{ key: 'sign', name: 'Знак' }, { key: 'title', name: 'Название' }],
     pagination: false,
     serverProcessing: true,

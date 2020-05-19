@@ -12,7 +12,7 @@ import ReportChartViewer from './ReportChartViewer';
 import { getPreviewWithTotal } from './network';
 import { formatDate } from './utils';
 
-import { 
+import {
     parseFullColumnName,
     findViewsTable,
     generalOrderTypes,
@@ -91,7 +91,8 @@ class ReportCompositeViewer extends React.Component {
                     table,
                     title: row.title,
                     func: ReportCompositeViewer.operatorTitle(row.operator),
-                    value: ReportCompositeViewer.createFilterValue(row.value, field.type)
+                    value: ReportCompositeViewer.createFilterValue(row.value, field.type),
+                    value2: ReportCompositeViewer.createFilterValue(row.value2, field.type)
                 }
             });
 
@@ -148,7 +149,7 @@ class ReportCompositeViewer extends React.Component {
                     prevReportData: nextProps.reportData,
                     ...rebuildHandler()
                 };
-            } 
+            }
 
             return {
                 chartData: undefined,
@@ -169,7 +170,7 @@ class ReportCompositeViewer extends React.Component {
         if (nextProps.rebuildPending !== prevState.prevRebuildPending) {
             return rebuildHandler();
         }
-    
+
         return {};
     }
 
@@ -198,12 +199,13 @@ class ReportCompositeViewer extends React.Component {
             })
             return Promise.resolve({data: [], total: {}});
         }
-
         this.setState({
             loading: true
         });
 
-        const qd = {...this.props.reportData.queryDescriptor};
+        // const qd = {...this.props.reportData.queryDescriptor};
+        const qd = Object.assign({}, this.props.reportData.queryDescriptor);
+
         qd.orderBy = sorting ? sorting.map(sort => ({
             column: this.buildFullColumnName(sort.table, sort.column),
             order: (sort.order === "По возрастанию" ? "ASC" : "DESC")
@@ -211,7 +213,8 @@ class ReportCompositeViewer extends React.Component {
         qd.where = filtration ? filtration.map(filter => ({
             column: this.buildFullColumnName(filter.table, filter.column),
             operator: filter.func ? allCompareTypes.find(type => type.title === filter.func).type : "=",
-            value: ((filter.value === null || filter.value === undefined) ? 0 : filter.value)
+            value: ((filter.value === null || filter.value === undefined) ? 0 : filter.value),
+            value2: ((filter.value2 === null || filter.value2 === undefined) ? 0 : filter.value2)
         })) : qd.where;
 
         qd.orderBy = prepareSortingForExecute(qd.orderBy);
@@ -244,7 +247,7 @@ class ReportCompositeViewer extends React.Component {
                         return rowObject;
                     }),
                     total: {
-                        count: result.data.rows.length, 
+                        count: result.data.rows.length,
                         data: [totalData]
                     }
                 }

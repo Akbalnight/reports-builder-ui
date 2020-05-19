@@ -209,8 +209,8 @@ class FilterPopover extends Component {
 }
 
 const ReportViewerHeader = ({
-    column, 
-    onFilterChange, 
+    column,
+    onFilterChange,
     onSortToggle
 }) => (
     <div className="rbu-viewer-header">
@@ -259,7 +259,7 @@ const getNumbers = (rowNumbersStart, rowNumbersEnd) => {
 }
 
 const NumerationColumn = ({
-    rowNumbersStart, 
+    rowNumbersStart,
     rowNumbersEnd,
     height,
     width,

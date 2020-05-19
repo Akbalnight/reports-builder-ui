@@ -60,6 +60,8 @@ const DatePickerEditor = ({
         size="small"
         onOpenChange={editorPopupStatusChange}
         onChange={(e1, e2) => {
+            if (e2 === new Date().toLocaleDateString())
+                e2 = 'Сегодня';
             onChange(e2);
             onSave();
         }}
@@ -230,7 +232,7 @@ class EditableCell extends React.Component {
                         }}
                     </EditableContext.Consumer>
                 ) : (
-                    this.tooltipRender(tooltipContentRender, {table: record && record.table, value: record && record[dataIndex]}, 
+                    this.tooltipRender(tooltipContentRender, {table: record && record.table, value: record && record[dataIndex]},
                         <div className={cellClasses}>
                             {isEmpty ? placeholder : restProps.children}
                         </div>

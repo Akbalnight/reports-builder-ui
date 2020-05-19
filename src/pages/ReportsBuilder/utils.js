@@ -86,17 +86,17 @@ const prepareChartData = (data, valueAxis, dataAxis) => {
         return {
             [dataAxis.dataKey]: row[dataAxis.dataKey],
             ...valueAxis.map((item) => {
-                if (!item.rows || 
-                    !Array.isArray(item.rows) || 
+                if (!item.rows ||
+                    !Array.isArray(item.rows) ||
                     !item.rows.length ||
-                    ((!item.rows[0] || index >= item.rows[0] - 1) && 
+                    ((!item.rows[0] || index >= item.rows[0] - 1) &&
                     (!item.rows[1] || index <= item.rows[1] - 1))) {
 
                     return {
                         [item.dataKey]: Math.round(row[item.dataKey] * 100) / 100
                     };
                 }
-                
+
                 return {};
             }).reduce((a, c) => ({...a, ...c}), {})
         }
@@ -138,7 +138,7 @@ const formatDate = (date) => {
     if (!date)
         return "";
 
-    return moment(date).utcOffset(0).format('DD.MM.YYYY HH:mm');
+    return moment(date).format('DD.MM.YYYY HH:mm');
 }
 
 const debounce = (func, wait, immediate) => {
