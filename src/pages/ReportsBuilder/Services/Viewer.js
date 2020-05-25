@@ -8,7 +8,12 @@ import {
 
 const getFilterValue = (viewsData, filter) => {
     const td = findViewsTable(viewsData, filter.table);
-    const cd = td.children.find(c => c.column === filter.column);
+    let cd = '';
+   try {
+       cd = td.children.find(c => c.column === filter.column);
+   } catch (e) {
+       cd = 'numeric'
+   }
     if (cd.type === 'numeric') {
         return +filter.value || null;
     } else if (cd.type === 'date') {
@@ -19,7 +24,13 @@ const getFilterValue = (viewsData, filter) => {
 
 const getFilterValue2 = (viewsData, filter) => {
     const td = findViewsTable(viewsData, filter.table);
-    const cd = td.children.find(c => c.column === filter.column);
+    // const cd = td.children.find(c => c.column === filter.column);
+    let cd = '';
+    try {
+        cd = td.children.find(c => c.column === filter.column);
+    } catch (e) {
+        cd = 'numeric'
+    }
     if (cd.type === 'numeric') {
         return +filter.value2 || null;
     } else if (cd.type === 'date') {

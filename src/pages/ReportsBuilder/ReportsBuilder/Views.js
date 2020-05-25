@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import CalculatedField from '../Modals/CalculatedField';
 
 import { Icon, Input } from 'antd';
 
@@ -15,7 +16,7 @@ const SearchBar = (props) => (
 const Text = ({className, disabled, onDoubleClick, children, ...props}) => (
     <div
         className={classNames({className: true, 'rbu-st-text': true, 'rbu-st-disabled': disabled})}
-        onDoubleClick={disabled ? null : onDoubleClick} 
+        onDoubleClick={disabled ? null : onDoubleClick}
         {...props}
     >{children}</div>
 );
@@ -49,8 +50,8 @@ class TreePanel extends React.Component {
 
             if (Array.isArray(node.children)) {
                 hasShownChildren = this.applyFilterRecursive(
-                    node.children, 
-                    filter, 
+                    node.children,
+                    filter,
                     isShown);
             }
 
@@ -108,7 +109,7 @@ class TreePanel extends React.Component {
                                 (!node.parent || this.state.allowedNodeId !== this.props.idFunc(node.parent)) &&
                                 this.state.allowedNodeId !== this.props.idFunc(node)
                             )) || (
-                                this.props.allowedParents && this.props.allowedParents.length > 0 && 
+                                this.props.allowedParents && this.props.allowedParents.length > 0 &&
                                 !this.props.allowedParents.some(key => this.props.idFunc(node) === key) &&
                                 !this.props.allowedParents.some(key => node.parent && this.props.idFunc(node.parent) === key)
                             ) || (
@@ -292,6 +293,9 @@ class ReportsBuilderViews extends React.Component {
 
         return (
             <div className={classes}>
+                <div>
+                    <CalculatedField visible={this.props.visibleModal} toggleModal={this.props.toggleModal} addField={onMoveItem}/>
+                </div>
                 <SearchBar
                     className="rbu-st-search-bar"
                     onChange={this.onFilterChange} />

@@ -62,6 +62,9 @@ export const generalAggregationTypes = [{
 }, {
     type: 'MAX',
     title: 'Максимум'
+}, {
+    type: 'COUNT',
+    title: 'Колличество'
 }];
 
 export const defaultColors = [

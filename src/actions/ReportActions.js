@@ -16,19 +16,19 @@ export const setSubsystemsLoading = (state) => ({
 });
 
 // Реестр отчётов
-export const setReportsListLoadingState = (state) => ({ 
-    type: types.SET_REPORTS_LIST_LOADING_STATE, 
-    payload: state 
+export const setReportsListLoadingState = (state) => ({
+    type: types.SET_REPORTS_LIST_LOADING_STATE,
+    payload: state
 });
 export const requestReportsList = () => ({
     type: types.REPORTS_LIST_FETCH_REQUESTED
 });
 export const setReportsList = (reportsList) => ({
-    type: types.SET_REPORTS_LIST, 
+    type: types.SET_REPORTS_LIST,
     payload: {data: reportsList}
 });
 export const setReportsError = () => ({
-    type: types.SET_REPORTS_LIST, 
+    type: types.SET_REPORTS_LIST,
     payload: {error: 'unknown'}
 });
 
@@ -162,7 +162,7 @@ export const setReportType = (reportId, reportType) => ({
 export const setReportName = (reportId, reportName) => ({
     type: types.APPLY_NEW_STATE,
     payload: {
-        reportId, 
+        reportId,
         editorState: {
             reportName,
             isChanged: true
@@ -173,7 +173,7 @@ export const setReportName = (reportId, reportName) => ({
 export const setIsPublic = (reportId, isPublic) => ({
     type: types.APPLY_NEW_STATE,
     payload: {
-        reportId, 
+        reportId,
         editorState: {
             isPublic,
             isChanged: true
@@ -184,7 +184,7 @@ export const setIsPublic = (reportId, isPublic) => ({
 export const setIsFavorite = (reportId, isFavorite) => ({
     type: types.APPLY_NEW_STATE,
     payload: {
-        reportId, 
+        reportId,
         editorState: {
             isFavorite,
             isChanged: true
@@ -195,7 +195,7 @@ export const setIsFavorite = (reportId, isFavorite) => ({
 export const setValue = (reportId, paramName, value) => ({
     type: types.APPLY_NEW_STATE,
     payload: {
-        reportId, 
+        reportId,
         editorState: {
             [paramName]: value,
             isChanged: true
@@ -206,7 +206,7 @@ export const setValue = (reportId, paramName, value) => ({
 export const setAxisName = (reportId, chartName, value) => ({
     type: types.APPLY_CHART_NAME,
     payload: {
-        reportId, 
+        reportId,
         chartNames: {
             [chartName]: value
         }

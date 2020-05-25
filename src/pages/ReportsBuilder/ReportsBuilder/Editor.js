@@ -11,6 +11,7 @@ import ViewerWrapper from './ViewerWrapper';
 import ReportChartViewerWrapper from './ReportChartViewerWrapper';
 import ChartSettingsWrapper from './ChartSettingsWrapper';
 import TypeSettingsWrapper from './TypeSettingsWrapper';
+import CalculatedField from '../Modals/CalculatedField';
 
 import { Item, ItemActions, ItemFooter } from './Item';
 
@@ -55,7 +56,8 @@ class Editor extends Component {
         this.state = {
             ...state,
             isReportViewMaximized: false,
-            isChartViewMaximized: false
+            isChartViewMaximized: false,
+            visibleModal: false
         }
     }
 
@@ -116,6 +118,12 @@ class Editor extends Component {
         } else {
             this.props.changeSettingsTab(key);
         }
+    }
+
+    toggleModal = () => {
+        this.setState({
+            visibleModal: !this.state.visibleModal
+        })
     }
 
     cancelHandler = () => {
@@ -213,7 +221,7 @@ class Editor extends Component {
                         title="Доступные поля"
                         icon="database"
                         contentClassName="rbu-builder-item-views">
-                        <ViewsWrapper selectsOnlySiblings={true} />
+                        <ViewsWrapper selectsOnlySiblings={true} visibleModal={this.state.visibleModal} toggleModal={this.toggleModal}/>
                     </Item>
                 </div>
                 <div className="rbu-builder-editor-configuration">
@@ -221,6 +229,9 @@ class Editor extends Component {
                         <div className="rbu-builder-editor-fields">
                             <Item title="Отобранные поля" icon="bars">
                                 <FieldsWrapper title="Поля" />
+                                <ItemActions>
+                                    {<a href="#" onClick={this.toggleModal}>Добавить вычисляемое поле</a>}
+                                </ItemActions>
                             </Item>
                         </div>
                         <div className="rbu-builder-editor-settings">
