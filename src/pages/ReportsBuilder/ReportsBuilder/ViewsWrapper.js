@@ -15,6 +15,8 @@ class ViewsWrapper extends React.Component {
         const {
             selectedNodes,
             allowedParents,
+            visibleModal,
+            toggleModal,
             ...rest
         } = this.props;
 
@@ -24,6 +26,8 @@ class ViewsWrapper extends React.Component {
                 allowedParents={allowedParents}
                 idFunc={this.viewsIdFunc}
                 onMoveItem={this.props.addFields}
+                visibleModal={visibleModal}
+                toggleModal={toggleModal}
                 {...rest}
             />
         )
@@ -38,10 +42,10 @@ export default applyContext(
             allowedParents: allowedParentsSelector(ownProps.reportId)(state),
         };
     }, (dispatch, ownProps) => {
-        return { 
+        return {
             addFields: (data) => {
                 dispatch(requestAddFields(ownProps.reportId, data));
-            } 
+            }
         };
     })(ViewsWrapper)
 );

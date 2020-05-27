@@ -1,7 +1,7 @@
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 
-import { 
+import {
     requestRemoveField,
     requestChangeField,
     requestReorderFields,
@@ -9,12 +9,12 @@ import {
 } from 'Actions/ReportActions';
 import { fieldsDataSelector, settingsTabSelector } from 'Selectors/ReportsBuilder';
 
-import { applyContext } from './Context';
+import { applyContext } from '../ReportsBuilder/Context';
 
-import Fields from './Fields';
+import Fields from './FieldsModal';
 import { canFieldMove } from '../Services/Editor';
 
-class FieldsWrapper extends React.Component {
+class FieldsWrapperModal extends React.Component {
     viewsIdFunc = (row) => row.key;
 
     render () {
@@ -24,7 +24,8 @@ class FieldsWrapper extends React.Component {
             deleteField,
             changeField,
             reorderFields,
-            addSetting
+            addSetting,
+            addNameTable
         } = this.props;
 
         return (
@@ -34,7 +35,8 @@ class FieldsWrapper extends React.Component {
                 onDelete={deleteField}
                 onRowChanged={changeField}
                 onOrderChange={reorderFields}
-                onDoubleClick={addSetting} />
+                onDoubleClick={addSetting}
+                addNameTable={addNameTable}/>
         )
     }
 }
@@ -46,11 +48,11 @@ export default applyContext(
             settingsTab: settingsTabSelector(ownProps.reportId)(state)
         };
     }, (dispatch, ownProps) => {
-        return { 
+        return {
             deleteField: (data) => dispatch(requestRemoveField(ownProps.reportId, data)),
             changeField: (data) => dispatch(requestChangeField(ownProps.reportId, data)),
             reorderFields: (data) => dispatch(requestReorderFields(ownProps.reportId, data)),
             addSetting: (data) => dispatch(requestAddSetting(ownProps.reportId, data))
         };
-    })(FieldsWrapper)
+    })(FieldsWrapperModal)
 );
