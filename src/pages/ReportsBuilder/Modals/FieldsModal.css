@@ -19,3 +19,9 @@
 .modal-button button:not(:first-child) {
     margin-left: 15px;
 }
+
+.modal-button .ant-btn{
+    font-size: 18px;
+    height: 35px;
+    width: 44px;
+}
