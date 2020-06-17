@@ -31,6 +31,7 @@ class CalculatedField extends Component {
         this.state = {
             ...props,
             fieldName: 'Вычисляемое поле',
+            numField: 0,
             calField: '',
             param: {
                 key: 1000,
@@ -75,7 +76,6 @@ class CalculatedField extends Component {
                 canGroup: record.canGroup,
                 canOrder: record.canOrder,
                 canWhere: record.canWhere,
-                type: record.type,
                 schemeName: record.schemeName,
                 parent: record.parent
             }
@@ -90,9 +90,11 @@ class CalculatedField extends Component {
             title: this.state.fieldName,
             name: this.state.calField
         };
+        const numField = this.state.numField + 1;
         this.setState({
             calField: '',
-            fieldName: 'Вычисляемое поле',
+            numField: numField,
+            fieldName: 'Вычисляемое поле'+numField,
             param: {key: this.state.param.key + 1}
         })
 
@@ -102,7 +104,7 @@ class CalculatedField extends Component {
 
     defaultState = () => {
         this.setState({
-            fieldName: 'Вычисляемое поле',
+            fieldName: 'Вычисляемое поле'+this.state.numField,
             calField: '',
             param: {
                 key: this.state.param.key,
@@ -152,10 +154,10 @@ class CalculatedField extends Component {
                         </div>
                         <p/>
                         <div className={"modal-button"}>
-                            <Button type="primary" onClick={this.modalButtonClickHandler.bind(this, "+")}>{'\u2795'}</Button>
-                            <Button type="primary" onClick={this.modalButtonClickHandler.bind(this, "-")}>{'\u2796'}</Button>
-                            <Button type="primary" onClick={this.modalButtonClickHandler.bind(this, "*")}>{'\u2716'}</Button>
-                            <Button type="primary" onClick={this.modalButtonClickHandler.bind(this, "/")}>{'\u2797'}</Button>
+                            <Button type="primary" onClick={this.modalButtonClickHandler.bind(this, "+")}>{'+'}</Button>
+                            <Button type="primary" onClick={this.modalButtonClickHandler.bind(this, "-")}>{'-'}</Button>
+                            <Button type="primary" onClick={this.modalButtonClickHandler.bind(this, "*")}>{'×'}</Button>
+                            <Button type="primary" onClick={this.modalButtonClickHandler.bind(this, "/")}>{'÷'}</Button>
                         </div>
                         <p/>
                         <TextArea rows={4} value={this.state.calField} onChange={this.calculatedFieldHandler} />

@@ -12,7 +12,7 @@ const getFilterValue = (viewsData, filter) => {
    try {
        cd = td.children.find(c => c.column === filter.column);
    } catch (e) {
-       cd = 'numeric'
+       return +filter.value || null;
    }
     if (cd.type === 'numeric') {
         return +filter.value || null;
@@ -29,7 +29,7 @@ const getFilterValue2 = (viewsData, filter) => {
     try {
         cd = td.children.find(c => c.column === filter.column);
     } catch (e) {
-        cd = 'numeric'
+        return +filter.value2 || null;
     }
     if (cd.type === 'numeric') {
         return +filter.value2 || null;
@@ -65,7 +65,7 @@ const allowedEmptyFunctions = [
     'Не задано', 'is null'
 ];
 const isEmptyAllowed = (func, value) => {
-    if (value)
+    if (value!==null)
         return true;
 
     return allowedEmptyFunctions.includes(func)

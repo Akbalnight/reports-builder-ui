@@ -130,9 +130,21 @@ const generateReduxData = (data) => {
     let keyCounter = data.keyCounter;
 
     const fieldsData = qd.select.map(row => {
-        const {column, table} = parseFullColumnName(row.column);
-        const td = findViewsTable(data.viewsData, table).children;
-        const field = td.find(f => f.column === column);
+        let {column, table} = parseFullColumnName(row.column);
+        let td;
+        let field;
+
+        try {
+            td = findViewsTable(data.viewsData, table).children;
+            field = td.find(f => f.column === column);
+        } catch (e) {
+            let arr = table.split('.');
+            const tableNew = arr[0]+'.'+arr[arr.length-1];
+            td = findViewsTable(data.viewsData, tableNew).children;
+            field = td.find(f => f.column === column);
+            column = table+'.'+column;
+            console.log(column);
+        }
 
         return {
             id: row.column,

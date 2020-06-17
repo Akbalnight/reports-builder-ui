@@ -59,9 +59,21 @@ class ReportCompositeViewer extends React.Component {
             if (!qd || !qd.select)
                 return <this.Placeholder />;
             const fieldsData = qd.select.map(row => {
-                const {column, table} = parseFullColumnName(row.column);
-                const td = findViewsTable(viewsData, table);
-                const field = td.children.find(f => f.column === column);
+                let {column, table} = parseFullColumnName(row.column);
+                let td;
+                let field;
+
+                try {
+                    td = findViewsTable(viewsData, table).children;
+                    field = td.find(f => f.column === column);
+                } catch (e) {
+                    let arr = table.split('.');
+                    const tableNew = arr[0]+'.'+arr[arr.length-1];
+                    td = findViewsTable(viewsData, tableNew).children;
+                    field = td.find(f => f.column === column);
+                    column = table+'.'+column;
+                    console.log(column);
+                }
 
                 return {
                     id: column,
