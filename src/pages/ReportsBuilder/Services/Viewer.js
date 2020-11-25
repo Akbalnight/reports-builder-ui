@@ -7,35 +7,35 @@ import {
 } from './Editor.js';
 
 const getFilterValue = (viewsData, filter) => {
-    const td = findViewsTable(viewsData, filter.table);
-    let cd = '';
-   try {
-       cd = td.children.find(c => c.column === filter.column);
-   } catch (e) {
-       return +filter.value || null;
-   }
-    if (cd.type === 'numeric') {
-        return +filter.value || null;
-    } else if (cd.type === 'date') {
-        return filter.value;
-    }
+   //  const td = findViewsTable(viewsData, filter.table);
+   //  let cd = '';
+   // try {
+   //     cd = td.children.find(c => c.column === filter.column);
+   // } catch (e) {
+   //     return +filter.value || null;
+   // }
+   //  if (cd.type === 'numeric') {
+   //      return filter.value || null;
+   //  } else if (cd.type === 'date') {
+   //      return filter.value;
+   //  }
     return filter.value || null;
 }
 
 const getFilterValue2 = (viewsData, filter) => {
-    const td = findViewsTable(viewsData, filter.table);
-    // const cd = td.children.find(c => c.column === filter.column);
-    let cd = '';
-    try {
-        cd = td.children.find(c => c.column === filter.column);
-    } catch (e) {
-        return +filter.value2 || null;
-    }
-    if (cd.type === 'numeric') {
-        return +filter.value2 || null;
-    } else if (cd.type === 'date') {
-        return filter.value2;
-    }
+    // const td = findViewsTable(viewsData, filter.table);
+    // // const cd = td.children.find(c => c.column === filter.column);
+    // let cd = '';
+    // try {
+    //     cd = td.children.find(c => c.column === filter.column);
+    // } catch (e) {
+    //     return +filter.value2 || null;
+    // }
+    // if (cd.type === 'numeric') {
+    //     return filter.value2 || null;
+    // } else if (cd.type === 'date') {
+    //     return filter.value2;
+    // }
 
     return filter.value2 || null;
 }
