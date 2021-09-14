@@ -181,6 +181,17 @@ export const setIsPublic = (reportId, isPublic) => ({
     }
 });
 
+export const setLimit50 = (reportId, limit50) => ({
+    type: types.APPLY_NEW_STATE,
+    payload: {
+        reportId,
+        editorState: {
+            limit50,
+            isChanged: true
+        }
+    }
+});
+
 export const setIsFavorite = (reportId, isFavorite) => ({
     type: types.APPLY_NEW_STATE,
     payload: {

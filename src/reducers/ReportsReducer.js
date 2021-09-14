@@ -11,7 +11,7 @@ const initialState = {
 const createNewEditorData = () => ({
     keyCounter: 0,
     isReportInitialized: false,
-    
+
     isChanged: false,
 
     // General
@@ -20,6 +20,7 @@ const createNewEditorData = () => ({
     reportName: '',
     isPublic: false,
     isFavorite: false,
+    limit50: true,
 
     // Views
     viewsSelected: [],

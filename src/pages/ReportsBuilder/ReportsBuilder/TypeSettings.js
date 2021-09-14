@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 
-import { 
-    Button, 
+import {
+    Button,
     Checkbox,
-    Input, 
+    Input,
     Drawer
 } from 'antd';
 
@@ -73,7 +73,7 @@ const ChartRow = ({title, className, filterFunc, onClick}) => {
 
     return (
         <Row title={title} className={className}>
-            {charts.map(({type, ...props}) => 
+            {charts.map(({type, ...props}) =>
                 <ChartImage key={type} onClick={() => onClick && onClick(type)} {...props} />)}
         </Row>
     );
@@ -97,6 +97,9 @@ class TypeSettings extends Component {
 
         isFavorite: PropTypes.bool,
         onIsFavoriteChange: PropTypes.func,
+
+        limit50: PropTypes.bool,
+        onLimit50Change: PropTypes.func,
 
         onTerminate: PropTypes.func,
         onCancel: PropTypes.func,
@@ -124,24 +127,25 @@ class TypeSettings extends Component {
             >
                 <div>
                     <Row title="Наименование отчёта">
-                        <Input 
+                        <Input
                             className={classNames({'rbu-builder-editor-type-settings-validation-error': this.props.highlightName && !this.props.reportName})}
-                            placeholder="Название отчёта" 
-                            value={this.props.reportName} 
+                            placeholder="Название отчёта"
+                            value={this.props.reportName}
                             onChange={this.props.onReportNameChange} />
                         <Checkbox checked={this.props.isPublic} onChange={this.props.onIsPublicChange}>Сделать отчёт публичным</Checkbox>
                         <Checkbox checked={this.props.isFavorite} onChange={this.props.onIsFavoriteChange}>Добавить в избранное</Checkbox>
+                        <Checkbox checked={this.props.limit50} onChange={this.props.onLimit50Change}>Выводить отчет прокруткой по 100 строк</Checkbox>
                     </Row>
-                    <ChartRow 
-                        title="Текущее представление отчёта" 
+                    <ChartRow
+                        title="Текущее представление отчёта"
                         className={classNames({'rbu-builder-editor-type-settings-validation-error': this.props.highlightTypes && !this.props.reportType})}
-                        filterFunc={type => type === this.props.reportType} 
+                        filterFunc={type => type === this.props.reportType}
                     />
-                    <ChartRow 
+                    <ChartRow
                         title="Доступные представления отчёта"
                         className={classNames({'rbu-builder-editor-type-settings-validation-error': this.props.highlightTypes && !this.props.reportType})}
-                        filterFunc={type => type !== this.props.reportType} 
-                        onClick={this.reportTypeChangeHandler} 
+                        filterFunc={type => type !== this.props.reportType}
+                        onClick={this.reportTypeChangeHandler}
                     />
                 </div>
                 <div className="rbu-builder-editor-type-settings-actions">

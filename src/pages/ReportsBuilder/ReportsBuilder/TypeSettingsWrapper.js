@@ -1,17 +1,19 @@
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 
-import { 
+import {
     setReportType,
     setReportName,
     setIsPublic,
-    setIsFavorite
+    setIsFavorite,
+    setLimit50
 } from 'Actions/ReportActions';
-import { 
-    reportTypeSelector, 
-    reportNameSelector, 
+import {
+    reportTypeSelector,
+    reportNameSelector,
     isPublicSelector,
-    isFavoriteSelector
+    isFavoriteSelector,
+    limit50Selector
 } from 'Selectors/ReportsBuilder';
 
 import { applyContext } from './Context';
@@ -31,6 +33,10 @@ class TypeSettingsWrapper extends React.Component {
         this.props.setIsFavorite(e.target.checked);
     }
 
+    isLimit50Handler = (e) => {
+        this.props.setLimit50(e.target.checked);
+    }
+
     render () {
         const {
             setReportType,
@@ -41,9 +47,10 @@ class TypeSettingsWrapper extends React.Component {
         return (
             <TypeSettings
                 onReportTypeChange={setReportType}
-                onReportNameChange={this.reportNameChangedHandler} 
+                onReportNameChange={this.reportNameChangedHandler}
                 onIsPublicChange={this.isPublicChangedHandler}
                 onIsFavoriteChange={this.isFavoriteChangedHandler}
+                onLimit50Change={this.isLimit50Handler}
                 {...rest}
             />
         )
@@ -57,13 +64,15 @@ export default applyContext(
             reportName: reportNameSelector(ownProps.reportId)(state),
             isPublic: isPublicSelector(ownProps.reportId)(state),
             isFavorite: isFavoriteSelector(ownProps.reportId)(state),
+            limit50: limit50Selector(ownProps.reportId)(state),
         };
     }, (dispatch, ownProps) => {
-        return { 
+        return {
             setReportType: (data) => dispatch(setReportType(ownProps.reportId, data)),
             setReportName: (data) => dispatch(setReportName(ownProps.reportId, data)),
             setIsPublic: (data) => dispatch(setIsPublic(ownProps.reportId, data)),
-            setIsFavorite: (data) => dispatch(setIsFavorite(ownProps.reportId, data))
+            setIsFavorite: (data) => dispatch(setIsFavorite(ownProps.reportId, data)),
+            setLimit50: (data) => dispatch(setLimit50(ownProps.reportId, data))
         };
     })(TypeSettingsWrapper)
 );

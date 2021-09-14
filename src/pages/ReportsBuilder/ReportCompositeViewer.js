@@ -204,7 +204,7 @@ class ReportCompositeViewer extends React.Component {
         };
     }
 
-    loadReportPreviewData = (sorting, filtration, paginationCurrent, paginationRows, needPagination) => {
+    loadReportPreviewData = (sorting, filtration, paginationCurrent, paginationRows, needPagination, limit, offset) => {
         if (!this.props.reportData.queryDescriptor.select || !this.props.reportData.queryDescriptor.select.length) {
             this.setState({
                 chartData: []
@@ -231,6 +231,9 @@ class ReportCompositeViewer extends React.Component {
 
         qd.orderBy = prepareSortingForExecute(qd.orderBy);
         qd.where = prepareFilterForExecute(this.props.viewsData, qd.where);
+
+        qd.limit = limit;
+        qd.offset = offset;
 
         return getPreviewWithTotal(qd).then(
             result => {
@@ -328,6 +331,7 @@ class ReportCompositeViewer extends React.Component {
                 dataSource={this.loadReportPreviewData}
                 serverProcessing={true}
                 pagination={false}
+                limit50={this.props.reportData.limit50}
                 {...props}
             />
         )

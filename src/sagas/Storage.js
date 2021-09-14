@@ -173,6 +173,7 @@ const generateReduxData = (data) => {
         isChartView: rd.type !== 'table',
         isPublic: rd.isPublic,
         isFavorite: rd.isFavorite,
+        limit50: rd.limit50,
         fieldsData,
         viewsSelected: getSelectedViews(fieldsData),
         viewsAllowedParents: getViewsAllowedParents(data.viewsData, fieldsData),
@@ -367,6 +368,7 @@ const generateSaveData = (data) => {
         type: data.reportType,
         isPublic: data.isPublic,
         isFavorite: data.isFavorite,
+        limit50: data.limit50,
         createdBy: 'username',
         description: generateChartSaveData(data.reportType, data),
         queryDescriptor: {

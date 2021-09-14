@@ -7,6 +7,7 @@ export const reportTypeSelector  = reportId => state => state.reports.editors[re
 export const isChangedSelector  = reportId => state => state.reports.editors[reportId] && state.reports.editors[reportId].isChanged;
 export const isPublicSelector  = reportId => state => state.reports.editors[reportId] && state.reports.editors[reportId].isPublic;
 export const isFavoriteSelector  = reportId => state => state.reports.editors[reportId] && state.reports.editors[reportId].isFavorite;
+export const limit50Selector  = reportId => state => state.reports.editors[reportId] && state.reports.editors[reportId].limit50;
 
 export const editorStateSelector = reportId => store => store.reports.editors[reportId];
 export const keyCounterSelector  = reportId => state => state.reports.editors[reportId] && state.reports.editors[reportId].keyCounter;
