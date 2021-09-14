@@ -11,7 +11,8 @@ import {
     sortDataSelector,
     groupDataSelector,
     totalDataSelector,
-    tableNameSelector
+    tableNameSelector,
+    limit50Selector
 } from 'Selectors/ReportsBuilder';
 
 import {
@@ -131,6 +132,7 @@ export default applyContext(
             sortData: sortDataSelector(ownProps.reportId)(state),
             groupData: groupDataSelector(ownProps.reportId)(state),
             totalData: totalDataSelector(ownProps.reportId)(state),
+            limit50: limit50Selector(ownProps.reportId)(state),
             tableName: tableNameSelector(ownProps.reportId)(state)
         };
     }, (dispatch, ownProps) => {

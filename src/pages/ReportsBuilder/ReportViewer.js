@@ -31,7 +31,7 @@ class ReportViewer extends React.Component {
             sortingFields: [],
             filteringFields: [],
             expandedRows: {},
-            limit: 100,
+            limit: props.limit50 ? 100 : 0,
             offset: 0,
             loading: false,
             needLoading: false,
@@ -321,7 +321,7 @@ class ReportViewer extends React.Component {
     }
 
     addRowsOnScroll = (e) => {
-        if (!this.state.needLoading && this.state.rows.length - e.rowVisibleEndIdx <= 20) {
+        if (this.props.limit50&&!this.state.needLoading && this.state.rows.length - e.rowVisibleEndIdx <= 20) {
             this.setState({needLoading: true});
             this.fetchData(this.state.rows.length);
         }
@@ -490,6 +490,7 @@ ReportViewer.propTypes = {
     grouping: PropTypes.array,
     pagination: PropTypes.bool,
     serverProcessing: PropTypes.bool,
+    limit50: PropTypes.bool,
     digitsAfterPoint: numberRange(0, 15),
     width: PropTypes.number,
     height: PropTypes.number,
